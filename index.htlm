@@ -1,0 +1,349 @@
+--- index.html (原始)
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Élan Vital - Bien-être & Développement personnel</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      /* 内联样式确保主题色立即生效，避免闪烁 */
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+      }
+      html.light,
+      html.light body {
+        background-color: #ffffff !important;
+        color: #000000;
+      }
+      html.dark,
+      html.dark body {
+        background-color: #1a1a1a !important;
+        color: #ffffff;
+      }
+    </style>
+    <script>
+      // 在 React 加载前立即设置主题，避免闪烁
+      (function () {
+        const isInIframe = window.self !== window.top;
+
+        function applyThemeToDOM(theme) {
+          document.documentElement.classList.remove("light", "dark");
+          document.documentElement.classList.add(theme);
+          document.documentElement.setAttribute("data-theme", theme);
+        }
+
+        if (isInIframe) {
+          // 监听父窗口主动推送的主题消息
+          window.addEventListener("message", function (event) {
+            if (event.data && typeof event.data.theme === "string") {
+              const theme = event.data.theme;
+              if (theme === "light" || theme === "dark") {
+                applyThemeToDOM(theme);
+              }
+            }
+          });
+        } else {
+          // 非 iframe 环境，使用默认 light 主题
+          applyThemeToDOM("light");
+        }
+      })();
+    </script>
+      <script>
+      (function () {
+        if (window.self === window.top) return;
+        var reported = {};
+        window.addEventListener("error", function (event) {
+          // 资源加载失败的 error 事件没有 message，此处仅上报 JS 运行时错误
+          if (!event || !event.message) return;
+          var key =
+            event.message + "|" + (event.filename || "") + "|" + (event.lineno || 0);
+          if (reported[key]) return; // 相同错误只上报一次，避免渲染循环刷屏
+          reported[key] = true;
+          try {
+            window.parent.postMessage(
+              {
+                type: "sandbox-runtime-error",
+                payload: {
+                  message: String(event.message).slice(0, 500),
+                  filename: event.filename || "",
+                  lineno: event.lineno || 0,
+                  colno: event.colno || 0,
+                  stack:
+                    event.error && event.error.stack
+                      ? String(event.error.stack).slice(0, 2000)
+                      : ""
+                }
+              },
+              "*"
+            );
+          } catch (e) {
+            /* 上报失败不影响页面运行 */
+          }
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+
+
++++ index.html (修改后)
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Élan Vital - Bien-être & Développement personnel</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .5s ease-out}
+.screen{display:none}.screen.active{display:block}
+</style>
+</head>
+<body class="bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 min-h-screen">
+<div id="app">
+
+<!-- ACCUEIL -->
+<div id="screen-welcome" class="screen active min-h-screen flex flex-col items-center justify-center px-4 py-12">
+<div class="max-w-2xl mx-auto text-center">
+<div class="mb-8">
+<div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-purple-200 to-pink-200 shadow-xl mb-6"><span class="text-5xl">🌿</span></div>
+<h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-700 via-pink-600 to-amber-600 bg-clip-text text-transparent mb-2">Élan Vital</h1>
+<p class="text-lg text-gray-500">Bien-être & Développement personnel</p>
+</div>
+<div class="bg-white/60 rounded-3xl p-8 md:p-10 shadow-xl border border-white/80 mb-8">
+<p class="text-xl md:text-2xl text-gray-700 mb-6">Bienvenue, toi. ✨</p>
+<p class="text-gray-600 mb-4">Tu as envie de te sentir mieux, de te reconnecter à toi-même ? Tu es au bon endroit.</p>
+<p class="text-gray-600 mb-4">Ici, pas de jugement. Juste des <strong class="text-purple-700">exercices bienveillants</strong> pour :</p>
+<div class="grid grid-cols-2 gap-3 my-6">
+<div class="bg-purple-50 rounded-xl p-3 border border-purple-100"><span class="text-lg">🧘</span><p class="text-sm text-purple-700 mt-1">Mieux te connaître</p></div>
+<div class="bg-pink-50 rounded-xl p-3 border border-pink-100"><span class="text-lg">💪</span><p class="text-sm text-pink-700 mt-1">Retrouver ta force</p></div>
+<div class="bg-amber-50 rounded-xl p-3 border border-amber-100"><span class="text-lg">🌱</span><p class="text-sm text-amber-700 mt-1">Grandir chaque jour</p></div>
+<div class="bg-green-50 rounded-xl p-3 border border-green-100"><span class="text-lg">☀️</span><p class="text-sm text-green-700 mt-1">Vivre pleinement</p></div>
+</div>
+</div>
+<button onclick="showScreen('screen-questionnaire')" class="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl font-semibold text-lg shadow-xl hover:scale-105 transition-all">Commencer mon parcours →</button>
+<div class="mt-10 p-4 bg-green-50/80 rounded-2xl border border-green-200/50">
+<p class="text-sm text-green-800">🌿 <strong>Élan Vital</strong> est un outil de développement personnel et de bien-être.</p>
+</div>
+</div>
+</div>
+
+<!-- QUESTIONNAIRE -->
+<div id="screen-questionnaire" class="screen min-h-screen flex flex-col items-center justify-center px-4 py-12">
+<div class="max-w-2xl mx-auto w-full">
+<div class="mb-8">
+<div class="flex items-center justify-between mb-2">
+<span class="text-sm text-gray-500">Question <span id="q-current">1</span> sur 5</span>
+<span class="text-sm text-purple-600 font-medium"><span id="q-percent">20</span>%</span>
+</div>
+<div class="w-full h-2 bg-purple-100 rounded-full overflow-hidden">
+<div id="q-progress" class="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all duration-500" style="width:20%"></div>
+</div>
+</div>
+<div class="bg-white/70 rounded-3xl p-8 shadow-xl border border-white/80">
+<h2 id="q-title" class="text-2xl md:text-3xl font-bold text-gray-800 mb-3"></h2>
+<p id="q-subtitle" class="text-gray-500 text-lg italic mb-8"></p>
+<div id="q-options" class="space-y-3 mb-8"></div>
+<div class="flex items-center justify-between">
+<button id="q-back" onclick="prevQuestion()" class="px-5 py-3 text-gray-500 hover:text-gray-700 transition-colors" disabled>← Retour</button>
+<button id="q-next" onclick="nextQuestion()" class="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold shadow-lg hover:scale-105 transition-all" disabled>Suivant →</button>
+</div>
+</div>
+<p class="text-center text-gray-400 text-sm mt-6">💜 Prends ton temps.</p>
+</div>
+</div>
+
+<!-- RÉSULTATS -->
+<div id="screen-results" class="screen min-h-screen px-4 py-12">
+<div class="max-w-4xl mx-auto">
+<div class="text-center mb-10">
+<div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-purple-200 to-pink-200 shadow-xl mb-6"><span class="text-4xl">✨</span></div>
+<h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Merci d'avoir partagé ✨</h1>
+<p class="text-lg text-gray-600">Voici les exercices qui correspondent le mieux à ton état d'esprit actuel.</p>
+</div>
+<div id="r-recommendations" class="bg-white/70 rounded-3xl p-8 shadow-xl border border-white/80 mb-8"></div>
+<div class="mb-8">
+<h3 class="text-xl font-bold text-gray-800 mb-4">🌈 Explore toutes les approches</h3>
+<div class="grid md:grid-cols-2 gap-4">
+<button onclick="showScreen('screen-library')" class="text-left p-6 rounded-2xl border-2 bg-indigo-50 border-indigo-200 hover:shadow-lg transition-all"><div class="flex items-center gap-3 mb-2"><span class="text-2xl">🧘</span><h4 class="font-bold text-gray-800">Méditation</h4></div><p class="text-gray-600 text-sm">Apaiser ton mental</p></button>
+<button onclick="showScreen('screen-library')" class="text-left p-6 rounded-2xl border-2 bg-green-50 border-green-200 hover:shadow-lg transition-all"><div class="flex items-center gap-3 mb-2"><span class="text-2xl">🌳</span><h4 class="font-bold text-gray-800">Ancrage & Présence</h4></div><p class="text-gray-600 text-sm">Te reconnecter à ton corps</p></button>
+<button onclick="showScreen('screen-library')" class="text-left p-6 rounded-2xl border-2 bg-pink-50 border-pink-200 hover:shadow-lg transition-all"><div class="flex items-center gap-3 mb-2"><span class="text-2xl">🎨</span><h4 class="font-bold text-gray-800">Créativité & Expression</h4></div><p class="text-gray-600 text-sm">T'exprimer par la création</p></button>
+<button onclick="showScreen('screen-library')" class="text-left p-6 rounded-2xl border-2 bg-amber-50 border-amber-200 hover:shadow-lg transition-all"><div class="flex items-center gap-3 mb-2"><span class="text-2xl">💛</span><h4 class="font-bold text-gray-800">Connaissance de soi</h4></div><p class="text-gray-600 text-sm">Explorer qui tu es vraiment</p></button>
+</div>
+</div>
+<div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-6 border border-amber-200/50 text-center">
+<p class="text-amber-800">🌸 Chaque petit pas compte. Choisis un exercice et fais-le à ton rythme.</p>
+</div>
+</div>
+</div>
+
+<!-- BIBLIOTHÈQUE -->
+<div id="screen-library" class="screen min-h-screen px-4 py-12">
+<div class="max-w-5xl mx-auto">
+<button onclick="showScreen('screen-results')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+<h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Bibliothèque d'exercices 📚</h1>
+<p class="text-gray-600 text-lg mb-8">Explore tous les exercices disponibles.</p>
+<div class="mb-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-6 text-white shadow-xl">
+<div class="flex flex-col md:flex-row items-center gap-4">
+<div class="flex-1"><h3 class="text-xl font-bold mb-2">✨ Débloque tous les exercices</h3><p class="text-purple-100 text-sm">Accède à tous les exercices premium + nouveautés chaque mois.</p></div>
+<button onclick="showScreen('screen-pricing')" class="px-6 py-3 bg-white text-purple-600 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg">Voir les offres →</button>
+</div>
+</div>
+<div id="exercises-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+</div>
+</div>
+
+<!-- EXERCICE -->
+<div id="screen-exercise" class="screen min-h-screen px-4 py-12">
+<div class="max-w-3xl mx-auto">
+<button onclick="showScreen('screen-library')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+<div id="exercise-content" class="bg-white/70 rounded-3xl p-8 shadow-xl border border-white/80 mb-8"></div>
+<div id="exercise-steps" class="space-y-4 mb-8"></div>
+</div>
+</div>
+
+<!-- TARIFICATION -->
+<div id="screen-pricing" class="screen min-h-screen px-4 py-12">
+<div class="max-w-4xl mx-auto">
+<button onclick="showScreen('screen-library')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+<div class="text-center mb-10">
+<div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-amber-200 to-orange-200 shadow-xl mb-6"><span class="text-4xl">⭐</span></div>
+<h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Passe au niveau supérieur</h1>
+<p class="text-gray-600 text-lg">Débloque tous les exercices premium.</p>
+</div>
+<div class="grid md:grid-cols-2 gap-6 mb-10">
+<div class="bg-white/70 rounded-3xl p-8 border-2 border-gray-200">
+<div class="text-center mb-6"><h3 class="text-xl font-bold text-gray-800 mb-1">Gratuit</h3><div class="mt-4"><span class="text-4xl font-bold">0€</span></div></div>
+<ul class="space-y-3 mb-8">
+<li class="flex items-center gap-3 text-gray-700"><span class="text-green-500">✓</span><span>8 exercices de base</span></li>
+<li class="flex items-center gap-3 text-gray-700"><span class="text-green-500">✓</span><span>Questionnaire personnalisé</span></li>
+<li class="flex items-center gap-3 text-gray-400"><span>✗</span><span>Exercices premium</span></li>
+</ul>
+<button onclick="showScreen('screen-library')" class="w-full py-3 border-2 border-gray-300 text-gray-600 rounded-xl font-semibold">Plan actuel</button>
+</div>
+<div class="relative bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-8 text-white shadow-2xl">
+<div class="absolute -top-3 right-6 bg-amber-400 text-amber-900 px-4 py-1 rounded-full text-xs font-bold">⭐ RECOMMANDÉ</div>
+<div class="text-center mb-6"><h3 class="text-xl font-bold mb-1">Premium</h3><div class="mt-4"><span class="text-4xl font-bold">9,90€</span><span class="text-purple-200">/mois</span></div><p class="text-purple-200 text-xs mt-2">ou 97€/an (2 mois offerts)</p></div>
+<ul class="space-y-3 mb-8">
+<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><span>Tous les exercices</span></li>
+<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><span>Nouveautés chaque mois</span></li>
+<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><span>Formations vidéo</span></li>
+<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><span>Communauté privée</span></li>
+</ul>
+<a href="#" class="block w-full py-4 bg-white text-purple-600 rounded-xl font-bold text-lg hover:scale-105 transition-transform shadow-lg text-center">Je passe Premium ✨</a>
+<p class="text-center text-purple-200 text-xs mt-3">Paiement sécurisé • Annulation à tout moment</p>
+</div>
+</div>
+<div class="bg-white/70 rounded-3xl p-8 border border-white/80">
+<h3 class="text-xl font-bold text-gray-800 mb-6 text-center">💜 Nos garanties</h3>
+<div class="grid md:grid-cols-3 gap-6">
+<div class="text-center"><div class="text-3xl mb-2">🔒</div><h4 class="font-semibold text-gray-800 mb-1">Paiement sécurisé</h4><p class="text-gray-500 text-sm">Via Stripe</p></div>
+<div class="text-center"><div class="text-3xl mb-2">🔄</div><h4 class="font-semibold text-gray-800 mb-1">Sans engagement</h4><p class="text-gray-500 text-sm">Annule quand tu veux</p></div>
+<div class="text-center"><div class="text-3xl mb-2">💯</div><h4 class="font-semibold text-gray-800 mb-1">Satisfait ou remboursé</h4><p class="text-gray-500 text-sm">14 jours pour tester</p></div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+const questions=[
+{title:"Qu'est-ce qui t'amène ici aujourd'hui ?",subtitle:"Écoute ce qui te motive.",options:[{value:'mieux-etre',label:'Me sentir mieux au quotidien',emoji:'🌤️'},{value:'confiance',label:'Développer ma confiance en moi',emoji:'💪'},{value:'sens',label:'Trouver ou retrouver du sens',emoji:'🧭'},{value:'stress',label:'Mieux gérer mon stress',emoji:'🍃'},{value:'creativite',label:'Libérer ma créativité',emoji:'✨'},{value:'equilibre',label:'Retrouver un équilibre de vie',emoji:'⚖️'}]},
+{title:"De quoi aurais-tu le plus besoin ?",subtitle:"Écoute ce qui résonne en toi.",options:[{value:'calme',label:'De calme et de sérénité',emoji:'☮️'},{value:'energie',label:"D'énergie et de motivation",emoji:'⚡'},{value:'clarte',label:'De clarté et de vision',emoji:'🔮'},{value:'creativite',label:"D'expression créative",emoji:'🎨'},{value:'connexion',label:'De me reconnecter à moi-même',emoji:'🤝'},{value:'gratitude',label:'De cultiver la gratitude',emoji:'🙏'}]},
+{title:"Combien de temps peux-tu consacrer ?",subtitle:"Même 5 minutes comptent.",options:[{value:'5',label:'5 minutes',emoji:'⏱️'},{value:'10',label:'10 minutes',emoji:'🕐'},{value:'20',label:'20 minutes',emoji:'🕑'},{value:'30',label:'30 minutes ou plus',emoji:'🕒'}]},
+{title:"Qu'est-ce qui t'attire le plus ?",subtitle:"Choisis ce qui te parle.",options:[{value:'respirer',label:'Respirer, méditer',emoji:'🧘'},{value:'bouger',label:'Bouger, nature',emoji:'🌿'},{value:'creer',label:'Créer, dessiner',emoji:'🎨'},{value:'ecrire',label:'Écrire, réfléchir',emoji:'📝'},{value:'visualiser',label:'Visualiser mes objectifs',emoji:'🎯'},{value:'nature',label:'Être en nature',emoji:'🌳'}]},
+{title:"Quelle est ton intention ?",subtitle:"Ton intention guide ton chemin.",options:[{value:'apaiser',label:'Apaiser mon mental',emoji:'🌙'},{value:'grandir',label:'Grandir et évoluer',emoji:'🌱'},{value:'confiance',label:'Renforcer ma confiance',emoji:'💎'},{value:'creativite',label:'Éveiller ma créativité',emoji:'✨'},{value:'presence',label:'Vivre le présent',emoji:'🌻'},{value:'harmonie',label:"L'harmonie intérieure",emoji:'☯️'}]}
+];
+
+const exercises=[
+{id:'med-1',title:'Respiration consciente',cat:'meditation',duration:'5-10 min',diff:'débutant',emoji:'🌬️',premium:false,desc:'Une méditation simple centrée sur le souffle.',benefits:['Réduit le stress','Améliore la concentration','Calme le système nerveux'],steps:[{t:'Installe-toi',d:'Assieds-toi confortablement. Ferme les yeux.'},{t:'Observe ta respiration',d:'Observe simplement comment tu respires.'},{t:'Approfondis',d:'Inspire 4 secondes, retiens 2 secondes, expire 6 secondes.'},{t:'Continue',d:'Pendant 5-10 minutes. Ramène ton esprit au souffle.'},{t:'Reviens',d:'Ouvre les yeux doucement.'}]},
+{id:'med-2',title:'Scan corporel',cat:'meditation',duration:'15-20 min',diff:'intermédiaire',emoji:'🫧',premium:true,desc:'Un voyage doux à travers ton corps.',benefits:['Relâche les tensions','Favorise le sommeil','Conscience de soi'],steps:[{t:'Allonge-toi',d:'Confortablement, bras le long du corps.'},{t:'Respire',d:'3 grandes respirations profondes.'},{t:'Les pieds',d:'Porte ton attention sur tes pieds.'},{t:'Remonte',d:'Jambes, hanches, ventre, poitrine...'}, {t:'Enveloppe-toi',d:'Imagine une lumière chaude.'}]},
+{id:'med-3',title:'Méditation gratitude',cat:'meditation',duration:'10 min',diff:'débutant',emoji:'🙏',premium:false,desc:'Cultive la gratitude.',benefits:['Améliore l\'humeur','Renforce la résilience','Favorise l\'optimisme'],steps:[{t:'Installe-toi',d:'Trouve un endroit paisible.'},{t:'3 choses',d:'Identifie 3 choses pour lesquelles tu es reconnaissant·e.'},{t:'Ressens',d:'Pour chaque chose, ressens la gratitude.'},{t:'Toi-même',d:'Envoie de la gratitude envers toi.'},{t:'Clôture',d:'Main sur le cœur. Respire.'}]},
+{id:'anc-1',title:'L\'arbre intérieur',cat:'ancrage',duration:'10 min',diff:'débutant',emoji:'🌳',premium:false,desc:'Visualise-toi comme un arbre puissant.',benefits:['Stabilité','Confiance','Connexion nature'],steps:[{t:'Debout',d:'Pieds écartés, ancrés dans le sol.'},{t:'Racines',d:'Visualise des racines profondes.'},{t:'Tronc fort',d:'Ton corps est un tronc solide.'},{t:'Branches',d:'Tes bras s\'ouvrent vers le ciel.'},{t:'Reviens',d:'Grande inspiration. Ramène cette force.'}]},
+{id:'anc-2',title:'Les 5 sens',cat:'ancrage',duration:'5 min',diff:'débutant',emoji:'👁️',premium:false,desc:'Reconnecte-toi au moment présent.',benefits:['Stoppe l\'anxiété','Ramène au présent','Disponible partout'],steps:[{t:'5 VOIS',d:'Nomme 5 choses que tu vois.'},{t:'4 TOUCHES',d:'Sens 4 choses que tu touches.'},{t:'3 ENTENDS',d:'Identifie 3 sons.'},{t:'2 SENS',d:'Identifie 2 odeurs.'},{t:'1 GOÛTE',d:'Concentre-toi sur le goût.'}]},
+{id:'art-1',title:'Dessin intuitif',cat:'art-therapie',duration:'15-20 min',diff:'débutant',emoji:'🎨',premium:false,desc:'Exprime-toi par les couleurs et formes.',benefits:['Libère la créativité','Conscience de soi','Réduit le stress'],steps:[{t:'Prépare',d:'Papier et crayons de couleur.'},{t:'Connecte-toi',d:'Comment te sens-tu ?'}, {t:'Laisse-toi guider',d:'Laisse ta main bouger.'},{t:'Couleurs',d:'Choisis celles qui t\'attirent.'},{t:'Contemple',d:'Que te dit ton dessin ?'}]},
+{id:'art-2',title:'Mandala personnel',cat:'art-therapie',duration:'20-30 min',diff:'intermédiaire',emoji:'🔮',premium:true,desc:'Crée ton mandala pour te centrer.',benefits:['Centre et recentre','Méditation','Harmonise'],steps:[{t:'Cercle',d:'Dessine un grand cercle.'},{t:'Centre',d:'Dessine ce qui te représente.'},{t:'Couches',d:'Ajoute des formes concentriques.'},{t:'Couleurs',d:'Utilise celles qui te parlent.'},{t:'Contemple',d:'Regarde ton mandala.'}]},
+{id:'emo-1',title:'Journal de gratitude',cat:'emotionnel',duration:'5-10 min',diff:'débutant',emoji:'📔',premium:false,desc:'Note 3 gratitudes chaque jour.',benefits:['Recentre sur le positif','Améliore l\'humeur','Change la perspective'],steps:[{t:'Moment',d:'Matin ou soir, un moment calme.'},{t:'3 gratitudes',d:'Note 3 choses simples.'},{t:'Développe',d:'Écris pourquoi.'},{t:'Toi-même',d:'Une gratitude envers toi.'},{t:'Ressens',d:'Laisse monter le sentiment.'}]},
+{id:'emo-2',title:'Lettre à soi-même',cat:'emotionnel',duration:'15-20 min',diff:'intermédiaire',emoji:'💌',premium:true,desc:'Écris une lettre tendre à toi-même.',benefits:['Compassion','Estime de soi','Lien intérieur'],steps:[{t:'Installe-toi',d:'Endroit calme.'},{t:'Commence',d:'"Cher moi," ou "À moi-même,"'},{t:'Parcours',d:'Ce que tu as accompli.'},{t:'Compassion',d:'Mots de tendresse.'},{t:'Amour',d:'"Je suis là pour toi."'}]},
+{id:'emo-3',title:'Valeurs personnelles',cat:'emotionnel',duration:'20-30 min',diff:'intermédiaire',emoji:'💎',premium:true,desc:'Découvre tes valeurs fondamentales.',benefits:['Clarifie les choix','Donne du sens','Guide les décisions'],steps:[{t:'Fierté',d:'5 moments de fierté.'},{t:'Thèmes',d:'Quels thèmes reviennent ?'},{t:'5 valeurs',d:'Choisis les 5 qui résonnent.'},{t:'Définis',d:'Ce que chacune signifie.'},{t:'Alignement',d:'Ta vie reflète-t-elle ces valeurs ?'}]}
+];
+
+let curQ=0,answers=[],selVal=null;
+
+function showScreen(id){
+document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+window.scrollTo(0,0);
+if(id==='screen-questionnaire'){curQ=0;answers=[];showQ()}
+else if(id==='screen-results')showResults();
+else if(id==='screen-library')showExercises();
+}
+
+function showQ(){
+const q=questions[curQ];
+document.getElementById('q-title').textContent=q.title;
+document.getElementById('q-subtitle').textContent=q.subtitle;
+document.getElementById('q-current').textContent=curQ+1;
+document.getElementById('q-percent').textContent=Math.round(((curQ+1)/questions.length)*100);
+document.getElementById('q-progress').style.width=((curQ+1)/questions.length)*100+'%';
+const od=document.getElementById('q-options');
+od.innerHTML='';
+q.options.forEach(o=>{
+const b=document.createElement('button');
+b.className='w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white/50 hover:border-purple-200 hover:bg-purple-50/50 transition-all';
+b.innerHTML='<div class="flex items-center gap-4"><span class="text-2xl">'+o.emoji+'</span><span class="text-gray-700">'+o.label+'</span></div>';
+b.onclick=()=>{selVal=o.value;document.querySelectorAll('#q-options button').forEach(x=>x.className='w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white/50 hover:border-purple-200 hover:bg-purple-50/50 transition-all');b.className='w-full text-left p-4 rounded-2xl border-2 border-purple-400 bg-purple-50 shadow-md transition-all';document.getElementById('q-next').disabled=false};
+od.appendChild(b);
+});
+document.getElementById('q-back').disabled=curQ===0;
+document.getElementById('q-next').disabled=true;
+selVal=null;
+}
+
+function nextQuestion(){if(selVal){answers[curQ]=selVal;if(curQ<questions.length-1){curQ++;showQ()}else showScreen('screen-results')}}
+function prevQuestion(){if(curQ>0){curQ--;showQ()}}
+
+function showResults(){
+const rd=document.getElementById('r-recommendations');
+const fe=exercises.filter(e=>!e.premium).slice(0,3);
+let h='<h2 class="text-2xl font-bold text-gray-800 mb-4">✨ Exercices recommandés</h2><div class="space-y-3">';
+fe.forEach(e=>{h+='<button onclick="showExercise(\''+e.id+'\')" class="w-full text-left p-5 rounded-2xl bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200/50 hover:shadow-lg transition-all"><div class="flex items-center gap-4"><span class="text-3xl">'+e.emoji+'</span><div class="flex-1"><h3 class="font-semibold text-gray-800 text-lg">'+e.title+'</h3><p class="text-gray-500 text-sm">'+e.desc+'</p><div class="flex items-center gap-3 mt-2"><span class="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded-full">⏱️ '+e.duration+'</span><span class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full">📊 '+e.diff+'</span></div></div><span class="text-purple-400 text-xl">→</span></div></button>'});
+h+='</div>';rd.innerHTML=h;
+}
+
+function showExercises(){
+const g=document.getElementById('exercises-grid');g.innerHTML='';
+exercises.forEach(e=>{
+const c=document.createElement('button');
+c.className='group text-left bg-white/70 rounded-2xl p-6 shadow-md border border-white/80 hover:shadow-xl hover:border-purple-200 transition-all';
+c.innerHTML='<div class="flex items-start justify-between mb-4"><span class="text-4xl">'+e.emoji+'</span>'+(e.premium?'<span class="text-xs px-2 py-0.5 bg-gradient-to-r from-amber-400 to-orange-400 text-white rounded-full font-bold">⭐ PREMIUM</span>':'')+'</div><h3 class="font-bold text-gray-800 text-lg mb-2">'+e.title+'</h3><p class="text-gray-500 text-sm mb-4">'+e.desc+'</p><div class="flex items-center gap-3"><span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">⏱️ '+e.duration+'</span><span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">📊 '+e.diff+'</span>'+(e.premium?'<span class="text-lg ml-auto">🔒</span>':'')+'</div>';
+c.onclick=()=>{if(e.premium)showScreen('screen-pricing');else showExercise(e.id)};
+g.appendChild(c);
+});
+}
+
+function showExercise(id){
+const e=exercises.find(x=>x.id===id);if(!e)return;
+document.getElementById('exercise-content').innerHTML='<div class="flex items-start gap-4 mb-6"><span class="text-5xl">'+e.emoji+'</span><div><h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">'+e.title+'</h1><div class="flex items-center gap-3"><span class="text-sm text-gray-500">⏱️ '+e.duration+'</span><span class="text-sm text-gray-500">📊 '+e.diff+'</span></div></div></div><p class="text-gray-600 text-lg mb-6">'+e.desc+'</p><div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-5 border border-purple-100"><h3 class="font-semibold text-purple-800 mb-3">✨ Bienfaits</h3><div class="flex flex-wrap gap-2">'+e.benefits.map(b=>'<span class="px-3 py-1.5 bg-white/80 rounded-full text-sm text-purple-700 border border-purple-100">'+b+'</span>').join('')+'</div></div>';
+const sd=document.getElementById('exercise-steps');
+sd.innerHTML='<h2 class="text-xl font-bold text-gray-800 mb-4">📋 Les étapes</h2>';
+e.steps.forEach((s,i)=>{const d=document.createElement('div');d.className='bg-white/70 rounded-2xl p-6 border border-gray-200';d.innerHTML='<div class="flex items-start gap-4"><div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold">'+(i+1)+'</div><div><h3 class="font-bold text-lg text-gray-800 mb-2">'+s.t+'</h3><p class="text-gray-600">'+s.d+'</p></div></div>';sd.appendChild(d)});
+showScreen('screen-exercise');
+}
+</script>
+</body>
+</html>
