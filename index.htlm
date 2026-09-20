@@ -1,101 +1,635 @@
 --- index.html (原始)
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Élan Vital - Bien-être & Développement personnel</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-<meta name="description" content="Application Elan Vital - Bien-être et développement personnel" />
-    <style>
-      /* 内联样式确保主题色立即生效，避免闪烁 */
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-      }
-      html.light,
-      html.light body {
-        background-color: #ffffff !important;
-        color: #000000;
-      }
-      html.dark,
-      html.dark body {
-        background-color: #1a1a1a !important;
-        color: #ffffff;
-      }
-    </style>
-    <script>
-      // 在 React 加载前立即设置主题，避免闪烁
-      (function () {
-        const isInIframe = window.self !== window.top;
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Élan Vital - Bien-être & Développement personnel</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .5s ease-out}
+.slide-up{animation:slideUp .6s ease-out}
+.pulse-anim{animation:pulse 2s ease-in-out infinite}
+.screen{display:none}.screen.active{display:block}
+.tab-active{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:white;box-shadow:0 4px 15px rgba(139,92,246,0.4)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:9999px;font-size:0.75rem;font-weight:600}
+.progress-ring{transform:rotate(-90deg)}
+</style>
+</head>
+<body class="bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 min-h-screen">
 
-        function applyThemeToDOM(theme) {
-          document.documentElement.classList.remove("light", "dark");
-          document.documentElement.classList.add(theme);
-          document.documentElement.setAttribute("data-theme", theme);
-        }
+<!-- NAVIGATION BOTTOM -->
+<nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-purple-100 z-50 hidden">
+<div class="max-w-lg mx-auto flex justify-around py-2">
+<button onclick="showScreen('screen-home')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-xl text-gray-400 hover:text-purple-600 transition-colors" data-screen="screen-home">
+<span class="text-xl">🏠</span><span class="text-xs">Accueil</span>
+</button>
+<button onclick="showScreen('screen-programs')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-xl text-gray-400 hover:text-purple-600 transition-colors" data-screen="screen-programs">
+<span class="text-xl">📅</span><span class="text-xs">Programmes</span>
+</button>
+<button onclick="showScreen('screen-library')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-xl text-gray-400 hover:text-purple-600 transition-colors" data-screen="screen-library">
+<span class="text-xl">📚</span><span class="text-xs">Exercices</span>
+</button>
+<button onclick="showScreen('screen-journal')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-xl text-gray-400 hover:text-purple-600 transition-colors" data-screen="screen-journal">
+<span class="text-xl">📔</span><span class="text-xs">Journal</span>
+</button>
+<button onclick="showScreen('screen-profile')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-xl text-gray-400 hover:text-purple-600 transition-colors" data-screen="screen-profile">
+<span class="text-xl">👤</span><span class="text-xs">Profil</span>
+</button>
+</div>
+</nav>
 
-        if (isInIframe) {
-          // 监听父窗口主动推送的主题消息
-          window.addEventListener("message", function (event) {
-            if (event.data && typeof event.data.theme === "string") {
-              const theme = event.data.theme;
-              if (theme === "light" || theme === "dark") {
-                applyThemeToDOM(theme);
-              }
-            }
-          });
-        } else {
-          // 非 iframe 环境，使用默认 light 主题
-          applyThemeToDOM("light");
-        }
-      })();
-    </script>
-      <script>
-      (function () {
-        if (window.self === window.top) return;
-        var reported = {};
-        window.addEventListener("error", function (event) {
-          // 资源加载失败的 error 事件没有 message，此处仅上报 JS 运行时错误
-          if (!event || !event.message) return;
-          var key =
-            event.message + "|" + (event.filename || "") + "|" + (event.lineno || 0);
-          if (reported[key]) return; // 相同错误只上报一次，避免渲染循环刷屏
-          reported[key] = true;
-          try {
-            window.parent.postMessage(
-              {
-                type: "sandbox-runtime-error",
-                payload: {
-                  message: String(event.message).slice(0, 500),
-                  filename: event.filename || "",
-                  lineno: event.lineno || 0,
-                  colno: event.colno || 0,
-                  stack:
-                    event.error && event.error.stack
-                      ? String(event.error.stack).slice(0, 2000)
-                      : ""
-                }
-              },
-              "*"
-            );
-          } catch (e) {
-            /* 上报失败不影响页面运行 */
-          }
-        });
-      })();
-    </script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<div id="app" class="pb-20">
+
+<!-- ===== ACCUEIL ===== -->
+<div id="screen-welcome" class="screen active min-h-screen flex flex-col items-center justify-center px-4 py-12">
+<div class="max-w-2xl mx-auto text-center">
+<div class="mb-8">
+<div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-purple-200 to-pink-200 shadow-xl mb-6 pulse-anim"><span class="text-5xl">🌿</span></div>
+<h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-700 via-pink-600 to-amber-600 bg-clip-text text-transparent mb-2">Élan Vital</h1>
+<p class="text-lg text-gray-500">Bien-être & Développement personnel</p>
+</div>
+<div class="bg-white/60 rounded-3xl p-8 md:p-10 shadow-xl border border-white/80 mb-8">
+<p class="text-xl md:text-2xl text-gray-700 mb-6">Bienvenue, toi. ✨</p>
+<p class="text-gray-600 mb-4">Tu as envie de te sentir mieux, de te reconnecter à toi-même, de donner un nouvel élan à ta vie ? Tu es au bon endroit.</p>
+<p class="text-gray-600 mb-4">Ici, pas de jugement. Juste des <strong class="text-purple-700">exercices bienveillants</strong> pour :</p>
+<div class="grid grid-cols-2 gap-3 my-6">
+<div class="bg-purple-50 rounded-xl p-3 border border-purple-100"><span class="text-lg">🧘</span><p class="text-sm text-purple-700 mt-1">Mieux te connaître</p></div>
+<div class="bg-pink-50 rounded-xl p-3 border border-pink-100"><span class="text-lg">💪</span><p class="text-sm text-pink-700 mt-1">Retrouver ta force</p></div>
+<div class="bg-amber-50 rounded-xl p-3 border border-amber-100"><span class="text-lg">🌱</span><p class="text-sm text-amber-700 mt-1">Grandir chaque jour</p></div>
+<div class="bg-green-50 rounded-xl p-3 border border-green-100"><span class="text-lg">☀️</span><p class="text-sm text-green-700 mt-1">Vivre pleinement</p></div>
+</div>
+<div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-4 mb-6">
+<p class="text-purple-800 text-sm font-medium">🎁 +30 exercices • Programmes guidés • Journal personnel • Suivi de progression • Badges & récompenses</p>
+</div>
+</div>
+<button onclick="showScreen('screen-questionnaire')" class="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl font-semibold text-lg shadow-xl hover:scale-105 transition-all">Commencer mon parcours →</button>
+<div class="mt-10 p-4 bg-green-50/80 rounded-2xl border border-green-200/50">
+<p class="text-sm text-green-800">🌿 <strong>Élan Vital</strong> est un outil de développement personnel et de bien-être.</p>
+</div>
+</div>
+</div>
+
+<!-- ===== QUESTIONNAIRE ===== -->
+<div id="screen-questionnaire" class="screen min-h-screen flex flex-col items-center justify-center px-4 py-12">
+<div class="max-w-2xl mx-auto w-full">
+<div class="mb-8">
+<div class="flex items-center justify-between mb-2"><span class="text-sm text-gray-500">Question <span id="q-current">1</span> sur 5</span><span class="text-sm text-purple-600 font-medium"><span id="q-percent">20</span>%</span></div>
+<div class="w-full h-2 bg-purple-100 rounded-full overflow-hidden"><div id="q-progress" class="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all duration-500" style="width:20%"></div></div>
+</div>
+<div class="bg-white/70 rounded-3xl p-8 shadow-xl border border-white/80">
+<h2 id="q-title" class="text-2xl md:text-3xl font-bold text-gray-800 mb-3"></h2>
+<p id="q-subtitle" class="text-gray-500 text-lg italic mb-8"></p>
+<div id="q-options" class="space-y-3 mb-8"></div>
+<div class="flex items-center justify-between">
+<button id="q-back" onclick="prevQuestion()" class="px-5 py-3 text-gray-500 hover:text-gray-700 transition-colors" disabled>← Retour</button>
+<button id="q-next" onclick="nextQuestion()" class="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold shadow-lg hover:scale-105 transition-all" disabled>Suivant →</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ===== PAGE D'ACCUEIL (après questionnaire) ===== -->
+<div id="screen-home" class="screen min-h-screen px-4 py-8">
+<div class="max-w-4xl mx-auto">
+<!-- Salut -->
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl p-8 text-white shadow-xl mb-8">
+<h1 class="text-2xl md:text-3xl font-bold mb-2">Bonjour toi ! 🌿</h1>
+<p class="text-purple-100 mb-4">Prêt·e pour ta séance du jour ?</p>
+<div class="flex items-center gap-4">
+<div class="bg-white/20 rounded-xl px-4 py-2"><span class="text-2xl font-bold" id="streak-count">0</span><p class="text-xs text-purple-100">jours d'affilée 🔥</p></div>
+<div class="bg-white/20 rounded-xl px-4 py-2"><span class="text-2xl font-bold" id="exercises-done">0</span><p class="text-xs text-purple-100">exercices faits ✨</p></div>
+<div class="bg-white/20 rounded-xl px-4 py-2"><span class="text-2xl font-bold" id="level-display">1</span><p class="text-xs text-purple-100">niveau 🏆</p></div>
+</div>
+</div>
+
+<!-- Défi du jour -->
+<div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-6 border border-amber-200 mb-6">
+<div class="flex items-center gap-3 mb-3"><span class="text-2xl">🔥</span><h3 class="font-bold text-amber-800">Défi du jour</h3></div>
+<p id="daily-challenge" class="text-amber-700 mb-3"></p>
+<button onclick="completeDailyChallenge()" class="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm font-semibold hover:bg-amber-600 transition-colors">✓ Défi accompli !</button>
+</div>
+
+<!-- Exercice recommandé -->
+<div class="bg-white/70 rounded-2xl p-6 border border-white/80 shadow-lg mb-6">
+<h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><span>✨</span> Exercice recommandé pour toi</h3>
+<div id="recommended-exercise" class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100 cursor-pointer hover:shadow-md transition-all"></div>
+</div>
+
+<!-- Programmes -->
+<div class="mb-6">
+<h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><span>📅</span> Programmes en cours</h3>
+<div class="grid md:grid-cols-2 gap-4" id="home-programs"></div>
+</div>
+
+<!-- Accès rapide -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+<button onclick="showScreen('screen-library')" class="bg-white/70 rounded-xl p-4 text-center border border-white/80 hover:shadow-lg transition-all"><span class="text-2xl">📚</span><p class="text-xs text-gray-600 mt-1">Exercices</p></button>
+<button onclick="showScreen('screen-journal')" class="bg-white/70 rounded-xl p-4 text-center border border-white/80 hover:shadow-lg transition-all"><span class="text-2xl">📔</span><p class="text-xs text-gray-600 mt-1">Journal</p></button>
+<button onclick="showScreen('screen-programs')" class="bg-white/70 rounded-xl p-4 text-center border border-white/80 hover:shadow-lg transition-all"><span class="text-2xl">📅</span><p class="text-xs text-gray-600 mt-1">Programmes</p></button>
+<button onclick="showScreen('screen-pricing')" class="bg-gradient-to-r from-amber-400 to-orange-400 rounded-xl p-4 text-center hover:shadow-lg transition-all"><span class="text-2xl">⭐</span><p class="text-xs text-white mt-1 font-semibold">Premium</p></button>
+</div>
+</div>
+</div>
+
+<!-- ===== PROGRAMMES ===== -->
+<div id="screen-programs" class="screen min-h-screen px-4 py-8">
+<div class="max-w-4xl mx-auto">
+<h1 class="text-3xl font-bold text-gray-800 mb-2">📅 Programmes guidés</h1>
+<p class="text-gray-600 mb-8">Des parcours structurés pour transformer ta vie, un jour à la fois.</p>
+<div id="programs-list" class="space-y-6"></div>
+</div>
+</div>
+
+<!-- ===== BIBLIOTHÈQUE ===== -->
+<div id="screen-library" class="screen min-h-screen px-4 py-8">
+<div class="max-w-5xl mx-auto">
+<h1 class="text-3xl font-bold text-gray-800 mb-2">📚 Bibliothèque d'exercices</h1>
+<p class="text-gray-600 mb-6">Explore tous les exercices disponibles.</p>
+<!-- Filtres -->
+<div class="flex flex-wrap gap-2 mb-6">
+<button onclick="filterExercises('all')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-purple-500 text-white">✨ Tous</button>
+<button onclick="filterExercises('meditation')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-white/70 text-gray-600 border border-gray-200">🧘 Méditation</button>
+<button onclick="filterExercises('ancrage')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-white/70 text-gray-600 border border-gray-200">🌳 Ancrage</button>
+<button onclick="filterExercises('art-therapie')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-white/70 text-gray-600 border border-gray-200">🎨 Créativité</button>
+<button onclick="filterExercises('emotionnel')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-white/70 text-gray-600 border border-gray-200">💛 Connaissance</button>
+<button onclick="filterExercises('gratitude')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-white/70 text-gray-600 border border-gray-200">🙏 Gratitude</button>
+<button onclick="filterExercises('confiance')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-white/70 text-gray-600 border border-gray-200">💎 Confiance</button>
+</div>
+<!-- Bannière Premium -->
+<div id="premium-banner" class="mb-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-6 text-white shadow-xl">
+<div class="flex flex-col md:flex-row items-center gap-4">
+<div class="flex-1"><h3 class="text-xl font-bold mb-2">✨ Débloque les 20+ exercices premium</h3><p class="text-purple-100 text-sm">Programmes complets, exercices avancés, nouveautés chaque mois.</p></div>
+<button onclick="showScreen('screen-pricing')" class="px-6 py-3 bg-white text-purple-600 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg whitespace-nowrap">Voir les offres →</button>
+</div>
+</div>
+<div id="exercises-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+</div>
+</div>
+
+<!-- ===== EXERCICE DÉTAIL ===== -->
+<div id="screen-exercise" class="screen min-h-screen px-4 py-8">
+<div class="max-w-3xl mx-auto">
+<button onclick="showScreen('screen-library')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+<div id="exercise-content" class="bg-white/70 rounded-3xl p-8 shadow-xl border border-white/80 mb-8"></div>
+<div id="exercise-steps" class="space-y-4 mb-8"></div>
+<button onclick="completeExercise()" id="complete-btn" class="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-bold text-lg shadow-lg hover:scale-105 transition-all mb-8">✓ Exercice terminé !</button>
+</div>
+</div>
+
+<!-- ===== JOURNAL ===== -->
+<div id="screen-journal" class="screen min-h-screen px-4 py-8">
+<div class="max-w-3xl mx-auto">
+<h1 class="text-3xl font-bold text-gray-800 mb-2">📔 Mon journal</h1>
+<p class="text-gray-600 mb-6">Un espace privé pour écrire, réfléchir et grandir.</p>
+<div class="bg-white/70 rounded-2xl p-6 border border-white/80 shadow-lg mb-6">
+<textarea id="journal-input" class="w-full h-40 p-4 bg-white/80 rounded-xl border border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-200 outline-none resize-none text-gray-700" placeholder="Écris ici ce qui te traverse l'esprit... Pas de jugement, juste toi. 🌿"></textarea>
+<div class="flex gap-3 mt-4">
+<select id="journal-mood" class="px-4 py-2 bg-white rounded-xl border border-gray-200 text-gray-700">
+<option value="">Comment tu te sens ?</option>
+<option value="😊">😊 Heureux·se</option>
+<option value="😌">😌 Calme</option>
+<option value="🤔">🤔 Réfléchi·e</option>
+<option value="😔">😔 Triste</option>
+<option value="😤">😤 Frustré·e</option>
+<option value="😰">😰 Anxieux·se</option>
+<option value="🥰">🥰 Reconnaissant·e</option>
+<option value="💪">💪 Motivé·e</option>
+</select>
+<button onclick="saveJournalEntry()" class="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:scale-105 transition-all">Enregistrer</button>
+</div>
+</div>
+<div id="journal-entries" class="space-y-4"></div>
+</div>
+</div>
+
+<!-- ===== PROFIL ===== -->
+<div id="screen-profile" class="screen min-h-screen px-4 py-8">
+<div class="max-w-3xl mx-auto">
+<div class="bg-white/70 rounded-3xl p-8 shadow-xl border border-white/80 mb-6">
+<div class="flex items-center gap-6 mb-6">
+<div class="w-20 h-20 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-3xl shadow-lg">🌿</div>
+<div><h1 class="text-2xl font-bold text-gray-800" id="profile-name">Toi</h1><p class="text-gray-500">Membre <span id="profile-plan">Gratuit</span></p></div>
+</div>
+<div class="grid grid-cols-3 gap-4 mb-6">
+<div class="bg-purple-50 rounded-xl p-4 text-center"><p class="text-2xl font-bold text-purple-700" id="p-exercises">0</p><p class="text-xs text-purple-600">Exercices</p></div>
+<div class="bg-pink-50 rounded-xl p-4 text-center"><p class="text-2xl font-bold text-pink-700" id="p-streak">0</p><p class="text-xs text-pink-600">Jours d'affilée</p></div>
+<div class="bg-amber-50 rounded-xl p-4 text-center"><p class="text-2xl font-bold text-amber-700" id="p-level">1</p><p class="text-xs text-amber-600">Niveau</p></div>
+</div>
+<!-- Badges -->
+<h3 class="font-bold text-gray-800 mb-3">🏆 Mes badges</h3>
+<div id="badges-container" class="flex flex-wrap gap-3 mb-6"></div>
+<!-- Niveau -->
+<div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+<div class="flex justify-between items-center mb-2"><span class="font-semibold text-purple-800">Niveau <span id="level-num">1</span></span><span class="text-sm text-purple-600"><span id="xp-current">0</span>/<span id="xp-next">100</span> XP</span></div>
+<div class="w-full h-3 bg-purple-200 rounded-full overflow-hidden"><div id="xp-bar" class="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all" style="width:0%"></div></div>
+<p class="text-xs text-purple-500 mt-2">Continue à pratiquer pour monter de niveau !</p>
+</div>
+</div>
+<button onclick="showScreen('screen-pricing')" class="w-full py-4 bg-gradient-to-r from-amber-400 to-orange-400 text-white rounded-xl font-bold text-lg shadow-lg hover:scale-105 transition-all mb-4">⭐ Passer Premium</button>
+</div>
+</div>
+
+<!-- ===== TARIFICATION ===== -->
+<div id="screen-pricing" class="screen min-h-screen px-4 py-8">
+<div class="max-w-4xl mx-auto">
+<button onclick="showScreen('screen-home')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+<div class="text-center mb-10">
+<div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-amber-200 to-orange-200 shadow-xl mb-6"><span class="text-4xl">⭐</span></div>
+<h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Passe au niveau supérieur</h1>
+<p class="text-gray-600 text-lg">Débloque tout le potentiel d'Élan Vital</p>
+</div>
+<div class="grid md:grid-cols-2 gap-6 mb-10">
+<!-- Gratuit -->
+<div class="bg-white/70 rounded-3xl p-8 border-2 border-gray-200">
+<div class="text-center mb-6"><h3 class="text-xl font-bold text-gray-800">Gratuit</h3><div class="mt-4"><span class="text-4xl font-bold">0€</span></div></div>
+<ul class="space-y-3 mb-8 text-sm">
+<li class="flex items-center gap-3 text-gray-700"><span class="text-green-500">✓</span>8 exercices de base</li>
+<li class="flex items-center gap-3 text-gray-700"><span class="text-green-500">✓</span>Questionnaire personnalisé</li>
+<li class="flex items-center gap-3 text-gray-700"><span class="text-green-500">✓</span>Journal basique</li>
+<li class="flex items-center gap-3 text-gray-400"><span>✗</span>Programmes guidés</li>
+<li class="flex items-center gap-3 text-gray-400"><span>✗</span>30+ exercices premium</li>
+<li class="flex items-center gap-3 text-gray-400"><span>✗</span>Suivi de progression</li>
+<li class="flex items-center gap-3 text-gray-400"><span>✗</span>Badges & récompenses</li>
+<li class="flex items-center gap-3 text-gray-400"><span>✗</span>Défis quotidiens</li>
+<li class="flex items-center gap-3 text-gray-400"><span>✗</span>Formations vidéo</li>
+<li class="flex items-center gap-3 text-gray-400"><span>✗</span>Communauté privée</li>
+</ul>
+<button onclick="showScreen('screen-home')" class="w-full py-3 border-2 border-gray-300 text-gray-600 rounded-xl font-semibold">Plan actuel</button>
+</div>
+<!-- Premium -->
+<div class="relative bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-8 text-white shadow-2xl">
+<div class="absolute -top-3 right-6 bg-amber-400 text-amber-900 px-4 py-1 rounded-full text-xs font-bold">⭐ RECOMMANDÉ</div>
+<div class="text-center mb-6"><h3 class="text-xl font-bold">Premium</h3><div class="mt-4"><span class="text-4xl font-bold">9,90€</span><span class="text-purple-200">/mois</span></div><p class="text-purple-200 text-xs mt-2">ou 97€/an (2 mois offerts)</p></div>
+<ul class="space-y-3 mb-8 text-sm">
+<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><strong>30+ exercices</strong> complets</li>
+<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><strong>Programmes guidés</strong> (7, 21, 30 jours)</li>
+<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><strong>Suivi de progression</strong> complet</li>
+<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><strong>Badges & niveaux</strong></li>
+<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><strong>Défis quotidiens</strong></li>
+<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><strong>Journal avancé</strong> avec humeur</li>
+<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><strong>Nouveautés</strong> chaque mois</li>
+<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><strong>Formations vidéo</strong> exclusives</li>
+<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><strong>Ateliers créatifs</strong> guidés</li>
+<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><strong>Communauté privée</strong></li>
+</ul>
+<a href="#" class="block w-full py-4 bg-white text-purple-600 rounded-xl font-bold text-lg hover:scale-105 transition-transform shadow-lg text-center">Je passe Premium ✨</a>
+<p class="text-center text-purple-200 text-xs mt-3">Paiement sécurisé • Annulation à tout moment</p>
+</div>
+</div>
+<!-- Garanties -->
+<div class="bg-white/70 rounded-3xl p-8 border border-white/80">
+<h3 class="text-xl font-bold text-gray-800 mb-6 text-center">💜 Nos garanties</h3>
+<div class="grid md:grid-cols-3 gap-6">
+<div class="text-center"><div class="text-3xl mb-2">🔒</div><h4 class="font-semibold text-gray-800 mb-1">Paiement sécurisé</h4><p class="text-gray-500 text-sm">Via Stripe</p></div>
+<div class="text-center"><div class="text-3xl mb-2">🔄</div><h4 class="font-semibold text-gray-800 mb-1">Sans engagement</h4><p class="text-gray-500 text-sm">Annule quand tu veux</p></div>
+<div class="text-center"><div class="text-3xl mb-2">💯</div><h4 class="font-semibold text-gray-800 mb-1">Satisfait ou remboursé</h4><p class="text-gray-500 text-sm">14 jours pour tester</p></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ===== PROGRAMME DÉTAIL ===== -->
+<div id="screen-program-detail" class="screen min-h-screen px-4 py-8">
+<div class="max-w-3xl mx-auto">
+<button onclick="showScreen('screen-programs')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour aux programmes</button>
+<div id="program-detail-content"></div>
+</div>
+</div>
+
+</div>
+
+<script>
+// ===== DONNÉES =====
+const questions=[
+{title:"Qu'est-ce qui t'amène ici aujourd'hui ?",subtitle:"Écoute ce qui te motive.",options:[{value:'mieux-etre',label:'Me sentir mieux au quotidien',emoji:'🌤️'},{value:'confiance',label:'Développer ma confiance en moi',emoji:'💪'},{value:'sens',label:'Trouver ou retrouver du sens',emoji:'🧭'},{value:'stress',label:'Mieux gérer mon stress',emoji:'🍃'},{value:'creativite',label:'Libérer ma créativité',emoji:'✨'},{value:'equilibre',label:'Retrouver un équilibre de vie',emoji:'⚖️'}]},
+{title:"De quoi aurais-tu le plus besoin ?",subtitle:"Écoute ce qui résonne en toi.",options:[{value:'calme',label:'De calme et de sérénité',emoji:'☮️'},{value:'energie',label:"D'énergie et de motivation",emoji:'⚡'},{value:'clarte',label:'De clarté et de vision',emoji:'🔮'},{value:'creativite',label:"D'expression créative",emoji:'🎨'},{value:'connexion',label:'De me reconnecter à moi-même',emoji:'🤝'},{value:'gratitude',label:'De cultiver la gratitude',emoji:'🙏'}]},
+{title:"Combien de temps peux-tu consacrer ?",subtitle:"Même 5 minutes comptent.",options:[{value:'5',label:'5 minutes',emoji:'⏱️'},{value:'10',label:'10 minutes',emoji:'🕐'},{value:'20',label:'20 minutes',emoji:'🕑'},{value:'30',label:'30 minutes ou plus',emoji:'🕒'}]},
+{title:"Qu'est-ce qui t'attire le plus ?",subtitle:"Choisis ce qui te parle.",options:[{value:'respirer',label:'Respirer, méditer',emoji:'🧘'},{value:'bouger',label:'Bouger, nature',emoji:'🌿'},{value:'creer',label:'Créer, dessiner',emoji:'🎨'},{value:'ecrire',label:'Écrire, réfléchir',emoji:'📝'},{value:'visualiser',label:'Visualiser mes objectifs',emoji:'🎯'},{value:'nature',label:'Être en nature',emoji:'🌳'}]},
+{title:"Quelle est ton intention ?",subtitle:"Ton intention guide ton chemin.",options:[{value:'apaiser',label:'Apaiser mon mental',emoji:'🌙'},{value:'grandir',label:'Grandir et évoluer',emoji:'🌱'},{value:'confiance',label:'Renforcer ma confiance',emoji:'💎'},{value:'creativite',label:'Éveiller ma créativité',emoji:'✨'},{value:'presence',label:'Vivre le présent',emoji:'🌻'},{value:'harmonie',label:"L'harmonie intérieure",emoji:'☯️'}]}
+];
+
+const exercises=[
+// MÉDITATION (gratuits)
+{id:'med-1',title:'Respiration consciente',cat:'meditation',duration:'5-10 min',diff:'débutant',emoji:'🌬️',premium:false,desc:'Une méditation simple centrée sur le souffle pour apaiser ton mental.',benefits:['Réduit le stress','Améliore la concentration','Calme le système nerveux'],steps:[{t:'Installe-toi',d:'Assieds-toi confortablement. Ferme les yeux.'},{t:'Observe',d:'Observe simplement comment tu respires.'},{t:'Approfondis',d:'Inspire 4s, retiens 2s, expire 6s.'},{t:'Continue',d:'5-10 minutes. Ramène ton esprit au souffle.'},{t:'Reviens',d:'Ouvre les yeux doucement.'}]},
+{id:'med-3',title:'Méditation gratitude',cat:'gratitude',duration:'10 min',diff:'débutant',emoji:'🙏',premium:false,desc:'Cultive la gratitude pour transformer ton regard.',benefits:['Améliore l\'humeur','Renforce la résilience','Favorise l\'optimisme'],steps:[{t:'Installe-toi',d:'Trouve un endroit paisible.'},{t:'3 choses',d:'Identifie 3 choses pour lesquelles tu es reconnaissant·e.'},{t:'Ressens',d:'Pour chaque chose, ressens la gratitude.'},{t:'Toi-même',d:'Envoie de la gratitude envers toi.'},{t:'Clôture',d:'Main sur le cœur. Respire.'}]},
+// MÉDITATION (premium)
+{id:'med-2',title:'Scan corporel profond',cat:'meditation',duration:'20 min',diff:'intermédiaire',emoji:'🫧',premium:true,desc:'Un voyage profond à travers ton corps pour libérer toutes les tensions.',benefits:['Relâche les tensions profondes','Favorise un sommeil réparateur','Conscience corporelle accrue'],steps:[{t:'Allonge-toi',d:'Confortablement, bras le long du corps.'},{t:'3 respirations',d:'3 grandes respirations profondes.'},{t:'Les pieds',d:'Porte ton attention sur chaque orteil, la plante, le talon.'},{t:'Les jambes',d:'Remonte lentement vers les genoux, les cuisses.'},{t:'Le bassin',d:'Sens ton bassin, tes hanches se détendre.'},{t:'Le ventre',d:'Ton ventre se soulève doucement.'},{t:'La poitrine',d:'Sens ton cœur battre calmement.'},{t:'Le visage',d:'Détends mâchoire, front, yeux.'},{t:'Enveloppe-toi',d:'Lumière chaude qui enveloppe tout ton corps.'}]},
+{id:'med-4',title:'Visualisation créatrice',cat:'meditation',duration:'15 min',diff:'intermédiaire',emoji:'🌟',premium:true,desc:'Crée ta réalité idéale par la visualisation guidée.',benefits:['Programme le succès','Clarifie tes objectifs','Booste la motivation'],steps:[{t:'Détends-toi',d:'5 grandes respirations.'},{t:'Ton lieu sûr',d:'Visualise un endroit où tu te sens en paix.'},{t:'Ton avenir',d:'Vois-toi dans 1 an, vie idéale.'},{t:'Les détails',d:'Couleurs, sons, odeurs, émotions.'},{t:'Ressens',d:'Amplifie les émotions positives.'},{t:'Premier pas',d:'Quelle action faire dès aujourd\'hui ?'},{t:'Ancre',d:'Mémorise cette vision.'}]},
+{id:'med-5',title:'Méditation du cœur',cat:'meditation',duration:'15 min',diff:'intermédiaire',emoji:'💗',premium:true,desc:'Ouvre ton cœur à la compassion et à l\'amour.',benefits:['Ouvre le cœur','Développe la compassion','Apaise les blessures'],steps:[{t:'Centre-toi',d:'Respire profondément.'},{t:'Ton cœur',d:'Porte ton attention sur ta poitrine.'},{t:'Lumière',d:'Imagine une lumière verte ou rose dans ton cœur.'},{t:'Toi-même',d:'Envoie de l\'amour à toi-même.'},{t:'Un proche',d:'Pense à quelqu\'un que tu aimes.'},{t:'Neutre',d:'Pense à une personne neutre.'},{t:'Difficile',d:'Pense à une personne difficile.'},{t:'Tous',d:'Envoie de l\'amour à tous les êtres.'}]},
+// ANCRAGE (gratuits)
+{id:'anc-1',title:'L\'arbre intérieur',cat:'ancrage',duration:'10 min',diff:'débutant',emoji:'🌳',premium:false,desc:'Visualise-toi comme un arbre puissant et enraciné.',benefits:['Stabilité','Confiance','Connexion nature'],steps:[{t:'Debout',d:'Pieds écartés, ancrés.'},{t:'Racines',d:'Racines profondes dans la terre.'},{t:'Tronc',d:'Ton corps est un tronc solide.'},{t:'Branches',d:'Tes bras s\'ouvrent vers le ciel.'},{t:'Reviens',d:'Grande inspiration.'}]},
+{id:'anc-2',title:'Les 5 sens',cat:'ancrage',duration:'5 min',diff:'débutant',emoji:'👁️',premium:false,desc:'Reconnecte-toi au moment présent.',benefits:['Stoppe l\'anxiété','Ramène au présent','Disponible partout'],steps:[{t:'5 VOIS',d:'5 choses que tu vois.'},{t:'4 TOUCHES',d:'4 choses que tu touches.'},{t:'3 ENTENDS',d:'3 sons.'},{t:'2 SENS',d:'2 odeurs.'},{t:'1 GOÛTE',d:'1 goût.'}]},
+{id:'anc-3',title:'Ancrage émotionnel',cat:'ancrage',duration:'10 min',diff:'intermédiaire',emoji:'⚓',premium:true,desc:'Crée un ancrage physique pour accéder au calme instantanément.',benefits:['Calme instantané','Outil portable','Autonomie émotionnelle'],steps:[{t:'Rappelle-toi',d:'Un moment de calme intense.'},{t:'Ressens',d:'Ressens cette sensation pleinement.'},{t:'Amplifie',d:'Amplifie la sensation.'},{t:'L\'ancre',d:'Serre ton poing ou touche ton pouce et index.'},{t:'Répète',d:'Répète 5 fois pour ancrer.'},{t:'Teste',d:'Refais le geste et sens le calme revenir.'}]},
+{id:'anc-4',title:'Bain de nature',cat:'ancrage',duration:'30 min',diff:'débutant',emoji:'🌲',premium:true,desc:'Immerge-toi dans la nature en pleine conscience.',benefits:['Recharge énergétiquement','Inspire la créativité','Bien-être profond'],steps:[{t:'Choisis ton lieu',d:'Parc, forêt, jardin.'},{t:'Respire',d:'5 grandes respirations.'},{t:'Observe',d:'Regarde comme pour la première fois.'},{t:'Écoute',d:'Ferme les yeux, écoute.'},{t:'Touche',d:'Touche l\'écorce, les feuilles.'},{t:'Remercie',d:'Merci à la nature.'}]},
+// CRÉATIVITÉ (gratuits)
+{id:'art-1',title:'Dessin intuitif',cat:'art-therapie',duration:'15-20 min',diff:'débutant',emoji:'🎨',premium:false,desc:'Exprime-toi par les couleurs et les formes.',benefits:['Libère la créativité','Conscience de soi','Réduit le stress'],steps:[{t:'Prépare',d:'Papier et crayons.'},{t:'Connecte-toi',d:'Comment te sens-tu ?'},{t:'Laisse-toi guider',d:'Laisse ta main bouger.'},{t:'Couleurs',d:'Choisis celles qui t\'attirent.'},{t:'Contemple',d:'Que te dit ton dessin ?'}]},
+{id:'art-2',title:'Mandala personnel',cat:'art-therapie',duration:'25 min',diff:'intermédiaire',emoji:'🔮',premium:true,desc:'Crée ton mandala pour te centrer.',benefits:['Centre et recentre','Méditation active','Harmonise'],steps:[{t:'Cercle',d:'Dessine un grand cercle.'},{t:'Centre',d:'Ce qui te représente.'},{t:'Couches',d:'Formes concentriques.'},{t:'Couleurs',d:'Celles qui te parlent.'},{t:'Contemple',d:'Ton monde intérieur.'}]},
+{id:'art-3',title:'Écriture intuitive',cat:'art-therapie',duration:'10-15 min',diff:'débutant',emoji:'✍️',premium:false,desc:'Écris sans filtre, sans censure.',benefits:['Libère les pensées','Clarifie l\'esprit','Connaissance de soi'],steps:[{t:'Prépare',d:'Carnet et stylo. 10 min.'},{t:'Écris',d:'Tout ce qui te passe par la tête.'},{t:'Laisse venir',d:'Sans juger, sans corriger.'},{t:'Continue',d:'Jusqu\'à la fin du temps.'},{t:'Accueille',d:'Relis doucement.'}]},
+{id:'art-4',title:'Tableau de vision',cat:'art-therapie',duration:'40 min',diff:'débutant',emoji:'🖼️',premium:true,desc:'Crée un collage de tes rêves et objectifs.',benefits:['Clarifie les objectifs','Booste la motivation','Matérialise tes rêves'],steps:[{t:'Matériel',d:'Magazines, ciseaux, colle.'},{t:'Domaines',d:'Carrière, relations, santé, créativité.'},{t:'Images',d:'Choisis ce qui te représente.'},{t:'Compose',d:'Dispose et colle.'},{t:'Affiche',d:'Place-le en vue chaque jour.'}]},
+{id:'art-5',title:'Collage émotionnel',cat:'art-therapie',duration:'20 min',diff:'débutant',emoji:'🎭',premium:true,desc:'Exprime tes émotions par le collage.',benefits:['Exprime l\'inexprimable','Libère les émotions','Créativité émotionnelle'],steps:[{t:'Ton émotion',d:'Quelle émotion est présente ?'},{t:'Couleurs',d:'Choisis des couleurs qui correspondent.'},{t:'Images',d:'Découpe des images qui résonnent.'},{t:'Compose',d:'Crée ton collage émotionnel.'},{t:'Contemple',d:'Que te dit-il ?'}]},
+// CONNAISSANCE DE SOI (gratuits)
+{id:'emo-1',title:'Journal de gratitude',cat:'gratitude',duration:'5-10 min',diff:'débutant',emoji:'📔',premium:false,desc:'Note 3 gratitudes chaque jour.',benefits:['Recentre sur le positif','Améliore l\'humeur','Change la perspective'],steps:[{t:'Moment',d:'Matin ou soir.'},{t:'3 gratitudes',d:'3 choses simples.'},{t:'Développe',d:'Pourquoi ?'},{t:'Toi-même',d:'Une gratitude envers toi.'},{t:'Ressens',d:'Laisse monter le sentiment.'}]},
+{id:'emo-4',title:'Affirmations positives',cat:'confiance',duration:'5-10 min',diff:'débutant',emoji:'✨',premium:false,desc:'Reprogramme ton mental avec des affirmations.',benefits:['Renforce la confiance','Change le dialogue intérieur','Booste l\'estime de soi'],steps:[{t:'Observe',d:'Note tes pensées négatives.'},{t:'Transforme',d:'Crée l\'affirmation opposée.'},{t:'5 affirmations',d:'Choisis les 5 qui résonnent.'},{t:'Répète',d:'Chaque matin à voix haute.'},{t:'Ressens',d:'Ressens-les dans ton corps.'}]},
+// CONNAISSANCE DE SOI (premium)
+{id:'emo-2',title:'Lettre à soi-même',cat:'emotionnel',duration:'20 min',diff:'intermédiaire',emoji:'💌',premium:true,desc:'Écris une lettre tendre à toi-même.',benefits:['Compassion','Estime de soi','Lien intérieur'],steps:[{t:'Installe-toi',d:'Endroit calme.'},{t:'Commence',d:'"Cher moi,"'},{t:'Parcours',d:'Ce que tu as accompli.'},{t:'Compassion',d:'Mots de tendresse.'},{t:'Forces',d:'Tes qualités, tes forces.'},{t:'Amour',d:'"Je suis là pour toi."'}]},
+{id:'emo-3',title:'Valeurs personnelles',cat:'emotionnel',duration:'30 min',diff:'intermédiaire',emoji:'💎',premium:true,desc:'Découvre tes valeurs fondamentales.',benefits:['Clarifie les choix','Donne du sens','Guide les décisions'],steps:[{t:'Fierté',d:'5 moments de fierté.'},{t:'Thèmes',d:'Quels thèmes reviennent ?'},{t:'5 valeurs',d:'Choisis les 5 qui résonnent.'},{t:'Définis',d:'Ce que chacune signifie.'},{t:'Alignement',d:'Ta vie reflète-t-elle ces valeurs ?'},{t:'Actions',d:'Une action par valeur cette semaine.'}]},
+{id:'emo-5',title:'Ligne de vie',cat:'emotionnel',duration:'30 min',diff:'avancé',emoji:'📈',premium:true,desc:'Trace ta ligne de vie pour comprendre ton parcours.',benefits:['Vision globale','Comprend ton chemin','Identifie les forces'],steps:[{t:'Dessine',d:'Une ligne horizontale.'},{t:'Sommet',d:'Tes moments les plus hauts.'},{t:'Creux',d:'Tes moments les plus bas.'},{t:'Leçons',d:'Qu\'as-tu appris de chaque moment ?'},{t:'Forces',d:'Quelles forces as-tu développées ?'},{t:'Direction',d:'Où veux-tu aller maintenant ?'}]},
+{id:'emo-6',title:'Ikigai personnel',cat:'emotionnel',duration:'30 min',diff:'intermédiaire',emoji:'🎯',premium:true,desc:'Trouve ta raison d\'être avec le concept japonais de l\'Ikigai.',benefits:['Trouve du sens','Aligne ta vie','Motivation profonde'],steps:[{t:'Ce que tu aimes',d:'Qu\'est-ce que tu aimes faire ?'},{t:'Ce que le monde attend',d:'De quoi le monde a-t-il besoin ?'},{t:'Ce pour quoi tu es doué·e',d:'Dans quoi excelles-tu ?'},{t:'Ce pour quoi tu peux être payé·e',d:'Quelles compétences ont de la valeur ?'},{t:'Ton Ikigai',d:'Trouve l\'intersection des 4 cercles.'}]},
+{id:'emo-7',title:'Roue de la vie',cat:'emotionnel',duration:'20 min',diff:'débutant',emoji:'🎡',premium:true,desc:'Évalue l\'équilibre de ta vie dans tous les domaines.',benefits:['Vision globale','Identifie les déséquilibres','Plan d\'action'],steps:[{t:'Dessine',d:'Un cercle divisé en 8 parts.'},{t:'Domaines',d:'Santé, travail, amour, famille, amis, argent, loisirs, spiritualité.'},{t:'Note',d:'Note chaque domaine de 1 à 10.'},{t:'Relie',d:'Relie les points pour former ta roue.'},{t:'Analyse',d:'Où sont les déséquilibres ?'},{t:'Plan',d:'Choisis 1 domaine à améliorer.'}]},
+{id:'emo-8',title:'Shadow work',cat:'emotionnel',duration:'25 min',diff:'avancé',emoji:'🌑',premium:true,desc:'Explore tes zones d\'ombre avec bienveillance.',benefits:['Intégration','Libération','Authenticité'],steps:[{t:'Ce qui te dérange',d:'Qu\'est-ce qui te déclenche chez les autres ?'},{t:'Projection',d:'Est-ce que tu as aussi cette qualité (en négatif) ?'},{t:'Enfant intérieur',d:'Quand as-tu appris à cacher cette partie ?'},{t:'Accueille',d:'Cette partie veut te protéger.'},{t:'Intègre',d:'Comment cette qualité peut devenir une force ?'}]},
+{id:'emo-9',title:'Objectifs SMART',cat:'confiance',duration:'20 min',diff:'débutant',emoji:'🎯',premium:true,desc:'Définis des objectifs clairs et atteignables.',benefits:['Clarté','Motivation','Plan d\'action concret'],steps:[{t:'Spécifique',d:'Que veux-tu exactement ?'},{t:'Mesurable',d:'Comment tu sauras que c\'est atteint ?'},{t:'Atteignable',d:'Est-ce réaliste ?'},{t:'Rélevant',d:'Pourquoi c\'est important pour toi ?'},{t:'Temporel',d:'Pour quand ?'}]},
+{id:'emo-10',title:'Auto-compassion',cat:'confiance',duration:'15 min',diff:'débutant',emoji:'🤗',premium:true,desc:'Apprends à être ton propre meilleur ami.',benefits:['Bienveillance','Estime de soi','Résilience'],steps:[{t:'Situation difficile',d:'Pense à une situation difficile.'},{t:'Souffrance',d:'Reconnais ta souffrance.'},{t:'Humanité',d:'Tout le monde souffre.'},{t:'Bienveillance',d:'Parle-toi comme à un ami.'},{t:'Geste',d:'Pose une main sur ton cœur.'}]}
+];
+
+const programs=[
+{id:'p1',title:'🌅 21 jours de gratitude',duration:'21 jours',desc:'Transforme ton regard sur la vie en cultivant la gratitude chaque jour.',premium:false,color:'from-amber-400 to-orange-400',days:[
+{t:'Jour 1',d:'Écris 3 choses pour lesquelles tu es reconnaissant·e aujourd\'hui.'},
+{t:'Jour 2',d:'Écris une lettre de remerciement à quelqu\'un.'},
+{t:'Jour 3',d:'Prends une photo de quelque chose de beau.'},
+{t:'Jour 4',d:'Remercie ton corps pour tout ce qu\'il fait.'},
+{t:'Jour 5',d:'Exprime ta gratitude à un·e ami·e.'},
+{t:'Jour 6',d:'Note 3 leçons apprises grâce à des difficultés.'},
+{t:'Jour 7',d:'Méditation de gratitude (10 min).'},
+{t:'Jour 8-14',d:'Continue le journal de gratitude + 1 acte de bonté par jour.'},
+{t:'Jour 15-21',d:'Gratitude profonde : écris sur les tournants de ta vie.'}
+]},
+{id:'p2',title:'🧘 7 jours de méditation',duration:'7 jours',desc:'Initie-toi à la méditation avec un programme doux et progressif.',premium:false,color:'from-indigo-400 to-purple-400',days:[
+{t:'Jour 1',d:'5 min de respiration consciente.'},
+{t:'Jour 2',d:'5 min : observe tes pensées sans juger.'},
+{t:'Jour 3',d:'7 min : scan corporel rapide.'},
+{t:'Jour 4',d:'7 min : méditation de gratitude.'},
+{t:'Jour 5',d:'10 min : respiration 4-2-6.'},
+{t:'Jour 6',d:'10 min : méditation du cœur.'},
+{t:'Jour 7',d:'15 min : méditation complète.'}
+]},
+{id:'p3',title:'💎 Confiance en soi',duration:'14 jours',desc:'Renforce ta confiance et ton estime personnelle.',premium:true,color:'from-purple-400 to-pink-400',days:[
+{t:'Jour 1-3',d:'Affirmations positives + journal des réussites.'},
+{t:'Jour 4-6',d:'Lettre à toi-même + ligne de vie.'},
+{t:'Jour 7-9',d:'Valeurs personnelles + Ikigai.'},
+{t:'Jour 10-12',d:'Objectifs SMART + auto-compassion.'},
+{t:'Jour 13-14',d:'Synthèse et plan d\'action.'}
+]},
+{id:'p4',title:'🎨 30 jours de créativité',duration:'30 jours',desc:'Réveille ton âme créative avec un exercice par jour.',premium:true,color:'from-pink-400 to-rose-400',days:[
+{t:'Semaine 1',d:'Dessin intuitif chaque jour (5-10 min).'},
+{t:'Semaine 2',d:'Collage émotionnel + mandala.'},
+{t:'Semaine 3',d:'Écriture intuitive + poésie.'},
+{t:'Semaine 4',d:'Projet créatif personnel + tableau de vision.'}
+]},
+{id:'p5',title:'🌙 Gestion du stress',duration:'14 jours',desc:'Apprends à gérer ton stress avec des outils concrets.',premium:true,color:'from-blue-400 to-cyan-400',days:[
+{t:'Jour 1-4',d:'Respiration + 5 sens + ancrage.'},
+{t:'Jour 5-8',d:'Scan corporel + nature + méditation.'},
+{t:'Jour 9-12',d:'Journal + affirmations + auto-compassion.'},
+{t:'Jour 13-14',d:'Routine anti-stress personnalisée.'}
+]}
+];
+
+const dailyChallenges=[
+"Écris 3 choses positives de ta journée",
+"Fais 5 minutes de respiration consciente",
+"Envoie un message de gratitude à quelqu'un",
+"Prends 10 minutes dans la nature",
+"Dessine ce que tu ressens",
+"Écris une affirmation positive pour demain",
+"Fais l'exercice des 5 sens maintenant",
+"Note un souvenir heureux dans ton journal",
+"Offre un compliment sincère",
+"Accorde-toi 5 minutes de silence"
+];
+
+const allBadges=[
+{id:'b1',name:'Premier pas',emoji:'👣',desc:'Ton premier exercice',condition:1},
+{id:'b2',name:'Assidu·e',emoji:'🔥',desc:'3 jours d\'affilée',condition:3},
+{id:'b3',name:'Engagé·e',emoji:'💪',desc:'7 jours d\'affilée',condition:7},
+{id:'b4',name:'Déterminé·e',emoji:'🏅',desc:'10 exercices',condition:10},
+{id:'b5',name:'Explorateur·rice',emoji:'🧭',desc:'5 catégories différentes',condition:5},
+{id:'b6',name:'Créatif·ve',emoji:'🎨',desc:'5 exercices créatifs',condition:5},
+{id:'b7',name:'Méditatif·ve',emoji:'🧘',desc:'10 méditations',condition:10},
+{id:'b8',name:'Maître·sse',emoji:'🏆',desc:'Niveau 5',condition:5}
+];
+
+// ===== ÉTAT =====
+let curQ=0,answers=[],selVal=null;
+let state=JSON.parse(localStorage.getItem('elanvital')||'{}');
+if(!state.exercisesDone)state.exercisesDone=0;
+if(!state.streak)state.streak=0;
+if(!state.xp)state.xp=0;
+if(!state.level)state.level=1;
+if(!state.badges)state.badges=[];
+if(!state.journal)state.journal=[];
+if(!state.completedExercises)state.completedExercises=[];
+if(!state.programProgress)state.programProgress={};
+if(!state.lastDate)state.lastDate='';
+saveState();
+
+function saveState(){localStorage.setItem('elanvital',JSON.stringify(state))}
+
+// ===== NAVIGATION =====
+function showScreen(id){
+document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+window.scrollTo(0,0);
+const showNav=['screen-home','screen-programs','screen-library','screen-journal','screen-profile'];
+document.getElementById('bottom-nav').classList.toggle('hidden',!showNav.includes(id));
+document.querySelectorAll('.nav-btn').forEach(b=>{
+b.classList.toggle('text-purple-600',b.dataset.screen===id);
+b.classList.toggle('text-gray-400',b.dataset.screen!==id);
+});
+if(id==='screen-home')renderHome();
+if(id==='screen-library')showExercises();
+if(id==='screen-programs')renderPrograms();
+if(id==='screen-journal')renderJournal();
+if(id==='screen-profile')renderProfile();
+if(id==='screen-questionnaire'){curQ=0;answers=[];showQ();}
+checkStreak();
+}
+
+// ===== QUESTIONNAIRE =====
+function showQ(){
+const q=questions[curQ];
+document.getElementById('q-title').textContent=q.title;
+document.getElementById('q-subtitle').textContent=q.subtitle;
+document.getElementById('q-current').textContent=curQ+1;
+document.getElementById('q-percent').textContent=Math.round(((curQ+1)/questions.length)*100);
+document.getElementById('q-progress').style.width=((curQ+1)/questions.length)*100+'%';
+const od=document.getElementById('q-options');od.innerHTML='';
+q.options.forEach(o=>{const b=document.createElement('button');b.className='w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white/50 hover:border-purple-200 transition-all';b.innerHTML='<div class="flex items-center gap-4"><span class="text-2xl">'+o.emoji+'</span><span class="text-gray-700">'+o.label+'</span></div>';b.onclick=()=>{selVal=o.value;document.querySelectorAll('#q-options button').forEach(x=>x.className='w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white/50 transition-all');b.className='w-full text-left p-4 rounded-2xl border-2 border-purple-400 bg-purple-50 shadow-md transition-all';document.getElementById('q-next').disabled=false};od.appendChild(b)});
+document.getElementById('q-back').disabled=curQ===0;
+document.getElementById('q-next').disabled=true;selVal=null;
+}
+function nextQuestion(){if(selVal){answers[curQ]=selVal;if(curQ<questions.length-1){curQ++;showQ()}else showScreen('screen-home')}}
+function prevQuestion(){if(curQ>0){curQ--;showQ()}}
+
+// ===== ACCUEIL =====
+function renderHome(){
+document.getElementById('streak-count').textContent=state.streak;
+document.getElementById('exercises-done').textContent=state.exercisesDone;
+document.getElementById('level-display').textContent=state.level;
+// Défi du jour
+const dayIndex=new Date().getDate()%dailyChallenges.length;
+document.getElementById('daily-challenge').textContent=dailyChallenges[dayIndex];
+// Exercice recommandé
+const free=exercises.filter(e=>!e.premium);
+const rec=free[Math.floor(Math.random()*free.length)];
+document.getElementById('recommended-exercise').innerHTML='<div class="flex items-center gap-4" onclick="showExercise(\''+rec.id+'\')"><span class="text-3xl">'+rec.emoji+'</span><div class="flex-1"><h3 class="font-semibold text-gray-800">'+rec.title+'</h3><p class="text-gray-500 text-sm">'+rec.desc+'</p></div><span class="text-purple-400">→</span></div>';
+// Programmes
+const hp=document.getElementById('home-programs');hp.innerHTML='';
+programs.filter(p=>!p.premium).slice(0,2).forEach(p=>{
+hp.innerHTML+='<button onclick="showProgramDetail(\''+p.id+'\')" class="text-left bg-gradient-to-r '+p.color+' rounded-xl p-4 text-white hover:shadow-lg transition-all"><h4 class="font-bold mb-1">'+p.title+'</h4><p class="text-sm opacity-90">'+p.duration+'</p></button>';
+});
+}
+
+// ===== EXERCICES =====
+function showExercises(filter){
+const g=document.getElementById('exercises-grid');g.innerHTML='';
+const list=filter&&filter!=='all'?exercises.filter(e=>e.cat===filter):exercises;
+list.forEach(e=>{
+const done=state.completedExercises.includes(e.id);
+const c=document.createElement('button');
+c.className='group text-left bg-white/70 rounded-2xl p-6 shadow-md border border-white/80 hover:shadow-xl hover:border-purple-200 transition-all relative';
+c.innerHTML='<div class="flex items-start justify-between mb-4"><span class="text-4xl">'+e.emoji+'</span><div class="flex flex-col items-end gap-1">'+(e.premium?'<span class="badge bg-gradient-to-r from-amber-400 to-orange-400 text-white">⭐ PREMIUM</span>':'<span class="badge bg-green-100 text-green-700">Gratuit</span>')+(done?'<span class="badge bg-green-500 text-white">✓ Fait</span>':'')+'</div></div><h3 class="font-bold text-gray-800 text-lg mb-2">'+e.title+'</h3><p class="text-gray-500 text-sm mb-4 line-clamp-2">'+e.desc+'</p><div class="flex items-center gap-3"><span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">⏱️ '+e.duration+'</span><span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">📊 '+e.diff+'</span>'+(e.premium&&!state.isPremium?'<span class="text-lg ml-auto">🔒</span>':'')+'</div>';
+c.onclick=()=>{if(e.premium&&!state.isPremium)showScreen('screen-pricing');else showExercise(e.id)};
+g.appendChild(c);
+});
+}
+function filterExercises(cat){
+document.querySelectorAll('.filter-btn').forEach(b=>{b.className='filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-white/70 text-gray-600 border border-gray-200'});
+event.target.className='filter-btn px-4 py-2 rounded-xl text-sm font-medium bg-purple-500 text-white';
+showExercises(cat);
+}
+
+function showExercise(id){
+const e=exercises.find(x=>x.id===id);if(!e)return;
+document.getElementById('exercise-content').innerHTML='<div class="flex items-start gap-4 mb-6"><span class="text-5xl">'+e.emoji+'</span><div><h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">'+e.title+'</h1><div class="flex items-center gap-3"><span class="text-sm text-gray-500">⏱️ '+e.duration+'</span><span class="text-sm text-gray-500">📊 '+e.diff+'</span></div></div></div><p class="text-gray-600 text-lg mb-6">'+e.desc+'</p><div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-5 border border-purple-100"><h3 class="font-semibold text-purple-800 mb-3">✨ Bienfaits</h3><div class="flex flex-wrap gap-2">'+e.benefits.map(b=>'<span class="px-3 py-1.5 bg-white/80 rounded-full text-sm text-purple-700 border border-purple-100">'+b+'</span>').join('')+'</div></div>';
+const sd=document.getElementById('exercise-steps');sd.innerHTML='<h2 class="text-xl font-bold text-gray-800 mb-4">📋 Les étapes</h2>';
+e.steps.forEach((s,i)=>{const d=document.createElement('div');d.className='bg-white/70 rounded-2xl p-6 border border-gray-200 slide-up';d.style.animationDelay=(i*0.1)+'s';d.innerHTML='<div class="flex items-start gap-4"><div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold">'+(i+1)+'</div><div><h3 class="font-bold text-lg text-gray-800 mb-2">'+s.t+'</h3><p class="text-gray-600">'+s.d+'</p></div></div>';sd.appendChild(d)});
+document.getElementById('complete-btn').style.display=state.completedExercises.includes(id)?'none':'block';
+document.getElementById('complete-btn').onclick=()=>completeExercise(id);
+showScreen('screen-exercise');
+}
+
+function completeExercise(id){
+if(!state.completedExercises.includes(id)){
+state.completedExercises.push(id);
+state.exercisesDone++;
+state.xp+=20;
+checkLevelUp();
+checkBadges();
+saveState();
+}
+showScreen('screen-library');
+}
+
+function completeDailyChallenge(){
+state.xp+=10;state.streak++;state.lastDate=new Date().toDateString();
+checkLevelUp();saveState();renderHome();
+alert('🔥 Bravo ! Défi accompli ! +10 XP');
+}
+
+function checkLevelUp(){
+const xpNeeded=state.level*100;
+while(state.xp>=xpNeeded){state.xp-=xpNeeded;state.level++}
+}
+
+function checkBadges(){
+allBadges.forEach(b=>{
+if(!state.badges.includes(b.id)){
+let earned=false;
+if(b.id==='b1'&&state.exercisesDone>=1)earned=true;
+if(b.id==='b2'&&state.streak>=3)earned=true;
+if(b.id==='b3'&&state.streak>=7)earned=true;
+if(b.id==='b4'&&state.exercisesDone>=10)earned=true;
+if(b.id==='b8'&&state.level>=5)earned=true;
+if(earned){state.badges.push(b.id);alert('🏆 Nouveau badge : '+b.emoji+' '+b.name+' !')}
+}
+});
+}
+
+function checkStreak(){
+const today=new Date().toDateString();
+if(state.lastDate&&state.lastDate!==today){
+const last=new Date(state.lastDate);
+const diff=Math.floor((new Date()-last)/(1000*60*60*24));
+if(diff>1)state.streak=0;
+saveState();
+}
+}
+
+// ===== PROGRAMMES =====
+function renderPrograms(){
+const pl=document.getElementById('programs-list');pl.innerHTML='';
+programs.forEach(p=>{
+const progress=state.programProgress[p.id]||0;
+const pct=Math.round((progress/p.days.length)*100);
+pl.innerHTML+='<div class="bg-white/70 rounded-2xl p-6 border border-white/80 shadow-lg hover:shadow-xl transition-all cursor-pointer" onclick="showProgramDetail(\''+p.id+'\')"><div class="flex items-start gap-4"><div class="w-14 h-14 rounded-xl bg-gradient-to-br '+p.color+' flex items-center justify-center text-2xl shadow-lg">'+p.title.split(' ')[0]+'</div><div class="flex-1"><div class="flex items-center gap-2 mb-1"><h3 class="font-bold text-gray-800 text-lg">'+p.title.substring(p.title.indexOf(' ')+1)+'</h3>'+(p.premium?'<span class="badge bg-gradient-to-r from-amber-400 to-orange-400 text-white">⭐ PREMIUM</span>':'')+'</div><p class="text-gray-500 text-sm mb-3">'+p.desc+'</p><div class="flex items-center gap-3"><span class="text-xs text-gray-500">📅 '+p.duration+'</span><span class="text-xs text-gray-500">'+p.days.length+' étapes</span></div><div class="mt-3"><div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r '+p.color+' rounded-full" style="width:'+pct+'%"></div></div><p class="text-xs text-gray-500 mt-1">'+progress+'/'+p.days.length+' complétés</p></div></div><span class="text-purple-400 text-xl">→</span></div></div>';
+});
+}
+
+function showProgramDetail(id){
+const p=programs.find(x=>x.id===id);if(!p)return;
+if(p.premium&&!state.isPremium){showScreen('screen-pricing');return}
+const progress=state.programProgress[p.id]||0;
+const cd=document.getElementById('program-detail-content');
+cd.innerHTML='<div class="bg-gradient-to-r '+p.color+' rounded-3xl p-8 text-white shadow-xl mb-8"><h1 class="text-2xl md:text-3xl font-bold mb-2">'+p.title+'</h1><p class="opacity-90 mb-4">'+p.desc+'</p><p class="text-sm opacity-80">📅 '+p.duration+' • '+p.days.length+' étapes</p></div><div class="space-y-3">';
+p.days.forEach((d,i)=>{
+const done=i<progress;
+cd.innerHTML+='<div class="bg-white/70 rounded-xl p-4 border border-white/80 flex items-center gap-4 '+(done?'opacity-70':'')+'"><div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm '+(done?'bg-green-500 text-white':'bg-gray-200 text-gray-500')+'">'+(done?'✓':(i+1))+'</div><div class="flex-1"><h4 class="font-semibold text-gray-800">'+d.t+'</h4><p class="text-gray-600 text-sm">'+d.d+'</p></div>'+(i===progress?'<button onclick="advanceProgram(\''+p.id+'\')" class="px-4 py-2 bg-gradient-to-r '+p.color+' text-white rounded-lg text-sm font-semibold hover:scale-105 transition-all">Fait ✓</button>':'')+'</div>';
+});
+cd.innerHTML+='</div>';
+showScreen('screen-program-detail');
+}
+
+function advanceProgram(id){
+if(!state.programProgress[id])state.programProgress[id]=0;
+state.programProgress[id]++;
+state.xp+=15;
+checkLevelUp();saveState();
+showProgramDetail(id);
+}
+
+// ===== JOURNAL =====
+function renderJournal(){
+const je=document.getElementById('journal-entries');je.innerHTML='';
+if(state.journal.length===0){je.innerHTML='<p class="text-gray-400 text-center py-8">Ton journal est vide. Commence à écrire ! 🌿</p>';return}
+state.journal.slice().reverse().forEach((entry,i)=>{
+je.innerHTML+='<div class="bg-white/70 rounded-xl p-4 border border-white/80"><div class="flex items-center gap-2 mb-2"><span class="text-lg">'+(entry.mood||'📝')+'</span><span class="text-xs text-gray-400">'+entry.date+'</span></div><p class="text-gray-700 text-sm">'+entry.text+'</p></div>';
+});
+}
+
+function saveJournalEntry(){
+const text=document.getElementById('journal-input').value.trim();
+if(!text)return;
+const mood=document.getElementById('journal-mood').value;
+state.journal.push({text:text,mood:mood,date:new Date().toLocaleDateString('fr-FR')});
+state.xp+=5;saveState();
+document.getElementById('journal-input').value='';
+document.getElementById('journal-mood').value='';
+renderJournal();
+}
+
+// ===== PROFIL =====
+function renderProfile(){
+document.getElementById('p-exercises').textContent=state.exercisesDone;
+document.getElementById('p-streak').textContent=state.streak;
+document.getElementById('p-level').textContent=state.level;
+document.getElementById('level-num').textContent=state.level;
+document.getElementById('xp-current').textContent=state.xp;
+const xpNeeded=state.level*100;
+document.getElementById('xp-next').textContent=xpNeeded;
+document.getElementById('xp-bar').style.width=(state.xp/xpNeeded*100)+'%';
+document.getElementById('profile-plan').textContent=state.isPremium?'Premium ⭐':'Gratuit';
+// Badges
+const bc=document.getElementById('badges-container');bc.innerHTML='';
+allBadges.forEach(b=>{
+const earned=state.badges.includes(b.id);
+bc.innerHTML+='<div class="flex items-center gap-2 px-3 py-2 rounded-xl '+(earned?'bg-amber-50 border border-amber-200':'bg-gray-100 border border-gray-200 opacity-50')+'" title="'+b.desc+'"><span class="text-xl">'+b.emoji+'</span><span class="text-xs font-medium '+(earned?'text-amber-800':'text-gray-400')+'">'+b.name+'</span></div>';
+});
+}
+</script>
+</body>
 </html>
 
 
@@ -109,151 +643,303 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes flip{0%{transform:rotateY(0)}100%{transform:rotateY(180deg)}}
+@keyframes glow{0%,100%{box-shadow:0 0 5px rgba(139,92,246,0.3)}50%{box-shadow:0 0 20px rgba(139,92,246,0.6)}}
 .fade-in{animation:fadeIn .5s ease-out}
+.pulse-anim{animation:pulse 2s ease-in-out infinite}
+.glow-anim{animation:glow 2s ease-in-out infinite}
 .screen{display:none}.screen.active{display:block}
+.card-flip{perspective:1000px}
+.card-inner{transition:transform 0.6s;transform-style:preserve-3d;position:relative}
+.card-inner.flipped{transform:rotateY(180deg)}
+.card-front,.card-back{backface-visibility:hidden;position:absolute;top:0;left:0;width:100%;height:100%}
+.card-back{transform:rotateY(180deg)}
 </style>
 </head>
 <body class="bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 min-h-screen">
-<div id="app">
 
-<!-- ACCUEIL -->
+<!-- NAVIGATION BOTTOM -->
+<nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-purple-100 z-50 hidden">
+<div class="max-w-lg mx-auto flex justify-around py-2">
+<button onclick="showScreen('screen-home')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-xl text-gray-400" data-screen="screen-home"><span class="text-xl">🏠</span><span class="text-xs">Accueil</span></button>
+<button onclick="showScreen('screen-card')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-xl text-gray-400" data-screen="screen-card"><span class="text-xl">🎴</span><span class="text-xs">Carte</span></button>
+<button onclick="showScreen('screen-programs')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-xl text-gray-400" data-screen="screen-programs"><span class="text-xl">📅</span><span class="text-xs">100 jours</span></button>
+<button onclick="showScreen('screen-library')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-xl text-gray-400" data-screen="screen-library"><span class="text-xl">📚</span><span class="text-xs">Exercices</span></button>
+<button onclick="showScreen('screen-profile')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-xl text-gray-400" data-screen="screen-profile"><span class="text-xl">👤</span><span class="text-xs">Profil</span></button>
+</div>
+</nav>
+
+<div id="app" class="pb-20">
+
+<!-- ===== ACCUEIL ===== -->
 <div id="screen-welcome" class="screen active min-h-screen flex flex-col items-center justify-center px-4 py-12">
 <div class="max-w-2xl mx-auto text-center">
 <div class="mb-8">
-<div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-purple-200 to-pink-200 shadow-xl mb-6"><span class="text-5xl">🌿</span></div>
+<div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-purple-200 to-pink-200 shadow-xl mb-6 pulse-anim"><span class="text-5xl">🌿</span></div>
 <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-700 via-pink-600 to-amber-600 bg-clip-text text-transparent mb-2">Élan Vital</h1>
-<p class="text-lg text-gray-500">Bien-être & Développement personnel</p>
+<p class="text-lg text-gray-500">Bien-être • Créativité • Transformation</p>
 </div>
-<div class="bg-white/60 rounded-3xl p-8 md:p-10 shadow-xl border border-white/80 mb-8">
-<p class="text-xl md:text-2xl text-gray-700 mb-6">Bienvenue, toi. ✨</p>
-<p class="text-gray-600 mb-4">Tu as envie de te sentir mieux, de te reconnecter à toi-même ? Tu es au bon endroit.</p>
-<p class="text-gray-600 mb-4">Ici, pas de jugement. Juste des <strong class="text-purple-700">exercices bienveillants</strong> pour :</p>
+<div class="bg-white/60 rounded-3xl p-8 shadow-xl border border-white/80 mb-8">
+<p class="text-xl text-gray-700 mb-6">Bienvenue, toi. ✨</p>
+<p class="text-gray-600 mb-4">Un parcours de <strong class="text-purple-700">100 jours</strong> pour te reconnecter à toi-même, libérer ta créativité et transformer ta vie.</p>
 <div class="grid grid-cols-2 gap-3 my-6">
-<div class="bg-purple-50 rounded-xl p-3 border border-purple-100"><span class="text-lg">🧘</span><p class="text-sm text-purple-700 mt-1">Mieux te connaître</p></div>
-<div class="bg-pink-50 rounded-xl p-3 border border-pink-100"><span class="text-lg">💪</span><p class="text-sm text-pink-700 mt-1">Retrouver ta force</p></div>
-<div class="bg-amber-50 rounded-xl p-3 border border-amber-100"><span class="text-lg">🌱</span><p class="text-sm text-amber-700 mt-1">Grandir chaque jour</p></div>
-<div class="bg-green-50 rounded-xl p-3 border border-green-100"><span class="text-lg">☀️</span><p class="text-sm text-green-700 mt-1">Vivre pleinement</p></div>
+<div class="bg-purple-50 rounded-xl p-3 border border-purple-100"><span class="text-lg">📅</span><p class="text-xs text-purple-700 mt-1">100 jours de transformation</p></div>
+<div class="bg-pink-50 rounded-xl p-3 border border-pink-100"><span class="text-lg">🎴</span><p class="text-xs text-pink-700 mt-1">Carte du jour</p></div>
+<div class="bg-amber-50 rounded-xl p-3 border border-amber-100"><span class="text-lg">✍️</span><p class="text-xs text-amber-700 mt-1">Écriture créative</p></div>
+<div class="bg-green-50 rounded-xl p-3 border border-green-100"><span class="text-lg">🎨</span><p class="text-xs text-green-700 mt-1">Création & transformation</p></div>
+</div>
+<div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-4 mb-6">
+<p class="text-purple-800 text-sm font-medium">🌟 50+ exercices • Rituels matin/soir • Défis créatifs • Histoires à écrire • Créations à transformer</p>
 </div>
 </div>
 <button onclick="showScreen('screen-questionnaire')" class="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl font-semibold text-lg shadow-xl hover:scale-105 transition-all">Commencer mon parcours →</button>
-<div class="mt-10 p-4 bg-green-50/80 rounded-2xl border border-green-200/50">
-<p class="text-sm text-green-800">🌿 <strong>Élan Vital</strong> est un outil de développement personnel et de bien-être.</p>
-</div>
 </div>
 </div>
 
-<!-- QUESTIONNAIRE -->
+<!-- ===== QUESTIONNAIRE ===== -->
 <div id="screen-questionnaire" class="screen min-h-screen flex flex-col items-center justify-center px-4 py-12">
 <div class="max-w-2xl mx-auto w-full">
 <div class="mb-8">
-<div class="flex items-center justify-between mb-2">
-<span class="text-sm text-gray-500">Question <span id="q-current">1</span> sur 5</span>
-<span class="text-sm text-purple-600 font-medium"><span id="q-percent">20</span>%</span>
-</div>
-<div class="w-full h-2 bg-purple-100 rounded-full overflow-hidden">
-<div id="q-progress" class="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all duration-500" style="width:20%"></div>
-</div>
+<div class="flex items-center justify-between mb-2"><span class="text-sm text-gray-500">Question <span id="q-current">1</span> sur 5</span><span class="text-sm text-purple-600 font-medium"><span id="q-percent">20</span>%</span></div>
+<div class="w-full h-2 bg-purple-100 rounded-full overflow-hidden"><div id="q-progress" class="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all duration-500" style="width:20%"></div></div>
 </div>
 <div class="bg-white/70 rounded-3xl p-8 shadow-xl border border-white/80">
-<h2 id="q-title" class="text-2xl md:text-3xl font-bold text-gray-800 mb-3"></h2>
+<h2 id="q-title" class="text-2xl font-bold text-gray-800 mb-3"></h2>
 <p id="q-subtitle" class="text-gray-500 text-lg italic mb-8"></p>
 <div id="q-options" class="space-y-3 mb-8"></div>
 <div class="flex items-center justify-between">
-<button id="q-back" onclick="prevQuestion()" class="px-5 py-3 text-gray-500 hover:text-gray-700 transition-colors" disabled>← Retour</button>
+<button id="q-back" onclick="prevQuestion()" class="px-5 py-3 text-gray-500" disabled>← Retour</button>
 <button id="q-next" onclick="nextQuestion()" class="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold shadow-lg hover:scale-105 transition-all" disabled>Suivant →</button>
 </div>
 </div>
-<p class="text-center text-gray-400 text-sm mt-6">💜 Prends ton temps.</p>
 </div>
 </div>
 
-<!-- RÉSULTATS -->
-<div id="screen-results" class="screen min-h-screen px-4 py-12">
+<!-- ===== PAGE D'ACCUEIL ===== -->
+<div id="screen-home" class="screen min-h-screen px-4 py-6">
 <div class="max-w-4xl mx-auto">
-<div class="text-center mb-10">
-<div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-purple-200 to-pink-200 shadow-xl mb-6"><span class="text-4xl">✨</span></div>
-<h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Merci d'avoir partagé ✨</h1>
-<p class="text-lg text-gray-600">Voici les exercices qui correspondent le mieux à ton état d'esprit actuel.</p>
-</div>
-<div id="r-recommendations" class="bg-white/70 rounded-3xl p-8 shadow-xl border border-white/80 mb-8"></div>
-<div class="mb-8">
-<h3 class="text-xl font-bold text-gray-800 mb-4">🌈 Explore toutes les approches</h3>
-<div class="grid md:grid-cols-2 gap-4">
-<button onclick="showScreen('screen-library')" class="text-left p-6 rounded-2xl border-2 bg-indigo-50 border-indigo-200 hover:shadow-lg transition-all"><div class="flex items-center gap-3 mb-2"><span class="text-2xl">🧘</span><h4 class="font-bold text-gray-800">Méditation</h4></div><p class="text-gray-600 text-sm">Apaiser ton mental</p></button>
-<button onclick="showScreen('screen-library')" class="text-left p-6 rounded-2xl border-2 bg-green-50 border-green-200 hover:shadow-lg transition-all"><div class="flex items-center gap-3 mb-2"><span class="text-2xl">🌳</span><h4 class="font-bold text-gray-800">Ancrage & Présence</h4></div><p class="text-gray-600 text-sm">Te reconnecter à ton corps</p></button>
-<button onclick="showScreen('screen-library')" class="text-left p-6 rounded-2xl border-2 bg-pink-50 border-pink-200 hover:shadow-lg transition-all"><div class="flex items-center gap-3 mb-2"><span class="text-2xl">🎨</span><h4 class="font-bold text-gray-800">Créativité & Expression</h4></div><p class="text-gray-600 text-sm">T'exprimer par la création</p></button>
-<button onclick="showScreen('screen-library')" class="text-left p-6 rounded-2xl border-2 bg-amber-50 border-amber-200 hover:shadow-lg transition-all"><div class="flex items-center gap-3 mb-2"><span class="text-2xl">💛</span><h4 class="font-bold text-gray-800">Connaissance de soi</h4></div><p class="text-gray-600 text-sm">Explorer qui tu es vraiment</p></button>
+<!-- Salutation -->
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl p-6 text-white shadow-xl mb-6">
+<h1 class="text-xl md:text-2xl font-bold mb-2" id="greeting">Bonjour toi ! 🌿</h1>
+<p class="text-purple-100 text-sm mb-4">Jour <span id="current-day">1</span>/100 de ton parcours</p>
+<div class="flex items-center gap-3">
+<div class="bg-white/20 rounded-xl px-3 py-2"><span class="text-xl font-bold" id="streak-count">0</span><p class="text-xs text-purple-100">jours 🔥</p></div>
+<div class="bg-white/20 rounded-xl px-3 py-2"><span class="text-xl font-bold" id="exercises-done">0</span><p class="text-xs text-purple-100">exercices ✨</p></div>
+<div class="bg-white/20 rounded-xl px-3 py-2"><span class="text-xl font-bold" id="level-display">1</span><p class="text-xs text-purple-100">niveau 🏆</p></div>
 </div>
 </div>
-<div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-6 border border-amber-200/50 text-center">
-<p class="text-amber-800">🌸 Chaque petit pas compte. Choisis un exercice et fais-le à ton rythme.</p>
+
+<!-- Carte du jour -->
+<div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-5 border border-amber-200 mb-6 cursor-pointer hover:shadow-lg transition-all" onclick="showScreen('screen-card')">
+<div class="flex items-center gap-3"><span class="text-2xl">🎴</span><div><h3 class="font-bold text-amber-800">Ta carte du jour</h3><p class="text-amber-600 text-sm">Tire ta carte pour découvrir ton intention du jour</p></div><span class="ml-auto text-amber-400">→</span></div>
+</div>
+
+<!-- Rituel du moment -->
+<div id="ritual-section" class="bg-white/70 rounded-2xl p-5 border border-white/80 shadow-lg mb-6">
+<h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2"><span id="ritual-icon">🌅</span><span id="ritual-title">Rituel du matin</span></h3>
+<div id="ritual-content" class="space-y-3"></div>
+</div>
+
+<!-- Défi de la semaine -->
+<div class="bg-gradient-to-r from-pink-50 to-rose-50 rounded-2xl p-5 border border-pink-200 mb-6">
+<div class="flex items-center gap-3 mb-3"><span class="text-2xl">🎭</span><h3 class="font-bold text-pink-800">Défi créatif de la semaine</h3></div>
+<p id="weekly-challenge" class="text-pink-700 mb-3"></p>
+<button onclick="completeWeeklyChallenge()" class="px-4 py-2 bg-pink-500 text-white rounded-lg text-sm font-semibold hover:bg-pink-600 transition-colors">✓ Défi accompli !</button>
+</div>
+
+<!-- Phase en cours -->
+<div class="bg-white/70 rounded-2xl p-5 border border-white/80 shadow-lg mb-6">
+<h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2"><span>📅</span> Ta phase actuelle</h3>
+<div id="current-phase" class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100"></div>
+</div>
+
+<!-- Accès rapide -->
+<div class="grid grid-cols-4 gap-3">
+<button onclick="showScreen('screen-writing')" class="bg-white/70 rounded-xl p-3 text-center border border-white/80 hover:shadow-lg transition-all"><span class="text-xl">✍️</span><p class="text-xs text-gray-600 mt-1">Écrire</p></button>
+<button onclick="showScreen('screen-creation')" class="bg-white/70 rounded-xl p-3 text-center border border-white/80 hover:shadow-lg transition-all"><span class="text-xl">🎨</span><p class="text-xs text-gray-600 mt-1">Créer</p></button>
+<button onclick="showScreen('screen-library')" class="bg-white/70 rounded-xl p-3 text-center border border-white/80 hover:shadow-lg transition-all"><span class="text-xl">📚</span><p class="text-xs text-gray-600 mt-1">Exercices</p></button>
+<button onclick="showScreen('screen-pricing')" class="bg-gradient-to-r from-amber-400 to-orange-400 rounded-xl p-3 text-center hover:shadow-lg transition-all"><span class="text-xl">⭐</span><p class="text-xs text-white mt-1 font-semibold">Premium</p></button>
 </div>
 </div>
 </div>
 
-<!-- BIBLIOTHÈQUE -->
-<div id="screen-library" class="screen min-h-screen px-4 py-12">
+<!-- ===== CARTE DU JOUR ===== -->
+<div id="screen-card" class="screen min-h-screen flex flex-col items-center justify-center px-4 py-8">
+<div class="max-w-md mx-auto w-full text-center">
+<h1 class="text-2xl font-bold text-gray-800 mb-2">🎴 Ta carte du jour</h1>
+<p class="text-gray-500 mb-8">Tire ta carte pour découvrir ton intention</p>
+<div class="card-flip w-72 h-96 mx-auto mb-8 cursor-pointer" onclick="flipCard()">
+<div id="card-inner" class="card-inner w-full h-full">
+<div class="card-front bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl shadow-xl flex flex-col items-center justify-center p-6">
+<span class="text-6xl mb-4">🎴</span>
+<p class="text-white text-xl font-bold">Touche pour révéler</p>
+<p class="text-purple-200 text-sm mt-2">ta carte du jour</p>
+</div>
+<div class="card-back bg-white rounded-2xl shadow-xl flex flex-col items-center justify-center p-6 border-2 border-purple-200">
+<span id="card-emoji" class="text-5xl mb-3"></span>
+<h3 id="card-title" class="text-lg font-bold text-purple-800 mb-2"></h3>
+<p id="card-affirmation" class="text-gray-600 text-sm italic mb-3"></p>
+<p id="card-exercise" class="text-gray-700 text-sm"></p>
+</div>
+</div>
+</div>
+<button onclick="showScreen('screen-home')" class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold shadow-lg hover:scale-105 transition-all">C'est parti ! →</button>
+</div>
+</div>
+
+<!-- ===== PROGRAMME 100 JOURS ===== -->
+<div id="screen-programs" class="screen min-h-screen px-4 py-8">
+<div class="max-w-4xl mx-auto">
+<h1 class="text-3xl font-bold text-gray-800 mb-2">📅 Programme 100 jours</h1>
+<p class="text-gray-600 mb-6">Ton parcours de transformation en 4 phases</p>
+<!-- Progression globale -->
+<div class="bg-white/70 rounded-2xl p-5 border border-white/80 shadow-lg mb-6">
+<div class="flex justify-between items-center mb-2"><span class="font-semibold text-gray-800">Progression globale</span><span class="text-sm text-purple-600"><span id="total-progress">0</span>%</span></div>
+<div class="w-full h-3 bg-purple-100 rounded-full overflow-hidden"><div id="total-bar" class="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all" style="width:0%"></div></div>
+<p class="text-xs text-gray-500 mt-2">Jour <span id="progress-day">1</span> sur 100</p>
+</div>
+<!-- Les 4 phases -->
+<div id="phases-container" class="space-y-4"></div>
+</div>
+</div>
+
+<!-- ===== PHASE DÉTAIL ===== -->
+<div id="screen-phase-detail" class="screen min-h-screen px-4 py-8">
+<div class="max-w-3xl mx-auto">
+<button onclick="showScreen('screen-programs')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+<div id="phase-detail-content"></div>
+</div>
+</div>
+
+<!-- ===== BIBLIOTHÈQUE ===== -->
+<div id="screen-library" class="screen min-h-screen px-4 py-8">
 <div class="max-w-5xl mx-auto">
-<button onclick="showScreen('screen-results')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
-<h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Bibliothèque d'exercices 📚</h1>
-<p class="text-gray-600 text-lg mb-8">Explore tous les exercices disponibles.</p>
-<div class="mb-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-6 text-white shadow-xl">
-<div class="flex flex-col md:flex-row items-center gap-4">
-<div class="flex-1"><h3 class="text-xl font-bold mb-2">✨ Débloque tous les exercices</h3><p class="text-purple-100 text-sm">Accède à tous les exercices premium + nouveautés chaque mois.</p></div>
-<button onclick="showScreen('screen-pricing')" class="px-6 py-3 bg-white text-purple-600 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg">Voir les offres →</button>
+<h1 class="text-3xl font-bold text-gray-800 mb-2">📚 Bibliothèque</h1>
+<p class="text-gray-600 mb-4">50+ exercices pour ta transformation</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<button onclick="filterEx('all')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-purple-500 text-white">✨ Tous</button>
+<button onclick="filterEx('meditation')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">🧘 Méditation</button>
+<button onclick="filterEx('ancrage')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">🌳 Ancrage</button>
+<button onclick="filterEx('ecriture')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">✍️ Écriture</button>
+<button onclick="filterEx('creation')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">🎨 Création</button>
+<button onclick="filterEx('gratitude')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">🙏 Gratitude</button>
+<button onclick="filterEx('confiance')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">💎 Confiance</button>
+<button onclick="filterEx('emotionnel')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">💛 Émotions</button>
 </div>
+<div id="premium-banner" class="mb-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-5 text-white shadow-xl">
+<div class="flex items-center gap-4"><div class="flex-1"><h3 class="font-bold mb-1">✨ Débloque les 40+ exercices premium</h3><p class="text-purple-100 text-sm">Programme 100 jours complet, écriture créative, créations transformatrices</p></div><button onclick="showScreen('screen-pricing')" class="px-4 py-2 bg-white text-purple-600 rounded-xl font-bold text-sm">Voir →</button></div>
 </div>
-<div id="exercises-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+<div id="exercises-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 </div>
 </div>
 
-<!-- EXERCICE -->
-<div id="screen-exercise" class="screen min-h-screen px-4 py-12">
+<!-- ===== ÉCRITURE CRÉATIVE ===== -->
+<div id="screen-writing" class="screen min-h-screen px-4 py-8">
+<div class="max-w-3xl mx-auto">
+<button onclick="showScreen('screen-home')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+<h1 class="text-3xl font-bold text-gray-800 mb-2">✍️ Écriture créative</h1>
+<p class="text-gray-600 mb-6">Raconte une histoire selon un thème. Laisse venir les mots.</p>
+<div id="writing-prompts" class="space-y-4"></div>
+</div>
+</div>
+
+<!-- ===== ÉCRITURE DÉTAIL ===== -->
+<div id="screen-writing-detail" class="screen min-h-screen px-4 py-8">
+<div class="max-w-3xl mx-auto">
+<button onclick="showScreen('screen-writing')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+<div id="writing-detail-content"></div>
+</div>
+</div>
+
+<!-- ===== CRÉATION ===== -->
+<div id="screen-creation" class="screen min-h-screen px-4 py-8">
+<div class="max-w-3xl mx-auto">
+<button onclick="showScreen('screen-home')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+<h1 class="text-3xl font-bold text-gray-800 mb-2">🎨 Création & Transformation</h1>
+<p class="text-gray-600 mb-6">Une activité créative simple liée à ce que tu veux transformer dans ta vie.</p>
+<div id="creation-prompts" class="space-y-4"></div>
+</div>
+</div>
+
+<!-- ===== CRÉATION DÉTAIL ===== -->
+<div id="screen-creation-detail" class="screen min-h-screen px-4 py-8">
+<div class="max-w-3xl mx-auto">
+<button onclick="showScreen('screen-creation')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+<div id="creation-detail-content"></div>
+</div>
+</div>
+
+<!-- ===== EXERCICE DÉTAIL ===== -->
+<div id="screen-exercise" class="screen min-h-screen px-4 py-8">
 <div class="max-w-3xl mx-auto">
 <button onclick="showScreen('screen-library')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
-<div id="exercise-content" class="bg-white/70 rounded-3xl p-8 shadow-xl border border-white/80 mb-8"></div>
-<div id="exercise-steps" class="space-y-4 mb-8"></div>
+<div id="exercise-content" class="bg-white/70 rounded-3xl p-6 shadow-xl border border-white/80 mb-6"></div>
+<div id="exercise-steps" class="space-y-3 mb-6"></div>
+<button onclick="completeCurrentExercise()" id="complete-btn" class="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-bold shadow-lg hover:scale-105 transition-all mb-6">✓ Exercice terminé !</button>
 </div>
 </div>
 
-<!-- TARIFICATION -->
-<div id="screen-pricing" class="screen min-h-screen px-4 py-12">
+<!-- ===== PROFIL ===== -->
+<div id="screen-profile" class="screen min-h-screen px-4 py-8">
+<div class="max-w-3xl mx-auto">
+<div class="bg-white/70 rounded-3xl p-6 shadow-xl border border-white/80 mb-6">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-2xl shadow-lg">🌿</div>
+<div><h1 class="text-xl font-bold text-gray-800">Toi</h1><p class="text-gray-500 text-sm">Membre <span id="profile-plan">Gratuit</span></p></div>
+</div>
+<div class="grid grid-cols-4 gap-3 mb-4">
+<div class="bg-purple-50 rounded-xl p-3 text-center"><p class="text-xl font-bold text-purple-700" id="p-ex">0</p><p class="text-xs text-purple-600">Exercices</p></div>
+<div class="bg-pink-50 rounded-xl p-3 text-center"><p class="text-xl font-bold text-pink-700" id="p-st">0</p><p class="text-xs text-pink-600">Jours 🔥</p></div>
+<div class="bg-amber-50 rounded-xl p-3 text-center"><p class="text-xl font-bold text-amber-700" id="p-lv">1</p><p class="text-xs text-amber-600">Niveau</p></div>
+<div class="bg-green-50 rounded-xl p-3 text-center"><p class="text-xl font-bold text-green-700" id="p-dy">1</p><p class="text-xs text-green-600">Jour/100</p></div>
+</div>
+<div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+<div class="flex justify-between items-center mb-2"><span class="font-semibold text-purple-800 text-sm">Niveau <span id="level-num">1</span></span><span class="text-xs text-purple-600"><span id="xp-current">0</span>/<span id="xp-next">100</span> XP</span></div>
+<div class="w-full h-2 bg-purple-200 rounded-full overflow-hidden"><div id="xp-bar" class="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all" style="width:0%"></div></div>
+</div>
+</div>
+<button onclick="showScreen('screen-pricing')" class="w-full py-4 bg-gradient-to-r from-amber-400 to-orange-400 text-white rounded-xl font-bold shadow-lg hover:scale-105 transition-all mb-4">⭐ Passer Premium</button>
+</div>
+</div>
+
+<!-- ===== TARIFICATION ===== -->
+<div id="screen-pricing" class="screen min-h-screen px-4 py-8">
 <div class="max-w-4xl mx-auto">
-<button onclick="showScreen('screen-library')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
-<div class="text-center mb-10">
-<div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-amber-200 to-orange-200 shadow-xl mb-6"><span class="text-4xl">⭐</span></div>
-<h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Passe au niveau supérieur</h1>
-<p class="text-gray-600 text-lg">Débloque tous les exercices premium.</p>
+<button onclick="showScreen('screen-home')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+<div class="text-center mb-8">
+<div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-amber-200 to-orange-200 shadow-xl mb-4"><span class="text-3xl">⭐</span></div>
+<h1 class="text-3xl font-bold text-gray-800 mb-2">Passe au niveau supérieur</h1>
 </div>
-<div class="grid md:grid-cols-2 gap-6 mb-10">
-<div class="bg-white/70 rounded-3xl p-8 border-2 border-gray-200">
-<div class="text-center mb-6"><h3 class="text-xl font-bold text-gray-800 mb-1">Gratuit</h3><div class="mt-4"><span class="text-4xl font-bold">0€</span></div></div>
-<ul class="space-y-3 mb-8">
-<li class="flex items-center gap-3 text-gray-700"><span class="text-green-500">✓</span><span>8 exercices de base</span></li>
-<li class="flex items-center gap-3 text-gray-700"><span class="text-green-500">✓</span><span>Questionnaire personnalisé</span></li>
-<li class="flex items-center gap-3 text-gray-400"><span>✗</span><span>Exercices premium</span></li>
+<div class="grid md:grid-cols-2 gap-6 mb-8">
+<div class="bg-white/70 rounded-3xl p-6 border-2 border-gray-200">
+<div class="text-center mb-4"><h3 class="text-xl font-bold text-gray-800">Gratuit</h3><div class="mt-3"><span class="text-3xl font-bold">0€</span></div></div>
+<ul class="space-y-2 mb-6 text-sm">
+<li class="flex items-center gap-2 text-gray-700"><span class="text-green-500">✓</span>10 exercices de base</li>
+<li class="flex items-center gap-2 text-gray-700"><span class="text-green-500">✓</span>Carte du jour</li>
+<li class="flex items-center gap-2 text-gray-700"><span class="text-green-500">✓</span>Rituels matin/soir</li>
+<li class="flex items-center gap-2 text-gray-400"><span>✗</span>Programme 100 jours</li>
+<li class="flex items-center gap-2 text-gray-400"><span>✗</span>Écriture créative</li>
+<li class="flex items-center gap-2 text-gray-400"><span>✗</span>Créations transformatrices</li>
+<li class="flex items-center gap-2 text-gray-400"><span>✗</span>40+ exercices premium</li>
+<li class="flex items-center gap-2 text-gray-400"><span>✗</span>Défis créatifs</li>
 </ul>
-<button onclick="showScreen('screen-library')" class="w-full py-3 border-2 border-gray-300 text-gray-600 rounded-xl font-semibold">Plan actuel</button>
+<button onclick="showScreen('screen-home')" class="w-full py-3 border-2 border-gray-300 text-gray-600 rounded-xl font-semibold">Plan actuel</button>
 </div>
-<div class="relative bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-8 text-white shadow-2xl">
-<div class="absolute -top-3 right-6 bg-amber-400 text-amber-900 px-4 py-1 rounded-full text-xs font-bold">⭐ RECOMMANDÉ</div>
-<div class="text-center mb-6"><h3 class="text-xl font-bold mb-1">Premium</h3><div class="mt-4"><span class="text-4xl font-bold">9,90€</span><span class="text-purple-200">/mois</span></div><p class="text-purple-200 text-xs mt-2">ou 97€/an (2 mois offerts)</p></div>
-<ul class="space-y-3 mb-8">
-<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><span>Tous les exercices</span></li>
-<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><span>Nouveautés chaque mois</span></li>
-<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><span>Formations vidéo</span></li>
-<li class="flex items-center gap-3"><span class="text-amber-300">✓</span><span>Communauté privée</span></li>
+<div class="relative bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-6 text-white shadow-2xl">
+<div class="absolute -top-3 right-4 bg-amber-400 text-amber-900 px-3 py-1 rounded-full text-xs font-bold">⭐ TOP</div>
+<div class="text-center mb-4"><h3 class="text-xl font-bold">Premium</h3><div class="mt-3"><span class="text-3xl font-bold">9,90€</span><span class="text-purple-200">/mois</span></div><p class="text-purple-200 text-xs mt-1">ou 97€/an</p></div>
+<ul class="space-y-2 mb-6 text-sm">
+<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Programme 100 jours</strong> complet</li>
+<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>50+ exercices</strong></li>
+<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Écriture créative</strong> guidée</li>
+<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Créations transformatrices</strong></li>
+<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Défis créatifs</strong> hebdo</li>
+<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Cartes du jour</strong> illimitées</li>
+<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Rituels</strong> matin/soir</li>
+<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Nouveautés</strong> chaque mois</li>
 </ul>
-<a href="#" class="block w-full py-4 bg-white text-purple-600 rounded-xl font-bold text-lg hover:scale-105 transition-transform shadow-lg text-center">Je passe Premium ✨</a>
-<p class="text-center text-purple-200 text-xs mt-3">Paiement sécurisé • Annulation à tout moment</p>
-</div>
-</div>
-<div class="bg-white/70 rounded-3xl p-8 border border-white/80">
-<h3 class="text-xl font-bold text-gray-800 mb-6 text-center">💜 Nos garanties</h3>
-<div class="grid md:grid-cols-3 gap-6">
-<div class="text-center"><div class="text-3xl mb-2">🔒</div><h4 class="font-semibold text-gray-800 mb-1">Paiement sécurisé</h4><p class="text-gray-500 text-sm">Via Stripe</p></div>
-<div class="text-center"><div class="text-3xl mb-2">🔄</div><h4 class="font-semibold text-gray-800 mb-1">Sans engagement</h4><p class="text-gray-500 text-sm">Annule quand tu veux</p></div>
-<div class="text-center"><div class="text-3xl mb-2">💯</div><h4 class="font-semibold text-gray-800 mb-1">Satisfait ou remboursé</h4><p class="text-gray-500 text-sm">14 jours pour tester</p></div>
+<a href="#" class="block w-full py-3 bg-white text-purple-600 rounded-xl font-bold text-center hover:scale-105 transition-transform">Je passe Premium ✨</a>
 </div>
 </div>
 </div>
@@ -262,38 +948,205 @@
 </div>
 
 <script>
+// ===== DONNÉES =====
 const questions=[
-{title:"Qu'est-ce qui t'amène ici aujourd'hui ?",subtitle:"Écoute ce qui te motive.",options:[{value:'mieux-etre',label:'Me sentir mieux au quotidien',emoji:'🌤️'},{value:'confiance',label:'Développer ma confiance en moi',emoji:'💪'},{value:'sens',label:'Trouver ou retrouver du sens',emoji:'🧭'},{value:'stress',label:'Mieux gérer mon stress',emoji:'🍃'},{value:'creativite',label:'Libérer ma créativité',emoji:'✨'},{value:'equilibre',label:'Retrouver un équilibre de vie',emoji:'⚖️'}]},
-{title:"De quoi aurais-tu le plus besoin ?",subtitle:"Écoute ce qui résonne en toi.",options:[{value:'calme',label:'De calme et de sérénité',emoji:'☮️'},{value:'energie',label:"D'énergie et de motivation",emoji:'⚡'},{value:'clarte',label:'De clarté et de vision',emoji:'🔮'},{value:'creativite',label:"D'expression créative",emoji:'🎨'},{value:'connexion',label:'De me reconnecter à moi-même',emoji:'🤝'},{value:'gratitude',label:'De cultiver la gratitude',emoji:'🙏'}]},
-{title:"Combien de temps peux-tu consacrer ?",subtitle:"Même 5 minutes comptent.",options:[{value:'5',label:'5 minutes',emoji:'⏱️'},{value:'10',label:'10 minutes',emoji:'🕐'},{value:'20',label:'20 minutes',emoji:'🕑'},{value:'30',label:'30 minutes ou plus',emoji:'🕒'}]},
-{title:"Qu'est-ce qui t'attire le plus ?",subtitle:"Choisis ce qui te parle.",options:[{value:'respirer',label:'Respirer, méditer',emoji:'🧘'},{value:'bouger',label:'Bouger, nature',emoji:'🌿'},{value:'creer',label:'Créer, dessiner',emoji:'🎨'},{value:'ecrire',label:'Écrire, réfléchir',emoji:'📝'},{value:'visualiser',label:'Visualiser mes objectifs',emoji:'🎯'},{value:'nature',label:'Être en nature',emoji:'🌳'}]},
-{title:"Quelle est ton intention ?",subtitle:"Ton intention guide ton chemin.",options:[{value:'apaiser',label:'Apaiser mon mental',emoji:'🌙'},{value:'grandir',label:'Grandir et évoluer',emoji:'🌱'},{value:'confiance',label:'Renforcer ma confiance',emoji:'💎'},{value:'creativite',label:'Éveiller ma créativité',emoji:'✨'},{value:'presence',label:'Vivre le présent',emoji:'🌻'},{value:'harmonie',label:"L'harmonie intérieure",emoji:'☯️'}]}
+{title:"Qu'est-ce qui t'amène ici ?",subtitle:"Écoute ce qui te motive.",options:[{value:'mieux-etre',label:'Me sentir mieux',emoji:'🌤️'},{value:'confiance',label:'Développer ma confiance',emoji:'💪'},{value:'sens',label:'Trouver du sens',emoji:'🧭'},{value:'stress',label:'Gérer mon stress',emoji:'🍃'},{value:'creativite',label:'Libérer ma créativité',emoji:'✨'},{value:'equilibre',label:'Retrouver un équilibre',emoji:'⚖️'}]},
+{title:"De quoi aurais-tu le plus besoin ?",subtitle:"Écoute ce qui résonne.",options:[{value:'calme',label:'De calme',emoji:'☮️'},{value:'energie',label:"D'énergie",emoji:'⚡'},{value:'clarte',label:'De clarté',emoji:'🔮'},{value:'creativite',label:"D'expression",emoji:'🎨'},{value:'connexion',label:'De connexion à moi',emoji:'🤝'},{value:'gratitude',label:'De gratitude',emoji:'🙏'}]},
+{title:"Combien de temps par jour ?",subtitle:"Même 5 minutes comptent.",options:[{value:'5',label:'5 minutes',emoji:'⏱️'},{value:'10',label:'10 minutes',emoji:'🕐'},{value:'20',label:'20 minutes',emoji:'🕑'},{value:'30',label:'30 min ou plus',emoji:'🕒'}]},
+{title:"Qu'est-ce qui t'attire ?",subtitle:"Choisis ce qui te parle.",options:[{value:'respirer',label:'Respirer, méditer',emoji:'🧘'},{value:'ecrire',label:'Écrire, raconter',emoji:'✍️'},{value:'creer',label:'Créer, transformer',emoji:'🎨'},{value:'nature',label:'Être en nature',emoji:'🌳'},{value:'visualiser',label:'Visualiser',emoji:'🎯'},{value:'reflecter',label:'Réfléchir, comprendre',emoji:'💭'}]},
+{title:"Ton intention ?",subtitle:"Ton phare pour 100 jours.",options:[{value:'apaiser',label:'Apaiser mon mental',emoji:'🌙'},{value:'grandir',label:'Grandir',emoji:'🌱'},{value:'confiance',label:'Ma confiance',emoji:'💎'},{value:'creer',label:'Créer davantage',emoji:'✨'},{value:'presence',label:'Vivre le présent',emoji:'🌻'},{value:'harmonie',label:"L'harmonie",emoji:'☯️'}]}
+];
+
+const dailyCards=[
+{emoji:'🌅',title:'Nouveau départ',affirmation:"Aujourd'hui est un nouveau commencement.",exercise:"Écris 3 choses que tu veux laisser derrière toi."},
+{emoji:'💪',title:'Force intérieure',affirmation:"Tu es plus fort·e que tu ne le crois.",exercise:"Rappelle-toi un moment où tu as surmonté un défi."},
+{emoji:'🌿',title:'Ancrage',affirmation:"Tu es ici, maintenant, et c'est suffisant.",exercise:"Fais l'exercice des 5 sens."},
+{emoji:'✨',title:'Créativité',affirmation:"Ta créativité est illimitée.",exercise:"Dessine ce que tu ressens en ce moment."},
+{emoji:'🙏',title:'Gratitude',affirmation:"La gratitude transforme ce que tu as en suffisant.",exercise:"Note 3 choses pour lesquelles tu es reconnaissant·e."},
+{emoji:'🌙',title:'Lâcher prise',affirmation:"Tu n'as pas besoin de tout contrôler.",exercise:"Écris ce que tu peux lâcher aujourd'hui."},
+{emoji:'💎',title:'Confiance',affirmation:"Tu mérites tout le bonheur du monde.",exercise:"Écris 5 qualités que tu apprécies chez toi."},
+{emoji:'🌊',title:'Fluidité',affirmation:"Comme l'eau, adapte-toi avec souplesse.",exercise:"Respire profondément 10 fois."},
+{emoji:'🔥',title:'Passion',affirmation:"Ce qui te fait vibrer est ton guide.",exercise:"Note ce qui te passionne vraiment."},
+{emoji:'🌸',title:'Douceur',affirmation:"Sois doux·ce avec toi-même.",exercise:"Pose une main sur ton cœur et respire."},
+{emoji:'🧭',title:'Direction',affirmation:"Chaque petit pas compte.",exercise:"Quel est ton prochain petit pas ?"},
+{emoji:'🎨',title:'Expression',affirmation:"Tes émotions méritent d'être exprimées.",exercise:"Écris ou dessine ce que tu ressens."},
+{emoji:'🌳',title:'Enracinement',affirmation:"Tu es solide comme un arbre.",exercise:"Visualise tes racines dans la terre."},
+{emoji:'☀️',title:'Lumière',affirmation:"Tu portes la lumière en toi.",exercise:"Qu'est-ce qui illumine ta vie ?"},
+{emoji:'🦋',title:'Transformation',affirmation:"Tu es en constante évolution.",exercise:"Qu'est-ce qui a changé en toi récemment ?"}
+];
+
+const morningRituals=[
+{icon:'🌅',title:'Intention du jour',steps:["Respire 3 fois profondément","Choisis une intention pour aujourd'hui","Dis-la à voix haute : \"Aujourd'hui, je...\""]},
+{icon:'🙏',title:'Gratitude matinale',steps:["Note 3 choses pour lesquelles tu es reconnaissant·e","Sens la gratitude dans ton corps","Souris"]},
+{icon:'💪',title:'Affirmation puissante',steps:["Choisis une affirmation","Répète-la 3 fois","Ressens-la dans tout ton corps"]},
+{icon:'🧘',title:'Mini méditation',steps:["Assieds-toi confortablement","Respire profondément 2 minutes","Observe tes pensées sans juger"]}
+];
+
+const eveningRituals=[
+{icon:'🌙',title:'Bilan du jour',steps:["Qu'est-ce qui s'est bien passé ?","Qu'as-tu appris ?","De quoi es-tu fier·e ?"]},
+{icon:'📔',title:'Journal du soir',steps:["Écris librement pendant 5 minutes","Note tes émotions","Lâche prise"]},
+{icon:'🙏',title:'Gratitude du soir',steps:["3 moments positifs de la journée","Remercie quelqu'un (même en pensée)","Endors-toi avec le cœur léger"]},
+{icon:'🫧',title:'Relaxation',steps:["Allonge-toi","Scan corporel rapide","3 grandes respirations"]}
+];
+
+const weeklyChallenges=[
+"🎨 Dessine ton émotion dominante de la semaine",
+"✍️ Écris une lettre à ton toi du futur (dans 1 an)",
+"🌿 Crée un mandala avec ce qui t'entoure (objets, feuilles...)",
+"📸 Prends 5 photos de ce qui te rend heureux·se",
+"✍️ Raconte le moment le plus beau de ta semaine comme une histoire",
+"🎨 Dessine ta semaine sous forme de paysage",
+"📝 Écris 10 choses que tu aimes chez toi",
+"🌳 Collectionne 3 objets naturels et crée quelque chose avec",
+"✍️ Écris une histoire où tu es le·la héros·ïne",
+"🎨 Transforme une vieille page en œuvre d'art",
+"📝 Liste 5 rêves que tu veux réaliser",
+"🎨 Crée un autoportrait symbolique (pas réaliste)"
+];
+
+const phases=[
+{id:1,name:'Éveil',emoji:'🌅',color:'from-amber-400 to-orange-400',days:'Jours 1-25',desc:'Découverte de soi et installation de l\'habitude',premium:false,
+tasks:[
+{d:1,t:'Respiration consciente',type:'meditation'},{d:2,t:'Journal : qui suis-je ?',type:'ecriture'},{d:3,t:'Les 5 sens',type:'ancrage'},
+{d:4,t:'Dessine ton état actuel',type:'creation'},{d:5,t:'3 gratitudes',type:'gratitude'},{d:6,t:'Scan corporel',type:'meditation'},
+{d:7,t:'Écris ton histoire (chapitre 1)',type:'ecriture'},{d:8,t:'L\'arbre intérieur',type:'ancrage'},{d:9,t:'Collage : mes valeurs',type:'creation'},
+{d:10,t:'Méditation de gratitude',type:'meditation'},{d:11,t:'Lettre à toi-même',type:'ecriture'},{d:12,t:'Affirmations positives',type:'confiance'},
+{d:13,t:'Mandala personnel',type:'creation'},{d:14,t:'Bilan de la semaine 2',type:'ecriture'},{d:15,t:'Visualisation',type:'meditation'},
+{d:16,t:'Raconte un souvenir heureux',type:'ecriture'},{d:17,t:'Ancrage émotionnel',type:'ancrage'},{d:18,t:'Dessine ta joie',type:'creation'},
+{d:19,t:'Journal des émotions',type:'emotionnel'},{d:20,t:'Respiration 4-7-8',type:'meditation'},{d:21,t:'Écris ce que tu veux laisser',type:'ecriture'},
+{d:22,t:'Création : transformer une peur',type:'creation'},{d:23,t:'Gratitude profonde',type:'gratitude'},{d:24,t:'Méditation du cœur',type:'meditation'},
+{d:25,t:'Bilan de la Phase 1',type:'ecriture'}
+]},
+{id:2,name:'Exploration',emoji:'🧭',color:'from-blue-400 to-cyan-400',days:'Jours 26-50',desc:'Approfondissement et créativité',premium:true,
+tasks:[
+{d:26,t:'Histoire : le chapitre du changement',type:'ecriture'},{d:27,t:'Création : ce que je veux transformer',type:'creation'},
+{d:28,t:'Méditation avancée 15 min',type:'meditation'},{d:29,t:'Écris à quelqu\'un qui compte',type:'ecriture'},{d:30,t:'Collage de vision',type:'creation'},
+{d:31,t:'Shadow work doux',type:'emotionnel'},{d:32,t:'Raconte ta plus belle réussite',type:'ecriture'},{d:33,t:'Création : portrait symbolique',type:'creation'},
+{d:34,t:'Ikigai personnel',type:'emotionnel'},{d:35,t:'Dessine ton monde idéal',type:'creation'},{d:36,t:'Méditation du cœur avancée',type:'meditation'},
+{d:37,t:'Écris une histoire de guérison',type:'ecriture'},{d:38,t:'Création : transformer la colère',type:'creation'},{d:39,t:'Roue de la vie',type:'emotionnel'},
+{d:40,t:'Bilan mi-parcours',type:'ecriture'},{d:41,t:'Ligne de vie',type:'emotionnel'},{d:42,t:'Création : carte au trésor',type:'creation'},
+{d:43,t:'Écris ton manifeste',type:'ecriture'},{d:44,t:'Méditation visualisation',type:'meditation'},{d:45,t:'Création : objet transitionnel',type:'creation'},
+{d:46,t:'Auto-compassion',type:'confiance'},{d:47,t:'Raconte un tournant de ta vie',type:'ecriture'},{d:48,t:'Création : libérer une émotion',type:'creation'},
+{d:49,t:'Objectifs SMART',type:'confiance'},{d:50,t:'Bilan de la Phase 2',type:'ecriture'}
+]},
+{id:3,name:'Transformation',emoji:'🦋',color:'from-purple-400 to-pink-400',days:'Jours 51-75',desc:'Changements profonds et ancrage',premium:true,
+tasks:[
+{d:51,t:'Histoire : le héros que je deviens',type:'ecriture'},{d:52,t:'Création : l\'ancien vs le nouveau moi',type:'creation'},
+{d:53,t:'Méditation profonde 20 min',type:'meditation'},{d:54,t:'Écris ce que tu pardonnes',type:'ecriture'},{d:55,t:'Création : rituel de passage',type:'creation'},
+{d:56,t:'Shadow work avancé',type:'emotionnel'},{d:57,t:'Raconte ta transformation',type:'ecriture'},{d:58,t:'Création : masque et vérité',type:'creation'},
+{d:59,t:'Enfant intérieur',type:'emotionnel'},{d:60,t:'Dessine ta force',type:'creation'},{d:61,t:'Méditation pleine conscience',type:'meditation'},
+{d:62,t:'Écris tes nouvelles croyances',type:'ecriture'},{d:63,t:'Création : autel personnel',type:'creation'},{d:64,t:'Gratitude transformée',type:'gratitude'},
+{d:65,t:'Bilan Phase 3 mi-parcours',type:'ecriture'},{d:66,t:'Écris une lettre de libération',type:'ecriture'},{d:67,t:'Création : pont vers l\'avenir',type:'creation'},
+{d:68,t:'Confiance inébranlable',type:'confiance'},{d:69,t:'Raconte ton plus grand courage',type:'ecriture'},{d:70,t:'Création : jardin intérieur',type:'creation'},
+{d:71,t:'Méditation amour universel',type:'meditation'},{d:72,t:'Écris tes engagements',type:'ecriture'},{d:73,t:'Création : symbole de force',type:'creation'},
+{d:74,t:'Visualisation avancée',type:'meditation'},{d:75,t:'Bilan de la Phase 3',type:'ecriture'}
+]},
+{id:4,name:'Intégration',emoji:'🌟',color:'from-green-400 to-emerald-400',days:'Jours 76-100',desc:'Consolidation et projection',premium:true,
+tasks:[
+{d:76,t:'Histoire finale : chapitre 1',type:'ecriture'},{d:77,t:'Création : œuvre de célébration',type:'creation'},
+{d:78,t:'Méditation de gratitude profonde',type:'meditation'},{d:79,t:'Écris ta nouvelle histoire',type:'ecriture'},{d:80,t:'Création : message au monde',type:'creation'},
+{d:81,t:'Synthèse du parcours',type:'emotionnel'},{d:82,t:'Raconte qui tu es devenu·e',type:'ecriture'},{d:83,t:'Création : cadeau à toi-même',type:'creation'},
+{d:84,t:'Plan pour les 100 prochains jours',type:'confiance'},{d:85,t:'Dessine ton avenir',type:'creation'},{d:86,t:'Méditation d\'ancrage final',type:'meditation'},
+{d:87,t:'Écris tes leçons apprises',type:'ecriture'},{d:88,t:'Création : arbre de vie',type:'creation'},{d:89,t:'Gratitude finale',type:'gratitude'},
+{d:90,t:'Bilan global',type:'ecriture'},{d:91,t:'Histoire finale : chapitre 2',type:'ecriture'},{d:92,t:'Création : héritage',type:'creation'},
+{d:93,t:'Lettre au·à la toi du début',type:'ecriture'},{d:94,t:'Création : boussole intérieure',type:'creation'},{d:95,t:'Méditation de célébration',type:'meditation'},
+{d:96,t:'Écris tes vœux pour la suite',type:'ecriture'},{d:97,t:'Création : œuvre finale',type:'creation'},{d:98,t:'Cérémonie de clôture',type:'emotionnel'},
+{d:99,t:'Histoire finale : épilogue',type:'ecriture'},{d:100,t:'🎉 CÉLÉBRATION !',type:'gratitude'}
+]}
 ];
 
 const exercises=[
-{id:'med-1',title:'Respiration consciente',cat:'meditation',duration:'5-10 min',diff:'débutant',emoji:'🌬️',premium:false,desc:'Une méditation simple centrée sur le souffle.',benefits:['Réduit le stress','Améliore la concentration','Calme le système nerveux'],steps:[{t:'Installe-toi',d:'Assieds-toi confortablement. Ferme les yeux.'},{t:'Observe ta respiration',d:'Observe simplement comment tu respires.'},{t:'Approfondis',d:'Inspire 4 secondes, retiens 2 secondes, expire 6 secondes.'},{t:'Continue',d:'Pendant 5-10 minutes. Ramène ton esprit au souffle.'},{t:'Reviens',d:'Ouvre les yeux doucement.'}]},
-{id:'med-2',title:'Scan corporel',cat:'meditation',duration:'15-20 min',diff:'intermédiaire',emoji:'🫧',premium:true,desc:'Un voyage doux à travers ton corps.',benefits:['Relâche les tensions','Favorise le sommeil','Conscience de soi'],steps:[{t:'Allonge-toi',d:'Confortablement, bras le long du corps.'},{t:'Respire',d:'3 grandes respirations profondes.'},{t:'Les pieds',d:'Porte ton attention sur tes pieds.'},{t:'Remonte',d:'Jambes, hanches, ventre, poitrine...'}, {t:'Enveloppe-toi',d:'Imagine une lumière chaude.'}]},
-{id:'med-3',title:'Méditation gratitude',cat:'meditation',duration:'10 min',diff:'débutant',emoji:'🙏',premium:false,desc:'Cultive la gratitude.',benefits:['Améliore l\'humeur','Renforce la résilience','Favorise l\'optimisme'],steps:[{t:'Installe-toi',d:'Trouve un endroit paisible.'},{t:'3 choses',d:'Identifie 3 choses pour lesquelles tu es reconnaissant·e.'},{t:'Ressens',d:'Pour chaque chose, ressens la gratitude.'},{t:'Toi-même',d:'Envoie de la gratitude envers toi.'},{t:'Clôture',d:'Main sur le cœur. Respire.'}]},
-{id:'anc-1',title:'L\'arbre intérieur',cat:'ancrage',duration:'10 min',diff:'débutant',emoji:'🌳',premium:false,desc:'Visualise-toi comme un arbre puissant.',benefits:['Stabilité','Confiance','Connexion nature'],steps:[{t:'Debout',d:'Pieds écartés, ancrés dans le sol.'},{t:'Racines',d:'Visualise des racines profondes.'},{t:'Tronc fort',d:'Ton corps est un tronc solide.'},{t:'Branches',d:'Tes bras s\'ouvrent vers le ciel.'},{t:'Reviens',d:'Grande inspiration. Ramène cette force.'}]},
-{id:'anc-2',title:'Les 5 sens',cat:'ancrage',duration:'5 min',diff:'débutant',emoji:'👁️',premium:false,desc:'Reconnecte-toi au moment présent.',benefits:['Stoppe l\'anxiété','Ramène au présent','Disponible partout'],steps:[{t:'5 VOIS',d:'Nomme 5 choses que tu vois.'},{t:'4 TOUCHES',d:'Sens 4 choses que tu touches.'},{t:'3 ENTENDS',d:'Identifie 3 sons.'},{t:'2 SENS',d:'Identifie 2 odeurs.'},{t:'1 GOÛTE',d:'Concentre-toi sur le goût.'}]},
-{id:'art-1',title:'Dessin intuitif',cat:'art-therapie',duration:'15-20 min',diff:'débutant',emoji:'🎨',premium:false,desc:'Exprime-toi par les couleurs et formes.',benefits:['Libère la créativité','Conscience de soi','Réduit le stress'],steps:[{t:'Prépare',d:'Papier et crayons de couleur.'},{t:'Connecte-toi',d:'Comment te sens-tu ?'}, {t:'Laisse-toi guider',d:'Laisse ta main bouger.'},{t:'Couleurs',d:'Choisis celles qui t\'attirent.'},{t:'Contemple',d:'Que te dit ton dessin ?'}]},
-{id:'art-2',title:'Mandala personnel',cat:'art-therapie',duration:'20-30 min',diff:'intermédiaire',emoji:'🔮',premium:true,desc:'Crée ton mandala pour te centrer.',benefits:['Centre et recentre','Méditation','Harmonise'],steps:[{t:'Cercle',d:'Dessine un grand cercle.'},{t:'Centre',d:'Dessine ce qui te représente.'},{t:'Couches',d:'Ajoute des formes concentriques.'},{t:'Couleurs',d:'Utilise celles qui te parlent.'},{t:'Contemple',d:'Regarde ton mandala.'}]},
-{id:'emo-1',title:'Journal de gratitude',cat:'emotionnel',duration:'5-10 min',diff:'débutant',emoji:'📔',premium:false,desc:'Note 3 gratitudes chaque jour.',benefits:['Recentre sur le positif','Améliore l\'humeur','Change la perspective'],steps:[{t:'Moment',d:'Matin ou soir, un moment calme.'},{t:'3 gratitudes',d:'Note 3 choses simples.'},{t:'Développe',d:'Écris pourquoi.'},{t:'Toi-même',d:'Une gratitude envers toi.'},{t:'Ressens',d:'Laisse monter le sentiment.'}]},
-{id:'emo-2',title:'Lettre à soi-même',cat:'emotionnel',duration:'15-20 min',diff:'intermédiaire',emoji:'💌',premium:true,desc:'Écris une lettre tendre à toi-même.',benefits:['Compassion','Estime de soi','Lien intérieur'],steps:[{t:'Installe-toi',d:'Endroit calme.'},{t:'Commence',d:'"Cher moi," ou "À moi-même,"'},{t:'Parcours',d:'Ce que tu as accompli.'},{t:'Compassion',d:'Mots de tendresse.'},{t:'Amour',d:'"Je suis là pour toi."'}]},
-{id:'emo-3',title:'Valeurs personnelles',cat:'emotionnel',duration:'20-30 min',diff:'intermédiaire',emoji:'💎',premium:true,desc:'Découvre tes valeurs fondamentales.',benefits:['Clarifie les choix','Donne du sens','Guide les décisions'],steps:[{t:'Fierté',d:'5 moments de fierté.'},{t:'Thèmes',d:'Quels thèmes reviennent ?'},{t:'5 valeurs',d:'Choisis les 5 qui résonnent.'},{t:'Définis',d:'Ce que chacune signifie.'},{t:'Alignement',d:'Ta vie reflète-t-elle ces valeurs ?'}]}
+// MÉDITATION
+{id:'med-1',title:'Respiration consciente',cat:'meditation',dur:'5 min',diff:'débutant',emoji:'🌬️',p:false,desc:'Apaise ton mental par le souffle.',ben:['Réduit le stress','Concentration','Calme'],steps:[{t:'Installe-toi',d:'Assieds-toi, ferme les yeux.'},{t:'Observe',d:'Observe ton souffle.'},{t:'Approfondis',d:'Inspire 4s, retiens 2s, expire 6s.'},{t:'Continue',d:'5 minutes.'},{t:'Reviens',d:'Ouvre les yeux.'}]},
+{id:'med-2',title:'Scan corporel',cat:'meditation',dur:'15 min',diff:'intermédiaire',emoji:'🫧',p:true,desc:'Voyage à travers ton corps.',ben:['Relâche les tensions','Sommeil','Conscience'],steps:[{t:'Allonge-toi',d:'Confortablement.'},{t:'Respire',d:'3 grandes respirations.'},{t:'Pieds',d:'Porte ton attention sur tes pieds.'},{t:'Remonte',d:'Jambes, bassin, ventre...'}, {t:'Visage',d:'Détends tout ton visage.'},{t:'Enveloppe',d:'Lumière chaude.'}]},
+{id:'med-3',title:'Gratitude',cat:'gratitude',dur:'10 min',diff:'débutant',emoji:'🙏',p:false,desc:'Cultive la gratitude.',ben:['Humeur','Résilience','Optimisme'],steps:[{t:'Installe-toi',d:'Endroit paisible.'},{t:'3 choses',d:'3 gratitudes.'},{t:'Ressens',d:'Ressens la gratitude.'},{t:'Toi',d:'Gratitude envers toi.'},{t:'Clôture',d:'Main sur le cœur.'}]},
+{id:'med-4',title:'Visualisation',cat:'meditation',dur:'15 min',diff:'intermédiaire',emoji:'🌟',p:true,desc:'Crée ta réalité idéale.',ben:['Succès','Objectifs','Motivation'],steps:[{t:'Détends-toi',d:'5 respirations.'},{t:'Lieu sûr',d:'Un endroit de paix.'},{t:'Avenir',d:'Toi dans 1 an.'},{t:'Détails',d:'Couleurs, sons, émotions.'},{t:'Action',d:'Premier pas.'}]},
+{id:'med-5',title:'Cœur ouvert',cat:'meditation',dur:'15 min',diff:'intermédiaire',emoji:'💗',p:true,desc:'Ouvre ton cœur.',ben:['Compassion','Amour','Paix'],steps:[{t:'Centre-toi',d:'Respire.'},{t:'Lumière',d:'Lumière dans ton cœur.'},{t:'Toi',d:'Amour à toi-même.'},{t:'Proche',d:'Quelqu\'un que tu aimes.'},{t:'Tous',d:'Amour à tous.'}]},
+// ANCRAGE
+{id:'anc-1',title:'Arbre intérieur',cat:'ancrage',dur:'10 min',diff:'débutant',emoji:'🌳',p:false,desc:'Deviens un arbre puissant.',ben:['Stabilité','Confiance','Nature'],steps:[{t:'Debout',d:'Pieds ancrés.'},{t:'Racines',d:'Racines profondes.'},{t:'Tronc',d:'Corps solide.'},{t:'Branches',d:'Bras vers le ciel.'},{t:'Reviens',d:'Inspire.'}]},
+{id:'anc-2',title:'5 sens',cat:'ancrage',dur:'5 min',diff:'débutant',emoji:'👁️',p:false,desc:'Reviens au présent.',ben:['Anti-anxiété','Présence','Partout'],steps:[{t:'5 VOIS',d:'5 choses.'},{t:'4 TOUCHES',d:'4 sensations.'},{t:'3 ENTENDS',d:'3 sons.'},{t:'2 SENS',d:'2 odeurs.'},{t:'1 GOÛTE',d:'1 goût.'}]},
+{id:'anc-3',title:'Ancrage émotionnel',cat:'ancrage',dur:'10 min',diff:'intermédiaire',emoji:'⚓',p:true,desc:'Crée un ancrage de calme.',ben:['Calme instantané','Portable','Autonomie'],steps:[{t:'Rappelle',d:'Un moment de calme.'},{t:'Ressens',d:'Amplifie.'},{t:'Ancre',d:'Serre ton poing.'},{t:'Répète',d:'5 fois.'},{t:'Teste',d:'Le calme revient.'}]},
+{id:'anc-4',title:'Bain de nature',cat:'ancrage',dur:'30 min',diff:'débutant',emoji:'🌲',p:true,desc:'Immerge-toi.',ben:['Recharge','Créativité','Bien-être'],steps:[{t:'Lieu',d:'Trouve la nature.'},{t:'Respire',d:'5 respirations.'},{t:'Observe',d:'Regarde tout.'},{t:'Écoute',d:'Yeux fermés.'},{t:'Touche',d:'Connecte-toi.'},{t:'Merci',d:'Remercie.'}]},
+// ÉCRITURE CRÉATIVE
+{id:'ecr-1',title:'Qui suis-je ?',cat:'ecriture',dur:'15 min',diff:'débutant',emoji:'🪞',p:false,desc:'Explore ton identité par l\'écriture.',ben:['Connaissance','Clarté','Authenticité'],steps:[{t:'Question',d:'"Qui suis-je vraiment ?"'},{t:'Écris',d:'Sans filtre, 10 minutes.'},{t:'Relis',d:'Que découvres-tu ?'},{t:'Note',d:'Les mots qui reviennent.'}]},
+{id:'ecr-2',title:'Mon histoire - Chapitre 1',cat:'ecriture',dur:'20 min',diff:'débutant',emoji:'📖',p:true,desc:'Commence à raconter ton histoire.',ben:['Sens','Compréhension','Libération'],steps:[{t:'Le début',d:'"Tout a commencé quand..."'},{t:'Décris',d:'Le contexte, les personnages.'},{t:'L\'élément',d:'Ce qui a tout changé.'},{t:'Ressens',d:'Comment tu te sens en écrivant.'}]},
+{id:'ecr-3',title:'Lettre à mon futur moi',cat:'ecriture',dur:'15 min',diff:'débutant',emoji:'💌',p:false,desc:'Écris à la personne que tu seras dans 1 an.',ben:['Vision','Espoir','Direction'],steps:[{t:'Cher futur moi',d:'Commence ta lettre.'},{t:'Aujourd\'hui',d:'Décris où tu en es.'},{t:'Rêves',d:'Ce que tu veux devenir.'},{t:'Promesse',d:'Ce que tu promets de faire.'}]},
+{id:'ecr-4',title:'Le chapitre du changement',cat:'ecriture',dur:'25 min',diff:'intermédiaire',emoji:'📝',p:true,desc:'Raconte le moment où tout a basculé.',ben:['Transformation','Sens','Force'],steps:[{t:'Avant',d:'Décris ta vie avant.'},{t:'Le déclic',d:'Qu\'est-ce qui a changé ?'},{t:'Pendant',d:'Comment tu as vécu le changement.'},{t:'Après',d:'Qui es-tu devenu·e ?'}]},
+{id:'ecr-5',title:'Mon manifeste',cat:'ecriture',dur:'20 min',diff:'intermédiaire',emoji:'📜',p:true,desc:'Écris tes valeurs et engagements.',ben:['Clarté','Engagement','Identité'],steps:[{t:'Je crois',d:'"Je crois que..."'},{t:'Je choisis',d:'"Je choisis de..."'},{t:'Je m\'engage',d:'"Je m\'engage à..."'},{t:'Je suis',d:'"Je suis..."'}]},
+{id:'ecr-6',title:'Histoire de guérison',cat:'ecriture',dur:'25 min',diff:'avancé',emoji:'🌈',p:true,desc:'Raconte ta guérison comme une histoire.',ben:['Guérison','Distance','Force'],steps:[{t:'La blessure',d:'Décris ce qui t\'a blessé·e.'},{t:'Le chemin',d:'Comment tu as traversé.'},{t:'La guérison',d:'Comment tu as guéri.'},{t:'Le trésor',d:'Ce que tu as gagné.'}]},
+{id:'ecr-7',title:'Lettre de libération',cat:'ecriture',dur:'20 min',diff:'intermédiaire',emoji:'🕊️',p:true,desc:'Libère-toi de ce qui te pèse.',ben:['Libération','Lâcher prise','Paix'],steps:[{t:'Ce que je libère',d:'"Je libère..."'},{t:'Ce que je pardonne',d:'"Je pardonne..."'},{t:'Ce que je choisis',d:'"Je choisis maintenant..."'},{t:'Adieu',d:'Écris ton adieu.'}]},
+{id:'ecr-8',title:'Le héros que je deviens',cat:'ecriture',dur:'30 min',diff:'avancé',emoji:'🦸',p:true,desc:'Raconte ton histoire héroïque.',ben:['Confiance','Vision','Puissance'],steps:[{t:'L\'appel',d:'Quel est ton appel ?'},{t:'Les épreuves',d:'Quels dragons as-tu affrontés ?'},{t:'Le trésor',d:'Qu\'as-tu gagné ?'},{t:'Le retour',d:'Comment tu transformes le monde.'}]},
+// CRÉATION & TRANSFORMATION
+{id:'cre-1',title:'Dessine ton émotion',cat:'creation',dur:'15 min',diff:'débutant',emoji:'🎨',p:false,desc:'Exprime ton émotion par le dessin.',ben:['Expression','Libération','Conscience'],steps:[{t:'Ton émotion',d:'Quelle émotion est là ?'},{t:'Couleurs',d:'Choisis les couleurs.'},{t:'Dessine',d:'Laisse ta main bouger.'},{t:'Contemple',d:'Que te dit ton dessin ?'}]},
+{id:'cre-2',title:'Ce que je veux transformer',cat:'creation',dur:'20 min',diff:'débutant',emoji:'🔄',p:true,desc:'Crée quelque chose pour symboliser ta transformation.',ben:['Transformation','Clarté','Action'],steps:[{t:'Identifie',d:'Qu\'est-ce que tu veux transformer ?'},{t:'Avant',d:'Dessine/écris l\'état actuel.'},{t:'Après',d:'Dessine/écris l\'état désiré.'},{t:'Le pont',d:'Crée le pont entre les deux.'}]},
+{id:'cre-3',title:'Mandala personnel',cat:'creation',dur:'25 min',diff:'intermédiaire',emoji:'🔮',p:true,desc:'Crée ton mandala.',ben:['Centre','Harmonie','Méditation'],steps:[{t:'Cercle',d:'Trace un cercle.'},{t:'Centre',d:'Toi au centre.'},{t:'Couches',d:'Formes concentriques.'},{t:'Couleurs',d:'Celles qui te parlent.'},{t:'Contemple',d:'Ton monde intérieur.'}]},
+{id:'cre-4',title:'Transformer la colère',cat:'creation',dur:'20 min',diff:'intermédiaire',emoji:'🔥',p:true,desc:'Transforme ta colère en création.',ben:['Libération','Transformation','Paix'],steps:[{t:'La colère',d:'Ressens-la sans juger.'},{t:'Matière',d:'Choisis un matériau (papier, argile...).'},{t:'Transforme',d:'Transforme la colère en forme.'},{t:'Lâche',d:'Que faire de cette œuvre ?'}]},
+{id:'cre-5',title:'Portrait symbolique',cat:'creation',dur:'25 min',diff:'intermédiaire',emoji:'🎭',p:true,desc:'Crée ton portrait symbolique.',ben:['Connaissance','Expression','Authenticité'],steps:[{t:'Symboles',d:'Quels symboles te représentent ?'},{t:'Crée',d:'Assemble-les.'},{t:'Signification',d:'Que disent-ils de toi ?'},{t:'Évolution',d:'Comment ils évoluent.'}]},
+{id:'cre-6',title:'Carte au trésor',cat:'creation',dur:'30 min',diff:'débutant',emoji:'🗺️',p:true,desc:'Crée ta carte vers tes rêves.',ben:['Vision','Motivation','Plan'],steps:[{t:'L\'île',d:'Ton objectif principal.'},{t:'Le chemin',d:'Les étapes.'},{t:'Les obstacles',d:'Les défis.'},{t:'Les alliés',d:'Tes ressources.'},{t:'Le trésor',d:'Ce que tu trouveras.'}]},
+{id:'cre-7',title:'Rituel de passage',cat:'creation',dur:'30 min',diff:'avancé',emoji:'🚪',p:true,desc:'Crée un rituel pour marquer un passage.',ben:['Transformation','Sens','Engagement'],steps:[{t:'Le passage',d:'Que laisses-tu derrière toi ?'},{t:'Le seuil',d:'Crée un objet/acte symbolique.'},{t:'L\'arrivée',d:'Qui arrives-tu de l\'autre côté ?'},{t:'Célébration',d:'Marque le moment.'}]},
+{id:'cre-8',title:'Arbre de vie',cat:'creation',dur:'30 min',diff:'intermédiaire',emoji:'🌳',p:true,desc:'Crée ton arbre de vie.',ben:['Vision globale','Racines','Croissance'],steps:[{t:'Racines',d:'Tes valeurs, ton histoire.'},{t:'Tronc',d:'Tes forces.'},{t:'Branches',d:'Tes aspirations.'},{t:'Fruits',d:'Tes accomplissements.'},{t:'Feuilles',d:'Tes rêves.'}]},
+// GRATITUDE
+{id:'gra-1',title:'Journal de gratitude',cat:'gratitude',dur:'5 min',diff:'débutant',emoji:'📔',p:false,desc:'3 gratitudes par jour.',ben:['Positif','Humeur','Perspective'],steps:[{t:'Moment',d:'Matin ou soir.'},{t:'3 choses',d:'3 gratitudes.'},{t:'Pourquoi',d:'Pourquoi ?'},{t:'Toi',d:'Gratitude envers toi.'}]},
+{id:'gra-2',title:'Gratitude profonde',cat:'gratitude',dur:'15 min',diff:'intermédiaire',emoji:'🙏',p:true,desc:'Gratitude pour les épreuves.',ben:['Acceptation','Sagesse','Paix'],steps:[{t:'L\'épreuve',d:'Pense à une difficulté.'},{t:'La leçon',d:'Qu\'as-tu appris ?'},{t:'La force',d:'Quelle force as-tu développée ?'},{t:'Merci',d:'Remercie pour cette leçon.'}]},
+// CONFIANCE
+{id:'con-1',title:'Affirmations',cat:'confiance',dur:'5 min',diff:'débutant',emoji:'✨',p:false,desc:'Reprogramme ton mental.',ben:['Confiance','Dialogue intérieur','Estime'],steps:[{t:'Pensées',d:'Note tes pensées négatives.'},{t:'Transforme',d:'Crée l\'opposé positif.'},{t:'5',d:'Choisis 5 affirmations.'},{t:'Répète',d:'Chaque matin.'}]},
+{id:'con-2',title:'Roue de la vie',cat:'emotionnel',dur:'20 min',diff:'intermédiaire',emoji:'🎡',p:true,desc:'Évalue l\'équilibre de ta vie.',ben:['Vision','Déséquilibres','Plan'],steps:[{t:'8 domaines',d:'Santé, travail, amour, famille, amis, argent, loisirs, spirituel.'},{t:'Note',d:'De 1 à 10.'},{t:'Relie',d:'Forme ta roue.'},{t:'Analyse',d:'Où sont les déséquilibres ?'}]},
+{id:'con-3',title:'Ikigai',cat:'emotionnel',dur:'30 min',diff:'intermédiaire',emoji:'🎯',p:true,desc:'Trouve ta raison d\'être.',ben:['Sens','Alignement','Motivation'],steps:[{t:'Aimes',d:'Ce que tu aimes.'},{t:'Monde',d:'Ce dont le monde a besoin.'},{t:'Doué·e',d:'Ce pour quoi tu es doué·e.'},{t:'Payé·e',d:'Ce pour quoi tu peux être payé·e.'},{t:'Ikigai',d:'L\'intersection.'}]},
+{id:'con-4',title:'Objectifs SMART',cat:'confiance',dur:'20 min',diff:'débutant',emoji:'🎯',p:true,desc:'Objectifs clairs.',ben:['Clarté','Motivation','Action'],steps:[{t:'S',d:'Spécifique.'},{t:'M',d:'Mesurable.'},{t:'A',d:'Atteignable.'},{t:'R',d:'Rélevant.'},{t:'T',d:'Temporel.'}]},
+{id:'con-5',title:'Auto-compassion',cat:'confiance',dur:'15 min',diff:'débutant',emoji:'🤗',p:true,desc:'Sois ton meilleur ami.',ben:['Bienveillance','Estime','Résilience'],steps:[{t:'Situation',d:'Une situation difficile.'},{t:'Souffrance',d:'Reconnais-la.'},{t:'Humanité',d:'Tout le monde souffre.'},{t:'Bienveillance',d:'Parle-toi comme à un ami.'},{t:'Geste',d:'Main sur le cœur.'}]}
 ];
 
-let curQ=0,answers=[],selVal=null;
+const writingPrompts=[
+{id:'w1',title:'Le commencement',emoji:'📖',desc:'Raconte le début de ton histoire. "Tout a commencé quand..."',theme:'Les origines',premium:false,steps:[{t:'Le décor',d:'Décris le lieu, l\'époque, l\'ambiance.'},{t:'Le personnage',d:'Qui étais-tu à ce moment ?'},{t:'L\'événement',d:'Qu\'est-ce qui a tout déclenché ?'},{t:'L\'émotion',d:'Qu\'as-tu ressenti ?'},{t:'Le sens',d:'Avec le recul, quel sens donnes-tu à ce début ?'}]},
+{id:'w2',title:'Le dragon',emoji:'🐉',desc:'Raconte ton combat contre ta plus grande peur.',theme:'Le courage',premium:true,steps:[{t:'Le dragon',d:'Décris ta peur comme un dragon.'},{t:'L\'appel',d:'Qu\'est-ce qui t\'a poussé·e à l\'affronter ?'},{t:'Le combat',d:'Comment l\'as-tu affronté ?'},{t:'La victoire',d:'Qu\'as-tu gagné ?'},{t:'Le trésor',d:'Quelle force as-tu trouvée ?'}]},
+{id:'w3',title:'La lettre jamais envoyée',emoji:'💌',desc:'Écris la lettre que tu n\'as jamais osé envoyer.',theme:'La libération',premium:true,steps:[{t:'Le destinataire',d:'À qui est cette lettre ?'},{t:'Ce que tu veux dire',d:'Écris sans filtre.'},{t:'Ce que tu ressens',d:'Laisse venir les émotions.'},{t:'La fin',d:'Comment veux-tu terminer ?'},{t:'Que faire',d:'Garder, envoyer, brûler ?'}]},
+{id:'w4',title:'Le monde idéal',emoji:'🌍',desc:'Décris ton monde idéal comme un conte.',theme:'La vision',premium:true,steps:[{t:'Le lieu',d:'Où se passe ton monde idéal ?'},{t:'Les habitants',d:'Qui y vit ?'},{t:'Ton rôle',d:'Qui es-tu dans ce monde ?'},{t:'Un jour',d:'Raconte une journée type.'},{t:'Le premier pas',d:'Comment t\'en rapprocher ?'}]},
+{id:'w5',title:'L\'objet magique',emoji:'✨',desc:'Si tu avais un objet magique, que ferait-il ?',theme:'Le pouvoir intérieur',premium:true,steps:[{t:'L\'objet',d:'Quel est cet objet ?'},{t:'Son pouvoir',d:'Que fait-il ?'},{t:'La première utilisation',d:'Comment l\'utilises-tu ?'},{t:'La conséquence',d:'Qu\'est-ce que ça change ?'},{t:'Le vrai pouvoir',d:'En réalité, ce pouvoir est déjà en toi. Lequel ?'}]},
+{id:'w6',title:'Le jardin secret',emoji:'🌺',desc:'Décris ton jardin intérieur.',theme:'L\'intériorité',premium:true,steps:[{t:'L\'entrée',d:'Comment y accède-t-on ?'},{t:'Les plantes',d:'Qu\'y pousse ? (fleurs = joies, épines = défis...)'},{t:'Le coin préféré',d:'Ton endroit refuge.'},{t:'Le jardinier',d:'Qui en prend soin ?'},{t:'La saison',d:'En quelle saison es-tu maintenant ?'}]},
+{id:'w7',title:'Le pont',emoji:'🌉',desc:'Raconte le pont entre qui tu étais et qui tu es.',theme:'La transformation',premium:true,steps:[{t:'L\'avant',d:'Qui étais-tu avant ?'},{t:'Le pont',d:'Qu\'est-ce qui t\'a fait traverser ?'},{t:'La traversée',d:'Comment était le passage ?'},{t:'L\'après',d:'Qui es-tu maintenant ?'},{t:'Le message',d:'Quel message as-tu pour ton ancien toi ?'}]},
+{id:'w8',title:'Le cadeau',emoji:'🎁',desc:'Si tu pouvais offrir un cadeau au monde, ce serait quoi ?',theme:'La contribution',premium:true,steps:[{t:'Le cadeau',d:'Quel est ce cadeau ?'},{t:'Pourquoi',d:'Pourquoi ce cadeau ?'},{t:'Pour qui',d:'À qui l\'offres-tu ?'},{t:'Comment',d:'Comment le donner ?'},{t:'Déjà',d:'Ne l\'as-tu pas déjà offert sans le savoir ?'}]}
+];
 
+const creationPrompts=[
+{id:'c1',title:'Avant/Après',emoji:'🔄',desc:'Crée une œuvre en 2 parties : ce que tu veux laisser et ce que tu veux devenir.',transform:'Une habitude ou un comportement',premium:false,steps:[{t:'Identifie',d:'Qu\'est-ce que tu veux transformer ?'},{t:'Avant',d:'Crée/dessine l\'état actuel.'},{t:'Après',d:'Crée/dessine l\'état désiré.'},{t:'Le geste',d:'Fais un geste symbolique pour marquer le passage.'}]},
+{id:'c2',title:'L\'emotion en matière',emoji:'🎭',desc:'Donne forme à une émotion difficile.',transform:'Une émotion qui te pèse',premium:true,steps:[{t:'L\'émotion',d:'Quelle émotion veux-tu transformer ?'},{t:'La matière',d:'Choisis : papier, argile, tissu, objets...'},{t:'La forme',d:'Donne-lui une forme.'},{t:'La transformation',d:'Transforme cette forme en quelque chose de beau.'},{t:'Le message',d:'Que te dit cette création ?'}]},
+{id:'c3',title:'La boussole',emoji:'🧭',desc:'Crée ta boussole intérieure.',transform:'Le manque de direction',premium:true,steps:[{t:'Le Nord',d:'Qu\'est-ce qui te guide ? (une valeur)'},{t:'Le Sud',d:'D\'où viens-tu ? (tes racines)'},{t:'L\'Est',d:'Vers quoi tu vas ? (ton rêve)'},{t:'L\'Ouest',d:'Ce que tu laisses derrière.'},{t:'Crée',d:'Fabrique ta boussole.'}]},
+{id:'c4',title:'Le masque et la vérité',emoji:'🎭',desc:'Crée un masque et révèle ce qui est derrière.',transform:'Ce que tu caches au monde',premium:true,steps:[{t:'Le masque',d:'Qu\'est-ce que tu montres au monde ?'},{t:'Crée le masque',d:'Dessine/fabrique ce masque.'},{t:'La vérité',d:'Qu\'est-ce qui est derrière ?'},{t:'Révèle',d:'Crée ce qui est caché.'},{t:'Intègre',d:'Comment réunir les deux ?'}]},
+{id:'c5',title:'L\'autel personnel',emoji:'🕯️',desc:'Crée un espace sacré avec des objets qui comptent.',transform:'Le manque de connexion à soi',premium:true,steps:[{t:'Choisis',d:'5-7 objets qui ont du sens pour toi.'},{t:'Dispose',d:'Crée ton autel.'},{t:'Chaque objet',d:'Pourquoi cet objet ? Que représente-t-il ?'},{t:'Rituel',d:'Crée un petit rituel pour cet espace.'}]},
+{id:'c6',title:'Le pont vers l\'autre',emoji:'🌉',desc:'Crée quelque chose pour quelqu\'un qui compte.',transform:'Une relation à améliorer',premium:true,steps:[{t:'La personne',d:'À qui penses-tu ?'},{t:'Le message',d:'Que veux-tu lui dire ?'},{t:'La création',d:'Crée quelque chose pour elle/lui.'},{t:'Le geste',d:'Comment le lui offrir ?'}]},
+{id:'c7',title:'L\'arbre des possibles',emoji:'🌳',desc:'Crée un arbre avec tes possibilités.',transform:'Le sentiment d\'être bloqué·e',premium:true,steps:[{t:'Le tronc',d:'Toi, ici et maintenant.'},{t:'Les branches',d:'Chaque branche = une possibilité.'},{t:'Les fruits',d:'Ce que chaque possibilité peut t\'apporter.'},{t:'Choisis',d:'Quelle branche t\'attire le plus ?'}]},
+{id:'c8',title:'La lettre en images',emoji:'🖼️',desc:'Crée une lettre visuelle à ton toi du futur.',transform:'Le manque de vision',premium:true,steps:[{t:'Le futur',d:'Imagine-toi dans 1 an.'},{t:'Les images',d:'Collecte/dessine des images.'},{t:'Compose',d:'Crée ta lettre visuelle.'},{t:'Place-la',d:'Là où tu la verras chaque jour.'}]}
+];
+
+// ===== ÉTAT =====
+let curQ=0,answers=[],selVal=null,currentExerciseId=null;
+let S=JSON.parse(localStorage.getItem('ev')||'{}');
+if(!S.done)S.done=0;if(!S.streak)S.streak=0;if(!S.xp)S.xp=0;if(!S.level)S.level=1;
+if(!S.day)S.day=1;if(!S.completed)S.completed=[];if(!S.lastDate)S.lastDate='';
+if(!S.cardFlipped)S.cardFlipped=false;if(!S.cardDate)S.cardDate='';
+if(!S.weekDone)S.weekDone=false;save();
+
+function save(){localStorage.setItem('ev',JSON.stringify(S))}
+
+// ===== NAVIGATION =====
 function showScreen(id){
 document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
 document.getElementById(id).classList.add('active');
 window.scrollTo(0,0);
-if(id==='screen-questionnaire'){curQ=0;answers=[];showQ()}
-else if(id==='screen-results')showResults();
-else if(id==='screen-library')showExercises();
+const nav=['screen-home','screen-card','screen-programs','screen-library','screen-profile'];
+document.getElementById('bottom-nav').classList.toggle('hidden',!nav.includes(id));
+document.querySelectorAll('.nav-btn').forEach(b=>{b.classList.toggle('text-purple-600',b.dataset.screen===id);b.classList.toggle('text-gray-400',b.dataset.screen!==id)});
+if(id==='screen-home')renderHome();
+if(id==='screen-library')showExercises();
+if(id==='screen-programs')renderPhases();
+if(id==='screen-profile')renderProfile();
+if(id==='screen-card')renderCard();
+if(id==='screen-writing')renderWriting();
+if(id==='screen-creation')renderCreation();
+if(id==='screen-questionnaire'){curQ=0;answers=[];showQ();}
 }
 
+// ===== QUESTIONNAIRE =====
 function showQ(){
 const q=questions[curQ];
 document.getElementById('q-title').textContent=q.title;
@@ -301,49 +1154,173 @@ document.getElementById('q-subtitle').textContent=q.subtitle;
 document.getElementById('q-current').textContent=curQ+1;
 document.getElementById('q-percent').textContent=Math.round(((curQ+1)/questions.length)*100);
 document.getElementById('q-progress').style.width=((curQ+1)/questions.length)*100+'%';
-const od=document.getElementById('q-options');
-od.innerHTML='';
-q.options.forEach(o=>{
-const b=document.createElement('button');
-b.className='w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white/50 hover:border-purple-200 hover:bg-purple-50/50 transition-all';
-b.innerHTML='<div class="flex items-center gap-4"><span class="text-2xl">'+o.emoji+'</span><span class="text-gray-700">'+o.label+'</span></div>';
-b.onclick=()=>{selVal=o.value;document.querySelectorAll('#q-options button').forEach(x=>x.className='w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white/50 hover:border-purple-200 hover:bg-purple-50/50 transition-all');b.className='w-full text-left p-4 rounded-2xl border-2 border-purple-400 bg-purple-50 shadow-md transition-all';document.getElementById('q-next').disabled=false};
-od.appendChild(b);
-});
-document.getElementById('q-back').disabled=curQ===0;
-document.getElementById('q-next').disabled=true;
-selVal=null;
+const od=document.getElementById('q-options');od.innerHTML='';
+q.options.forEach(o=>{const b=document.createElement('button');b.className='w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white/50 hover:border-purple-200 transition-all';b.innerHTML='<div class="flex items-center gap-4"><span class="text-2xl">'+o.emoji+'</span><span class="text-gray-700">'+o.label+'</span></div>';b.onclick=()=>{selVal=o.value;document.querySelectorAll('#q-options button').forEach(x=>x.className='w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white/50 transition-all');b.className='w-full text-left p-4 rounded-2xl border-2 border-purple-400 bg-purple-50 shadow-md transition-all';document.getElementById('q-next').disabled=false};od.appendChild(b)});
+document.getElementById('q-back').disabled=curQ===0;document.getElementById('q-next').disabled=true;selVal=null;
 }
-
-function nextQuestion(){if(selVal){answers[curQ]=selVal;if(curQ<questions.length-1){curQ++;showQ()}else showScreen('screen-results')}}
+function nextQuestion(){if(selVal){answers[curQ]=selVal;if(curQ<questions.length-1){curQ++;showQ()}else showScreen('screen-home')}}
 function prevQuestion(){if(curQ>0){curQ--;showQ()}}
 
-function showResults(){
-const rd=document.getElementById('r-recommendations');
-const fe=exercises.filter(e=>!e.premium).slice(0,3);
-let h='<h2 class="text-2xl font-bold text-gray-800 mb-4">✨ Exercices recommandés</h2><div class="space-y-3">';
-fe.forEach(e=>{h+='<button onclick="showExercise(\''+e.id+'\')" class="w-full text-left p-5 rounded-2xl bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200/50 hover:shadow-lg transition-all"><div class="flex items-center gap-4"><span class="text-3xl">'+e.emoji+'</span><div class="flex-1"><h3 class="font-semibold text-gray-800 text-lg">'+e.title+'</h3><p class="text-gray-500 text-sm">'+e.desc+'</p><div class="flex items-center gap-3 mt-2"><span class="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded-full">⏱️ '+e.duration+'</span><span class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full">📊 '+e.diff+'</span></div></div><span class="text-purple-400 text-xl">→</span></div></button>'});
-h+='</div>';rd.innerHTML=h;
+// ===== ACCUEIL =====
+function renderHome(){
+document.getElementById('streak-count').textContent=S.streak;
+document.getElementById('exercises-done').textContent=S.done;
+document.getElementById('level-display').textContent=S.level;
+document.getElementById('current-day').textContent=S.day;
+// Rituel
+const h=new Date().getHours();
+const isMorning=h<14;
+const rituals=isMorning?morningRituals:eveningRituals;
+const r=rituals[S.day%rituals.length];
+document.getElementById('ritual-icon').textContent=r.icon;
+document.getElementById('ritual-title').textContent=isMorning?'Rituel du matin 🌅':'Rituel du soir 🌙';
+document.getElementById('ritual-content').innerHTML=r.steps.map((s,i)=>'<div class="flex items-center gap-3 bg-white/50 rounded-xl p-3"><div class="w-7 h-7 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-xs font-bold">'+(i+1)+'</div><span class="text-gray-700 text-sm">'+s+'</span></div>').join('');
+// Défi
+document.getElementById('weekly-challenge').textContent=weeklyChallenges[Math.floor(S.day/7)%weeklyChallenges.length];
+// Phase
+const phase=phases.find(p=>S.day>=((p.id-1)*25+1)&&S.day<=(p.id*25));
+if(phase){
+const dayInPhase=S.day-((phase.id-1)*25);
+document.getElementById('current-phase').innerHTML='<div class="flex items-center gap-3 mb-2"><span class="text-2xl">'+phase.emoji+'</span><div><h4 class="font-bold text-gray-800">Phase '+phase.id+' : '+phase.name+'</h4><p class="text-gray-500 text-xs">'+phase.desc+'</p></div></div><div class="w-full h-2 bg-purple-200 rounded-full mt-3"><div class="h-full bg-gradient-to-r '+phase.color+' rounded-full" style="width:'+((dayInPhase/25)*100)+'%"></div></div><p class="text-xs text-gray-500 mt-1">Jour '+dayInPhase+'/25 de cette phase'+(phase.premium?' ⭐ Premium':'')+'</p>';
+}
+// Greeting
+const hour=new Date().getHours();
+document.getElementById('greeting').textContent=(hour<12?'Bonjour':hour<18?'Bon après-midi':'Bonsoir')+' toi ! 🌿';
 }
 
-function showExercises(){
+// ===== CARTE DU JOUR =====
+function renderCard(){
+const today=new Date().toDateString();
+if(S.cardDate!==today){S.cardFlipped=false;S.cardDate=today;save()}
+const card=dailyCards[S.day%dailyCards.length];
+document.getElementById('card-emoji').textContent=card.emoji;
+document.getElementById('card-title').textContent=card.title;
+document.getElementById('card-affirmation').textContent='"'+card.affirmation+'"';
+document.getElementById('card-exercise').textContent='🎯 '+card.exercise;
+document.getElementById('card-inner').classList.toggle('flipped',S.cardFlipped);
+}
+function flipCard(){
+S.cardFlipped=true;save();
+document.getElementById('card-inner').classList.add('flipped');
+}
+
+// ===== PROGRAMMES =====
+function renderPhases(){
+const pc=document.getElementById('phases-container');pc.innerHTML='';
+const pct=Math.round((S.day/100)*100);
+document.getElementById('total-progress').textContent=pct;
+document.getElementById('total-bar').style.width=pct+'%';
+document.getElementById('progress-day').textContent=S.day;
+phases.forEach(p=>{
+const dayInPhase=S.day-((p.id-1)*25);
+const phasePct=Math.min(100,Math.max(0,(dayInPhase/25)*100));
+const active=S.day>=((p.id-1)*25+1)&&S.day<=(p.id*25);
+const done=S.day>(p.id*25);
+pc.innerHTML+='<div class="bg-white/70 rounded-2xl p-5 border border-white/80 shadow-lg cursor-pointer hover:shadow-xl transition-all '+(active?'ring-2 ring-purple-400':'')+'" onclick="showPhaseDetail('+p.id+')"><div class="flex items-center gap-4"><div class="w-12 h-12 rounded-xl bg-gradient-to-br '+p.color+' flex items-center justify-center text-xl shadow-lg">'+p.emoji+'</div><div class="flex-1"><div class="flex items-center gap-2"><h3 class="font-bold text-gray-800">Phase '+p.id+' : '+p.name+'</h3>'+(p.premium?'<span class="text-xs px-2 py-0.5 bg-amber-400 text-white rounded-full">⭐</span>':'')+(done?'<span class="text-xs px-2 py-0.5 bg-green-400 text-white rounded-full">✓</span>':'')+'</div><p class="text-gray-500 text-xs">'+p.days+' • '+p.desc+'</p><div class="w-full h-1.5 bg-gray-200 rounded-full mt-2"><div class="h-full bg-gradient-to-r '+p.color+' rounded-full" style="width:'+phasePct+'%"></div></div></div><span class="text-purple-400">→</span></div></div>';
+});
+}
+
+function showPhaseDetail(id){
+const p=phases.find(x=>x.id===id);if(!p)return;
+if(p.premium&&!S.isPremium){showScreen('screen-pricing');return}
+const cd=document.getElementById('phase-detail-content');
+cd.innerHTML='<div class="bg-gradient-to-r '+p.color+' rounded-3xl p-6 text-white shadow-xl mb-6"><h1 class="text-2xl font-bold mb-2">'+p.emoji+' Phase '+p.id+' : '+p.name+'</h1><p class="opacity-90 text-sm">'+p.desc+'</p><p class="text-xs opacity-80 mt-2">'+p.days+'</p></div><div class="space-y-2">';
+p.tasks.forEach(t=>{
+const done=S.completed.includes('d'+t.d);
+cd.innerHTML+='<div class="bg-white/70 rounded-xl p-4 border border-white/80 flex items-center gap-3 '+(done?'opacity-60':'')+'"><div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold '+(done?'bg-green-500 text-white':'bg-gray-200 text-gray-500')+'">'+(done?'✓':t.d)+'</div><div class="flex-1"><p class="font-semibold text-gray-800 text-sm">'+t.t+'</p><p class="text-xs text-gray-500">'+t.type+'</p></div>'+(t.d===S.day&&!done?'<button onclick="completeDay('+t.d+')" class="px-3 py-1.5 bg-gradient-to-r '+p.color+' text-white rounded-lg text-xs font-semibold">Faire ✓</button>':'')+'</div>';
+});
+cd.innerHTML+='</div>';
+showScreen('screen-phase-detail');
+}
+
+function completeDay(d){
+if(!S.completed.includes('d'+d)){S.completed.push('d'+d);S.done++;S.xp+=20;S.day=Math.max(S.day,d+1);S.streak++;S.lastDate=new Date().toDateString();checkLevel();save()}
+showPhaseDetail(Math.ceil(d/25));
+}
+
+// ===== EXERCICES =====
+function showExercises(filter){
 const g=document.getElementById('exercises-grid');g.innerHTML='';
-exercises.forEach(e=>{
+const list=filter&&filter!=='all'?exercises.filter(e=>e.cat===filter):exercises;
+list.forEach(e=>{
+const done=S.completed.includes(e.id);
 const c=document.createElement('button');
-c.className='group text-left bg-white/70 rounded-2xl p-6 shadow-md border border-white/80 hover:shadow-xl hover:border-purple-200 transition-all';
-c.innerHTML='<div class="flex items-start justify-between mb-4"><span class="text-4xl">'+e.emoji+'</span>'+(e.premium?'<span class="text-xs px-2 py-0.5 bg-gradient-to-r from-amber-400 to-orange-400 text-white rounded-full font-bold">⭐ PREMIUM</span>':'')+'</div><h3 class="font-bold text-gray-800 text-lg mb-2">'+e.title+'</h3><p class="text-gray-500 text-sm mb-4">'+e.desc+'</p><div class="flex items-center gap-3"><span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">⏱️ '+e.duration+'</span><span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">📊 '+e.diff+'</span>'+(e.premium?'<span class="text-lg ml-auto">🔒</span>':'')+'</div>';
-c.onclick=()=>{if(e.premium)showScreen('screen-pricing');else showExercise(e.id)};
+c.className='group text-left bg-white/70 rounded-2xl p-5 shadow-md border border-white/80 hover:shadow-xl hover:border-purple-200 transition-all';
+c.innerHTML='<div class="flex items-start justify-between mb-3"><span class="text-3xl">'+e.emoji+'</span><div class="flex flex-col items-end gap-1">'+(e.p?'<span class="text-xs px-2 py-0.5 bg-gradient-to-r from-amber-400 to-orange-400 text-white rounded-full font-bold">⭐</span>':'')+(done?'<span class="text-xs px-2 py-0.5 bg-green-500 text-white rounded-full">✓</span>':'')+'</div></div><h3 class="font-bold text-gray-800 mb-1">'+e.title+'</h3><p class="text-gray-500 text-xs mb-3">'+e.desc+'</p><div class="flex items-center gap-2"><span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full">⏱️ '+e.dur+'</span><span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full">'+e.diff+'</span>'+(e.p&&!S.isPremium?'<span class="ml-auto">🔒</span>':'')+'</div>';
+c.onclick=()=>{if(e.p&&!S.isPremium)showScreen('screen-pricing');else showExercise(e.id)};
 g.appendChild(c);
 });
 }
+function filterEx(cat){document.querySelectorAll('.fbtn').forEach(b=>{b.className='fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border'});event.target.className='fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-purple-500 text-white';showExercises(cat)}
 
 function showExercise(id){
 const e=exercises.find(x=>x.id===id);if(!e)return;
-document.getElementById('exercise-content').innerHTML='<div class="flex items-start gap-4 mb-6"><span class="text-5xl">'+e.emoji+'</span><div><h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">'+e.title+'</h1><div class="flex items-center gap-3"><span class="text-sm text-gray-500">⏱️ '+e.duration+'</span><span class="text-sm text-gray-500">📊 '+e.diff+'</span></div></div></div><p class="text-gray-600 text-lg mb-6">'+e.desc+'</p><div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-5 border border-purple-100"><h3 class="font-semibold text-purple-800 mb-3">✨ Bienfaits</h3><div class="flex flex-wrap gap-2">'+e.benefits.map(b=>'<span class="px-3 py-1.5 bg-white/80 rounded-full text-sm text-purple-700 border border-purple-100">'+b+'</span>').join('')+'</div></div>';
-const sd=document.getElementById('exercise-steps');
-sd.innerHTML='<h2 class="text-xl font-bold text-gray-800 mb-4">📋 Les étapes</h2>';
-e.steps.forEach((s,i)=>{const d=document.createElement('div');d.className='bg-white/70 rounded-2xl p-6 border border-gray-200';d.innerHTML='<div class="flex items-start gap-4"><div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold">'+(i+1)+'</div><div><h3 class="font-bold text-lg text-gray-800 mb-2">'+s.t+'</h3><p class="text-gray-600">'+s.d+'</p></div></div>';sd.appendChild(d)});
+currentExerciseId=id;
+document.getElementById('exercise-content').innerHTML='<div class="flex items-start gap-4 mb-4"><span class="text-4xl">'+e.emoji+'</span><div><h1 class="text-xl font-bold text-gray-800 mb-1">'+e.title+'</h1><div class="flex items-center gap-2"><span class="text-xs text-gray-500">⏱️ '+e.dur+'</span><span class="text-xs text-gray-500">'+e.diff+'</span></div></div></div><p class="text-gray-600 text-sm mb-4">'+e.desc+'</p><div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100"><h3 class="font-semibold text-purple-800 text-sm mb-2">✨ Bienfaits</h3><div class="flex flex-wrap gap-1">'+e.ben.map(b=>'<span class="px-2 py-1 bg-white/80 rounded-full text-xs text-purple-700">'+b+'</span>').join('')+'</div></div>';
+const sd=document.getElementById('exercise-steps');sd.innerHTML='';
+e.steps.forEach((s,i)=>{sd.innerHTML+='<div class="bg-white/70 rounded-xl p-4 border border-gray-200 fade-in" style="animation-delay:'+(i*0.1)+'s"><div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">'+(i+1)+'</div><div><h3 class="font-bold text-gray-800 text-sm mb-1">'+s.t+'</h3><p class="text-gray-600 text-sm">'+s.d+'</p></div></div></div>'});
+document.getElementById('complete-btn').style.display=S.completed.includes(id)?'none':'block';
 showScreen('screen-exercise');
+}
+
+function completeCurrentExercise(){
+if(currentExerciseId&&!S.completed.includes(currentExerciseId)){S.completed.push(currentExerciseId);S.done++;S.xp+=20;checkLevel();save()}
+showScreen('screen-library');
+}
+
+function completeWeeklyChallenge(){S.xp+=15;S.weekDone=true;checkLevel();save();alert('🎭 Bravo ! Défi accompli ! +15 XP')}
+
+function checkLevel(){const n=S.level*100;while(S.xp>=n){S.xp-=n;S.level++}}
+
+// ===== ÉCRITURE =====
+function renderWriting(){
+const wp=document.getElementById('writing-prompts');wp.innerHTML='';
+writingPrompts.forEach(w=>{
+wp.innerHTML+='<div class="bg-white/70 rounded-2xl p-5 border border-white/80 shadow-lg cursor-pointer hover:shadow-xl transition-all" onclick="showWritingDetail(\''+w.id+'\')"><div class="flex items-center gap-4"><span class="text-3xl">'+w.emoji+'</span><div class="flex-1"><div class="flex items-center gap-2"><h3 class="font-bold text-gray-800">'+w.title+'</h3>'+(w.premium?'<span class="text-xs px-2 py-0.5 bg-amber-400 text-white rounded-full">⭐</span>':'')+'</div><p class="text-gray-500 text-sm">'+w.desc+'</p><p class="text-xs text-purple-500 mt-1">Thème : '+w.theme+'</p></div><span class="text-purple-400">→</span></div></div>';
+});
+}
+
+function showWritingDetail(id){
+const w=writingPrompts.find(x=>x.id===id);if(!w)return;
+if(w.premium&&!S.isPremium){showScreen('screen-pricing');return}
+const cd=document.getElementById('writing-detail-content');
+cd.innerHTML='<div class="bg-gradient-to-r from-amber-400 to-orange-400 rounded-3xl p-6 text-white shadow-xl mb-6"><span class="text-4xl">'+w.emoji+'</span><h1 class="text-2xl font-bold mt-2">'+w.title+'</h1><p class="opacity-90 text-sm mt-1">'+w.desc+'</p><p class="text-xs opacity-80 mt-2">Thème : '+w.theme+'</p></div><div class="bg-white/70 rounded-2xl p-6 border border-white/80 mb-6"><h3 class="font-bold text-gray-800 mb-4">📝 Écris ton histoire</h3><textarea id="writing-area" class="w-full h-48 p-4 bg-white/80 rounded-xl border border-gray-200 focus:border-purple-400 outline-none resize-none text-gray-700" placeholder="Laisse venir les mots... Il n\'y a pas de bonne ou mauvaise façon d\'écrire."></textarea><button onclick="saveWriting()" class="mt-3 px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:scale-105 transition-all">Enregistrer ✍️</button></div><div class="space-y-3"><h3 class="font-bold text-gray-800">📋 Guide d\'écriture</h3>'+w.steps.map((s,i)=>'<div class="bg-white/70 rounded-xl p-4 border border-gray-200"><div class="flex items-start gap-3"><div class="w-7 h-7 rounded-full bg-amber-400 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">'+(i+1)+'</div><div><h4 class="font-semibold text-gray-800 text-sm">'+s.t+'</h4><p class="text-gray-600 text-sm">'+s.d+'</p></div></div></div>').join('')+'</div>';
+showScreen('screen-writing-detail');
+}
+
+function saveWriting(){
+const text=document.getElementById('writing-area').value;
+if(text.trim()){S.xp+=10;S.done++;checkLevel();save();alert('✍️ Bravo ! Ton texte est enregistré. +10 XP')}
+}
+
+// ===== CRÉATION =====
+function renderCreation(){
+const cp=document.getElementById('creation-prompts');cp.innerHTML='';
+creationPrompts.forEach(c=>{
+cp.innerHTML+='<div class="bg-white/70 rounded-2xl p-5 border border-white/80 shadow-lg cursor-pointer hover:shadow-xl transition-all" onclick="showCreationDetail(\''+c.id+'\')"><div class="flex items-center gap-4"><span class="text-3xl">'+c.emoji+'</span><div class="flex-1"><div class="flex items-center gap-2"><h3 class="font-bold text-gray-800">'+c.title+'</h3>'+(c.premium?'<span class="text-xs px-2 py-0.5 bg-amber-400 text-white rounded-full">⭐</span>':'')+'</div><p class="text-gray-500 text-sm">'+c.desc+'</p><p class="text-xs text-green-600 mt-1">🔄 À transformer : '+c.transform+'</p></div><span class="text-purple-400">→</span></div></div>';
+});
+}
+
+function showCreationDetail(id){
+const c=creationPrompts.find(x=>x.id===id);if(!c)return;
+if(c.premium&&!S.isPremium){showScreen('screen-pricing');return}
+const cd=document.getElementById('creation-detail-content');
+cd.innerHTML='<div class="bg-gradient-to-r from-pink-400 to-rose-400 rounded-3xl p-6 text-white shadow-xl mb-6"><span class="text-4xl">'+c.emoji+'</span><h1 class="text-2xl font-bold mt-2">'+c.title+'</h1><p class="opacity-90 text-sm mt-1">'+c.desc+'</p><div class="bg-white/20 rounded-xl p-3 mt-3"><p class="text-xs font-semibold">🔄 Transformer :</p><p class="text-sm">'+c.transform+'</p></div></div><div class="space-y-3"><h3 class="font-bold text-gray-800">📋 Les étapes</h3>'+c.steps.map((s,i)=>'<div class="bg-white/70 rounded-xl p-4 border border-gray-200"><div class="flex items-start gap-3"><div class="w-7 h-7 rounded-full bg-pink-400 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">'+(i+1)+'</div><div><h4 class="font-semibold text-gray-800 text-sm">'+s.t+'</h4><p class="text-gray-600 text-sm">'+s.d+'</p></div></div></div>').join('')+'</div><div class="mt-6 bg-green-50 rounded-xl p-4 border border-green-200"><p class="text-green-800 text-sm">💡 <strong>Matériel simple :</strong> papier, crayons, ciseaux, colle, objets du quotidien. Pas besoin de matériel artistique professionnel !</p></div>';
+showScreen('screen-creation-detail');
+}
+
+// ===== PROFIL =====
+function renderProfile(){
+document.getElementById('p-ex').textContent=S.done;
+document.getElementById('p-st').textContent=S.streak;
+document.getElementById('p-lv').textContent=S.level;
+document.getElementById('p-dy').textContent=S.day;
+document.getElementById('level-num').textContent=S.level;
+document.getElementById('xp-current').textContent=S.xp;
+const xn=S.level*100;
+document.getElementById('xp-next').textContent=xn;
+document.getElementById('xp-bar').style.width=(S.xp/xn*100)+'%';
+document.getElementById('profile-plan').textContent=S.isPremium?'Premium ⭐':'Gratuit';
 }
 </script>
 </body>
