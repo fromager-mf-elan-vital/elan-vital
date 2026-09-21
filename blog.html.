@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Bien-être - Élan Vital</title>
+    <meta name="description" content="Articles, conseils et exercices pour votre bien-être et développement personnel.">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold text-purple-600">Élan Vital</a>
+            <a href="index.html" class="text-gray-600 hover:text-purple-600 transition">Retour à l'app</a>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <main class="flex-grow max-w-4xl mx-auto px-4 py-12 w-full">
+        
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-purple-700 mb-4">Le Blog Élan Vital</h1>
+            <p class="text-xl text-gray-600">Conseils, exercices et inspiration pour votre bien-être au quotidien.</p>
+        </header>
+
+        <!-- Liste des articles -->
+        <div class="grid gap-8">
+            
+            <!-- Article 1 -->
+            <a href="article1.html" class="block bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-lg transition transform hover:-translate-y-1">
+                <div class="flex items-center text-sm text-purple-500 font-semibold mb-3">
+                    <span>BIEN-ÊTRE</span>
+                    <span class="mx-2">•</span>
+                    <span>21 Septembre 2026</span>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-3 hover:text-purple-600 transition">5 exercices de respiration pour réduire le stress</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    Le stress fait partie intégrante de notre vie moderne. Découvrez 5 techniques de respiration simples et efficaces pour retrouver le calme en quelques minutes, où que vous soyez.
+                </p>
+                <span class="text-purple-600 font-semibold mt-6 inline-block">Lire l'article →</span>
+            </a>
+
+            <!-- Article 2 (Bientôt disponible) -->
+            <div class="block bg-gray-100 p-8 rounded-xl border border-gray-200 opacity-75">
+                <div class="flex items-center text-sm text-gray-500 font-semibold mb-3">
+                    <span>MÉDITATION</span>
+                    <span class="mx-2">•</span>
+                    <span>Bientôt</span>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-600 mb-3">Comment commencer la méditation quand on est débutant</h2>
+                <p class="text-gray-500 leading-relaxed">
+                    Vous pensez que la méditation n'est pas pour vous ? Détrompez-vous. Voici un guide simple pour faire vos premiers pas...
+                </p>
+                <span class="text-gray-400 font-semibold mt-6 inline-block">Bientôt disponible</span>
+            </div>
+
+            <!-- Article 3 (Bientôt disponible) -->
+            <div class="block bg-gray-100 p-8 rounded-xl border border-gray-200 opacity-75">
+                <div class="flex items-center text-sm text-gray-500 font-semibold mb-3">
+                    <span>DÉVELOPPEMENT PERSONNEL</span>
+                    <span class="mx-2">•</span>
+                    <span>Bientôt</span>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-600 mb-3">10 habitudes matinales pour une journée positive</h2>
+                <p class="text-gray-500 leading-relaxed">
+                    La façon dont vous commencez votre journée détermine souvent son déroulement. Découvrez les routines des personnes épanouies...
+                </p>
+                <span class="text-gray-400 font-semibold mt-6 inline-block">Bientôt disponible</span>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <p class="mb-4">&copy; 2026 Élan Vital. Tous droits réservés.</p>
+            <div class="space-x-4">
+                <a href="index.html" class="text-gray-300 hover:text-white transition">Accueil</a>
+                <a href="about.html" class="text-gray-300 hover:text-white transition">À propos</a>
+                <a href="privacy.html" class="text-gray-300 hover:text-white transition">Confidentialité</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
