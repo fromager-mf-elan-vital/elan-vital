@@ -3,25 +3,25 @@
 <html lang="fr">
 <head>
   <meta name="p:domain_verify" content="943064962803de98a86174e3bab5efdd"/>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Élan Vital - Bien-être & Développement personnel</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-@keyframes flip{0%{transform:rotateY(0)}100%{transform:rotateY(180deg)}}
-@keyframes glow{0%,100%{box-shadow:0 0 5px rgba(139,92,246,0.3)}50%{box-shadow:0 0 20px rgba(139,92,246,0.6)}}
-.fade-in{animation:fadeIn .5s ease-out}
-.pulse-anim{animation:pulse 2s ease-in-out infinite}
-.glow-anim{animation:glow 2s ease-in-out infinite}
-.screen{display:none}.screen.active{display:block}
-.card-flip{perspective:1000px}
-.card-inner{transition:transform 0.6s;transform-style:preserve-3d;position:relative}
-.card-inner.flipped{transform:rotateY(180deg)}
-.card-front,.card-back{backface-visibility:hidden;position:absolute;top:0;left:0;width:100%;height:100%}
-.card-back{transform:rotateY(180deg)}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Élan Vital - Bien-être & Développement personnel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+    @keyframes flip{0%{transform:rotateY(0)}100%{transform:rotateY(180deg)}}
+    @keyframes glow{0%,100%{box-shadow:0 0 5px rgba(139,92,246,0.3)}50%{box-shadow:0 0 20px rgba(139,92,246,0.6)}}
+    .fade-in{animation:fadeIn .5s ease-out}
+    .pulse-anim{animation:pulse 2s ease-in-out infinite}
+    .glow-anim{animation:glow 2s ease-in-out infinite}
+    .screen{display:none}.screen.active{display:block}
+    .card-flip{perspective:1000px}
+    .card-inner{transition:transform 0.6s;transform-style:preserve-3d;position:relative}
+    .card-inner.flipped{transform:rotateY(180deg)}
+    .card-front,.card-back{backface-visibility:hidden;position:absolute;top:0;left:0;width:100%;height:100%}
+    .card-back{transform:rotateY(180deg)}
+  </style>
 </head>
 <body class="bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 min-h-screen">
 
@@ -40,7 +40,6 @@
     <button onclick="showScreen('screen-library')" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-xl text-gray-400 hover:text-purple-600 transition-colors" data-screen="screen-library">
       <span class="text-xl">📚</span><span class="text-xs">Exercices</span>
     </button>
-    <!-- Bouton Blog -->
     <button onclick="window.location.href='blog.html'" class="nav-btn flex flex-col items-center gap-1 p-2 rounded-xl text-gray-400 hover:text-purple-600 transition-colors">
       <span class="text-xl">📝</span><span class="text-xs">Blog</span>
     </button>
@@ -49,277 +48,272 @@
     </button>
   </div>
 </nav>
+
 <!-- ===== ACCUEIL ===== -->
 <div id="screen-welcome" class="screen active min-h-screen flex flex-col items-center justify-center px-4 py-12">
-<div class="max-w-2xl mx-auto text-center">
-<div class="mb-8">
-<div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-purple-200 to-pink-200 shadow-xl mb-6 pulse-anim"><span class="text-5xl">🌿</span></div>
-<h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-700 via-pink-600 to-amber-600 bg-clip-text text-transparent mb-2">Élan Vital</h1>
-<p class="text-lg text-gray-500">Bien-être • Créativité • Transformation</p>
-</div>
-<div class="bg-white/60 rounded-3xl p-8 shadow-xl border border-white/80 mb-8">
-<p class="text-xl text-gray-700 mb-6">Bienvenue, toi. ✨</p>
-<p class="text-gray-600 mb-4">Un parcours de <strong class="text-purple-700">100 jours</strong> pour te reconnecter à toi-même, libérer ta créativité et transformer ta vie.</p>
-<div class="grid grid-cols-2 gap-3 my-6">
-<div class="bg-purple-50 rounded-xl p-3 border border-purple-100"><span class="text-lg">📅</span><p class="text-xs text-purple-700 mt-1">100 jours de transformation</p></div>
-<div class="bg-pink-50 rounded-xl p-3 border border-pink-100"><span class="text-lg">🎴</span><p class="text-xs text-pink-700 mt-1">Carte du jour</p></div>
-<div class="bg-amber-50 rounded-xl p-3 border border-amber-100"><span class="text-lg">✍️</span><p class="text-xs text-amber-700 mt-1">Écriture créative</p></div>
-<div class="bg-green-50 rounded-xl p-3 border border-green-100"><span class="text-lg">🎨</span><p class="text-xs text-green-700 mt-1">Création & transformation</p></div>
-</div>
-<div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-4 mb-6">
-<p class="text-purple-800 text-sm font-medium">🌟 50+ exercices • Rituels matin/soir • Défis créatifs • Histoires à écrire • Créations à transformer</p>
-</div>
-</div>
-<button onclick="showScreen('screen-questionnaire')" class="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl font-semibold text-lg shadow-xl hover:scale-105 transition-all">Commencer mon parcours →</button>
-</div>
+  <div class="max-w-2xl mx-auto text-center">
+    <div class="mb-8">
+      <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-purple-200 to-pink-200 shadow-xl mb-6 pulse-anim"><span class="text-5xl">🌿</span></div>
+      <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-700 via-pink-600 to-amber-600 bg-clip-text text-transparent mb-2">Élan Vital</h1>
+      <p class="text-lg text-gray-500">Bien-être • Créativité • Transformation</p>
+    </div>
+    <div class="bg-white/60 rounded-3xl p-8 shadow-xl border border-white/80 mb-8">
+      <p class="text-xl text-gray-700 mb-6">Bienvenue, toi. ✨</p>
+      <p class="text-gray-600 mb-4">Un parcours de <strong class="text-purple-700">100 jours</strong> pour te reconnecter à toi-même, libérer ta créativité et transformer ta vie.</p>
+      <div class="grid grid-cols-2 gap-3 my-6">
+        <div class="bg-purple-50 rounded-xl p-3 border border-purple-100"><span class="text-lg">📅</span><p class="text-xs text-purple-700 mt-1">100 jours de transformation</p></div>
+        <div class="bg-pink-50 rounded-xl p-3 border border-pink-100"><span class="text-lg">🎴</span><p class="text-xs text-pink-700 mt-1">Carte du jour</p></div>
+        <div class="bg-amber-50 rounded-xl p-3 border border-amber-100"><span class="text-lg">✍️</span><p class="text-xs text-amber-700 mt-1">Écriture créative</p></div>
+        <div class="bg-green-50 rounded-xl p-3 border border-green-100"><span class="text-lg">🎨</span><p class="text-xs text-green-700 mt-1">Création & transformation</p></div>
+      </div>
+      <div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-4 mb-6">
+        <p class="text-purple-800 text-sm font-medium">🌟 50+ exercices • Rituels matin/soir • Défis créatifs • Histoires à écrire • Créations à transformer</p>
+      </div>
+    </div>
+    <button onclick="showScreen('screen-questionnaire')" class="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl font-semibold text-lg shadow-xl hover:scale-105 transition-all">Commencer mon parcours →</button>
+  </div>
 </div>
 
 <!-- ===== QUESTIONNAIRE ===== -->
 <div id="screen-questionnaire" class="screen min-h-screen flex flex-col items-center justify-center px-4 py-12">
-<div class="max-w-2xl mx-auto w-full">
-<div class="mb-8">
-<div class="flex items-center justify-between mb-2"><span class="text-sm text-gray-500">Question <span id="q-current">1</span> sur 5</span><span class="text-sm text-purple-600 font-medium"><span id="q-percent">20</span>%</span></div>
-<div class="w-full h-2 bg-purple-100 rounded-full overflow-hidden"><div id="q-progress" class="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all duration-500" style="width:20%"></div></div>
-</div>
-<div class="bg-white/70 rounded-3xl p-8 shadow-xl border border-white/80">
-<h2 id="q-title" class="text-2xl font-bold text-gray-800 mb-3"></h2>
-<p id="q-subtitle" class="text-gray-500 text-lg italic mb-8"></p>
-<div id="q-options" class="space-y-3 mb-8"></div>
-<div class="flex items-center justify-between">
-<button id="q-back" onclick="prevQuestion()" class="px-5 py-3 text-gray-500" disabled>← Retour</button>
-<button id="q-next" onclick="nextQuestion()" class="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold shadow-lg hover:scale-105 transition-all" disabled>Suivant →</button>
-</div>
-</div>
-</div>
+  <div class="max-w-2xl mx-auto w-full">
+    <div class="mb-8">
+      <div class="flex items-center justify-between mb-2"><span class="text-sm text-gray-500">Question <span id="q-current">1</span> sur 5</span><span class="text-sm text-purple-600 font-medium"><span id="q-percent">20</span>%</span></div>
+      <div class="w-full h-2 bg-purple-100 rounded-full overflow-hidden"><div id="q-progress" class="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all duration-500" style="width:20%"></div></div>
+    </div>
+    <div class="bg-white/70 rounded-3xl p-8 shadow-xl border border-white/80">
+      <h2 id="q-title" class="text-2xl font-bold text-gray-800 mb-3"></h2>
+      <p id="q-subtitle" class="text-gray-500 text-lg italic mb-8"></p>
+      <div id="q-options" class="space-y-3 mb-8"></div>
+      <div class="flex items-center justify-between">
+        <button id="q-back" onclick="prevQuestion()" class="px-5 py-3 text-gray-500" disabled>← Retour</button>
+        <button id="q-next" onclick="nextQuestion()" class="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold shadow-lg hover:scale-105 transition-all" disabled>Suivant →</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ===== PAGE D'ACCUEIL ===== -->
 <div id="screen-home" class="screen min-h-screen px-4 py-6">
-<div class="max-w-4xl mx-auto">
-<!-- Salutation -->
-<div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl p-6 text-white shadow-xl mb-6">
-<h1 class="text-xl md:text-2xl font-bold mb-2" id="greeting">Bonjour toi ! 🌿</h1>
-<p class="text-purple-100 text-sm mb-4">Jour <span id="current-day">1</span>/100 de ton parcours</p>
-<div class="flex items-center gap-3">
-<div class="bg-white/20 rounded-xl px-3 py-2"><span class="text-xl font-bold" id="streak-count">0</span><p class="text-xs text-purple-100">jours 🔥</p></div>
-<div class="bg-white/20 rounded-xl px-3 py-2"><span class="text-xl font-bold" id="exercises-done">0</span><p class="text-xs text-purple-100">exercices ✨</p></div>
-<div class="bg-white/20 rounded-xl px-3 py-2"><span class="text-xl font-bold" id="level-display">1</span><p class="text-xs text-purple-100">niveau 🏆</p></div>
-</div>
-</div>
-
-<!-- Carte du jour -->
-<div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-5 border border-amber-200 mb-6 cursor-pointer hover:shadow-lg transition-all" onclick="showScreen('screen-card')">
-<div class="flex items-center gap-3"><span class="text-2xl">🎴</span><div><h3 class="font-bold text-amber-800">Ta carte du jour</h3><p class="text-amber-600 text-sm">Tire ta carte pour découvrir ton intention du jour</p></div><span class="ml-auto text-amber-400">→</span></div>
-</div>
-
-<!-- Rituel du moment -->
-<div id="ritual-section" class="bg-white/70 rounded-2xl p-5 border border-white/80 shadow-lg mb-6">
-<h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2"><span id="ritual-icon">🌅</span><span id="ritual-title">Rituel du matin</span></h3>
-<div id="ritual-content" class="space-y-3"></div>
-</div>
-
-<!-- Défi de la semaine -->
-<div class="bg-gradient-to-r from-pink-50 to-rose-50 rounded-2xl p-5 border border-pink-200 mb-6">
-<div class="flex items-center gap-3 mb-3"><span class="text-2xl">🎭</span><h3 class="font-bold text-pink-800">Défi créatif de la semaine</h3></div>
-<p id="weekly-challenge" class="text-pink-700 mb-3"></p>
-<button onclick="completeWeeklyChallenge()" class="px-4 py-2 bg-pink-500 text-white rounded-lg text-sm font-semibold hover:bg-pink-600 transition-colors">✓ Défi accompli !</button>
-</div>
-
-<!-- Phase en cours -->
-<div class="bg-white/70 rounded-2xl p-5 border border-white/80 shadow-lg mb-6">
-<h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2"><span>📅</span> Ta phase actuelle</h3>
-<div id="current-phase" class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100"></div>
-</div>
-
-<!-- Accès rapide -->
-<div class="grid grid-cols-4 gap-3">
-<button onclick="showScreen('screen-writing')" class="bg-white/70 rounded-xl p-3 text-center border border-white/80 hover:shadow-lg transition-all"><span class="text-xl">✍️</span><p class="text-xs text-gray-600 mt-1">Écrire</p></button>
-<button onclick="showScreen('screen-creation')" class="bg-white/70 rounded-xl p-3 text-center border border-white/80 hover:shadow-lg transition-all"><span class="text-xl">🎨</span><p class="text-xs text-gray-600 mt-1">Créer</p></button>
-<button onclick="showScreen('screen-library')" class="bg-white/70 rounded-xl p-3 text-center border border-white/80 hover:shadow-lg transition-all"><span class="text-xl">📚</span><p class="text-xs text-gray-600 mt-1">Exercices</p></button>
-<button onclick="showScreen('screen-pricing')" class="bg-gradient-to-r from-amber-400 to-orange-400 rounded-xl p-3 text-center hover:shadow-lg transition-all"><span class="text-xl">⭐</span><p class="text-xs text-white mt-1 font-semibold">Premium</p></button>
-</div>
-</div>
+  <div class="max-w-4xl mx-auto">
+    <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl p-6 text-white shadow-xl mb-6">
+      <h1 class="text-xl md:text-2xl font-bold mb-2" id="greeting">Bonjour toi ! 🌿</h1>
+      <p class="text-purple-100 text-sm mb-4">Jour <span id="current-day">1</span>/100 de ton parcours</p>
+      <div class="flex items-center gap-3">
+        <div class="bg-white/20 rounded-xl px-3 py-2"><span class="text-xl font-bold" id="streak-count">0</span><p class="text-xs text-purple-100">jours 🔥</p></div>
+        <div class="bg-white/20 rounded-xl px-3 py-2"><span class="text-xl font-bold" id="exercises-done">0</span><p class="text-xs text-purple-100">exercices ✨</p></div>
+        <div class="bg-white/20 rounded-xl px-3 py-2"><span class="text-xl font-bold" id="level-display">1</span><p class="text-xs text-purple-100">niveau 🏆</p></div>
+      </div>
+    </div>
+    <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-5 border border-amber-200 mb-6 cursor-pointer hover:shadow-lg transition-all" onclick="showScreen('screen-card')">
+      <div class="flex items-center gap-3"><span class="text-2xl">🎴</span><div><h3 class="font-bold text-amber-800">Ta carte du jour</h3><p class="text-amber-600 text-sm">Tire ta carte pour découvrir ton intention du jour</p></div><span class="ml-auto text-amber-400">→</span></div>
+    </div>
+    <div id="ritual-section" class="bg-white/70 rounded-2xl p-5 border border-white/80 shadow-lg mb-6">
+      <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2"><span id="ritual-icon">🌅</span><span id="ritual-title">Rituel du matin</span></h3>
+      <div id="ritual-content" class="space-y-3"></div>
+    </div>
+    <div class="bg-gradient-to-r from-pink-50 to-rose-50 rounded-2xl p-5 border border-pink-200 mb-6">
+      <div class="flex items-center gap-3 mb-3"><span class="text-2xl">🎭</span><h3 class="font-bold text-pink-800">Défi créatif de la semaine</h3></div>
+      <p id="weekly-challenge" class="text-pink-700 mb-3"></p>
+      <button onclick="completeWeeklyChallenge()" class="px-4 py-2 bg-pink-500 text-white rounded-lg text-sm font-semibold hover:bg-pink-600 transition-colors">✓ Défi accompli !</button>
+    </div>
+    <div class="bg-white/70 rounded-2xl p-5 border border-white/80 shadow-lg mb-6">
+      <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2"><span>📅</span> Ta phase actuelle</h3>
+      <div id="current-phase" class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100"></div>
+    </div>
+    <div class="grid grid-cols-4 gap-3">
+      <button onclick="showScreen('screen-writing')" class="bg-white/70 rounded-xl p-3 text-center border border-white/80 hover:shadow-lg transition-all"><span class="text-xl">✍️</span><p class="text-xs text-gray-600 mt-1">Écrire</p></button>
+      <button onclick="showScreen('screen-creation')" class="bg-white/70 rounded-xl p-3 text-center border border-white/80 hover:shadow-lg transition-all"><span class="text-xl">🎨</span><p class="text-xs text-gray-600 mt-1">Créer</p></button>
+      <button onclick="showScreen('screen-library')" class="bg-white/70 rounded-xl p-3 text-center border border-white/80 hover:shadow-lg transition-all"><span class="text-xl">📚</span><p class="text-xs text-gray-600 mt-1">Exercices</p></button>
+      <button onclick="showScreen('screen-pricing')" class="bg-gradient-to-r from-amber-400 to-orange-400 rounded-xl p-3 text-center hover:shadow-lg transition-all"><span class="text-xl">⭐</span><p class="text-xs text-white mt-1 font-semibold">Premium</p></button>
+    </div>
+  </div>
 </div>
 
 <!-- ===== CARTE DU JOUR ===== -->
 <div id="screen-card" class="screen min-h-screen flex flex-col items-center justify-center px-4 py-8">
-<div class="max-w-md mx-auto w-full text-center">
-<h1 class="text-2xl font-bold text-gray-800 mb-2">🎴 Ta carte du jour</h1>
-<p class="text-gray-500 mb-8">Tire ta carte pour découvrir ton intention</p>
-<div class="card-flip w-72 h-96 mx-auto mb-8 cursor-pointer" onclick="flipCard()">
-<div id="card-inner" class="card-inner w-full h-full">
-<div class="card-front bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl shadow-xl flex flex-col items-center justify-center p-6">
-<span class="text-6xl mb-4">🎴</span>
-<p class="text-white text-xl font-bold">Touche pour révéler</p>
-<p class="text-purple-200 text-sm mt-2">ta carte du jour</p>
-</div>
-<div class="card-back bg-white rounded-2xl shadow-xl flex flex-col items-center justify-center p-6 border-2 border-purple-200">
-<span id="card-emoji" class="text-5xl mb-3"></span>
-<h3 id="card-title" class="text-lg font-bold text-purple-800 mb-2"></h3>
-<p id="card-affirmation" class="text-gray-600 text-sm italic mb-3"></p>
-<p id="card-exercise" class="text-gray-700 text-sm"></p>
-</div>
-</div>
-</div>
-<button onclick="showScreen('screen-home')" class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold shadow-lg hover:scale-105 transition-all">C'est parti ! →</button>
-</div>
+  <div class="max-w-md mx-auto w-full text-center">
+    <h1 class="text-2xl font-bold text-gray-800 mb-2">🎴 Ta carte du jour</h1>
+    <p class="text-gray-500 mb-8">Tire ta carte pour découvrir ton intention</p>
+    <div class="card-flip w-72 h-96 mx-auto mb-8 cursor-pointer" onclick="flipCard()">
+      <div id="card-inner" class="card-inner w-full h-full">
+        <div class="card-front bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl shadow-xl flex flex-col items-center justify-center p-6">
+          <span class="text-6xl mb-4">🎴</span>
+          <p class="text-white text-xl font-bold">Touche pour révéler</p>
+          <p class="text-purple-200 text-sm mt-2">ta carte du jour</p>
+        </div>
+        <div class="card-back bg-white rounded-2xl shadow-xl flex flex-col items-center justify-center p-6 border-2 border-purple-200">
+          <span id="card-emoji" class="text-5xl mb-3"></span>
+          <h3 id="card-title" class="text-lg font-bold text-purple-800 mb-2"></h3>
+          <p id="card-affirmation" class="text-gray-600 text-sm italic mb-3"></p>
+          <p id="card-exercise" class="text-gray-700 text-sm"></p>
+        </div>
+      </div>
+    </div>
+    <button onclick="showScreen('screen-home')" class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold shadow-lg hover:scale-105 transition-all">C'est parti ! →</button>
+  </div>
 </div>
 
 <!-- ===== PROGRAMME 100 JOURS ===== -->
 <div id="screen-programs" class="screen min-h-screen px-4 py-8">
-<div class="max-w-4xl mx-auto">
-<h1 class="text-3xl font-bold text-gray-800 mb-2">📅 Programme 100 jours</h1>
-<p class="text-gray-600 mb-6">Ton parcours de transformation en 4 phases</p>
-<!-- Progression globale -->
-<div class="bg-white/70 rounded-2xl p-5 border border-white/80 shadow-lg mb-6">
-<div class="flex justify-between items-center mb-2"><span class="font-semibold text-gray-800">Progression globale</span><span class="text-sm text-purple-600"><span id="total-progress">0</span>%</span></div>
-<div class="w-full h-3 bg-purple-100 rounded-full overflow-hidden"><div id="total-bar" class="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all" style="width:0%"></div></div>
-<p class="text-xs text-gray-500 mt-2">Jour <span id="progress-day">1</span> sur 100</p>
-</div>
-<!-- Les 4 phases -->
-<div id="phases-container" class="space-y-4"></div>
-</div>
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">📅 Programme 100 jours</h1>
+    <p class="text-gray-600 mb-6">Ton parcours de transformation en 4 phases</p>
+    <div class="bg-white/70 rounded-2xl p-5 border border-white/80 shadow-lg mb-6">
+      <div class="flex justify-between items-center mb-2"><span class="font-semibold text-gray-800">Progression globale</span><span class="text-sm text-purple-600"><span id="total-progress">0</span>%</span></div>
+      <div class="w-full h-3 bg-purple-100 rounded-full overflow-hidden"><div id="total-bar" class="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all" style="width:0%"></div></div>
+      <p class="text-xs text-gray-500 mt-2">Jour <span id="progress-day">1</span> sur 100</p>
+    </div>
+    <div id="phases-container" class="space-y-4"></div>
+  </div>
 </div>
 
 <!-- ===== PHASE DÉTAIL ===== -->
 <div id="screen-phase-detail" class="screen min-h-screen px-4 py-8">
-<div class="max-w-3xl mx-auto">
-<button onclick="showScreen('screen-programs')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
-<div id="phase-detail-content"></div>
-</div>
+  <div class="max-w-3xl mx-auto">
+    <button onclick="showScreen('screen-programs')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+    <div id="phase-detail-content"></div>
+  </div>
 </div>
 
 <!-- ===== BIBLIOTHÈQUE ===== -->
 <div id="screen-library" class="screen min-h-screen px-4 py-8">
-<div class="max-w-5xl mx-auto">
-<h1 class="text-3xl font-bold text-gray-800 mb-2">📚 Bibliothèque</h1>
-<p class="text-gray-600 mb-4">50+ exercices pour ta transformation</p>
-<div class="flex flex-wrap gap-2 mb-6">
-<button onclick="filterEx('all')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-purple-500 text-white">✨ Tous</button>
-<button onclick="filterEx('meditation')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">🧘 Méditation</button>
-<button onclick="filterEx('ancrage')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">🌳 Ancrage</button>
-<button onclick="filterEx('ecriture')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">✍️ Écriture</button>
-<button onclick="filterEx('creation')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">🎨 Création</button>
-<button onclick="filterEx('gratitude')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">🙏 Gratitude</button>
-<button onclick="filterEx('confiance')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">💎 Confiance</button>
-<button onclick="filterEx('emotionnel')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">💛 Émotions</button>
-</div>
-<div id="premium-banner" class="mb-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-5 text-white shadow-xl">
-<div class="flex items-center gap-4"><div class="flex-1"><h3 class="font-bold mb-1">✨ Débloque les 40+ exercices premium</h3><p class="text-purple-100 text-sm">Programme 100 jours complet, écriture créative, créations transformatrices</p></div><button onclick="showScreen('screen-pricing')" class="px-4 py-2 bg-white text-purple-600 rounded-xl font-bold text-sm">Voir →</button></div>
-</div>
-<div id="exercises-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-</div>
+  <div class="max-w-5xl mx-auto">
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">📚 Bibliothèque</h1>
+    <p class="text-gray-600 mb-4">50+ exercices pour ta transformation</p>
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button onclick="filterEx('all')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-purple-500 text-white">✨ Tous</button>
+      <button onclick="filterEx('meditation')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">🧘 Méditation</button>
+      <button onclick="filterEx('ancrage')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">🌳 Ancrage</button>
+      <button onclick="filterEx('ecriture')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">✍️ Écriture</button>
+      <button onclick="filterEx('creation')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">🎨 Création</button>
+      <button onclick="filterEx('gratitude')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">🙏 Gratitude</button>
+      <button onclick="filterEx('confiance')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">💎 Confiance</button>
+      <button onclick="filterEx('emotionnel')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-medium bg-white/70 text-gray-600 border">💛 Émotions</button>
+    </div>
+    <div id="premium-banner" class="mb-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-5 text-white shadow-xl">
+      <div class="flex items-center gap-4"><div class="flex-1"><h3 class="font-bold mb-1">✨ Débloque les 40+ exercices premium</h3><p class="text-purple-100 text-sm">Programme 100 jours complet, écriture créative, créations transformatrices</p></div><button onclick="showScreen('screen-pricing')" class="px-4 py-2 bg-white text-purple-600 rounded-xl font-bold text-sm">Voir →</button></div>
+    </div>
+    <div id="exercises-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </div>
 </div>
 
 <!-- ===== ÉCRITURE CRÉATIVE ===== -->
 <div id="screen-writing" class="screen min-h-screen px-4 py-8">
-<div class="max-w-3xl mx-auto">
-<button onclick="showScreen('screen-home')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
-<h1 class="text-3xl font-bold text-gray-800 mb-2">✍️ Écriture créative</h1>
-<p class="text-gray-600 mb-6">Raconte une histoire selon un thème. Laisse venir les mots.</p>
-<div id="writing-prompts" class="space-y-4"></div>
-</div>
+  <div class="max-w-3xl mx-auto">
+    <button onclick="showScreen('screen-home')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">✍️ Écriture créative</h1>
+    <p class="text-gray-600 mb-6">Raconte une histoire selon un thème. Laisse venir les mots.</p>
+    <div id="writing-prompts" class="space-y-4"></div>
+  </div>
 </div>
 
 <!-- ===== ÉCRITURE DÉTAIL ===== -->
 <div id="screen-writing-detail" class="screen min-h-screen px-4 py-8">
-<div class="max-w-3xl mx-auto">
-<button onclick="showScreen('screen-writing')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
-<div id="writing-detail-content"></div>
-</div>
+  <div class="max-w-3xl mx-auto">
+    <button onclick="showScreen('screen-writing')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+    <div id="writing-detail-content"></div>
+  </div>
 </div>
 
 <!-- ===== CRÉATION ===== -->
 <div id="screen-creation" class="screen min-h-screen px-4 py-8">
-<div class="max-w-3xl mx-auto">
-<button onclick="showScreen('screen-home')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
-<h1 class="text-3xl font-bold text-gray-800 mb-2">🎨 Création & Transformation</h1>
-<p class="text-gray-600 mb-6">Une activité créative simple liée à ce que tu veux transformer dans ta vie.</p>
-<div id="creation-prompts" class="space-y-4"></div>
-</div>
+  <div class="max-w-3xl mx-auto">
+    <button onclick="showScreen('screen-home')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">🎨 Création & Transformation</h1>
+    <p class="text-gray-600 mb-6">Une activité créative simple liée à ce que tu veux transformer dans ta vie.</p>
+    <div id="creation-prompts" class="space-y-4"></div>
+  </div>
 </div>
 
 <!-- ===== CRÉATION DÉTAIL ===== -->
 <div id="screen-creation-detail" class="screen min-h-screen px-4 py-8">
-<div class="max-w-3xl mx-auto">
-<button onclick="showScreen('screen-creation')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
-<div id="creation-detail-content"></div>
-</div>
+  <div class="max-w-3xl mx-auto">
+    <button onclick="showScreen('screen-creation')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+    <div id="creation-detail-content"></div>
+  </div>
 </div>
 
 <!-- ===== EXERCICE DÉTAIL ===== -->
 <div id="screen-exercise" class="screen min-h-screen px-4 py-8">
-<div class="max-w-3xl mx-auto">
-<button onclick="showScreen('screen-library')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
-<div id="exercise-content" class="bg-white/70 rounded-3xl p-6 shadow-xl border border-white/80 mb-6"></div>
-<div id="exercise-steps" class="space-y-3 mb-6"></div>
-<button onclick="completeCurrentExercise()" id="complete-btn" class="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-bold shadow-lg hover:scale-105 transition-all mb-6">✓ Exercice terminé !</button>
-</div>
+  <div class="max-w-3xl mx-auto">
+    <button onclick="showScreen('screen-library')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+    <div id="exercise-content" class="bg-white/70 rounded-3xl p-6 shadow-xl border border-white/80 mb-6"></div>
+    <div id="exercise-steps" class="space-y-3 mb-6"></div>
+    <button onclick="completeCurrentExercise()" id="complete-btn" class="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-bold shadow-lg hover:scale-105 transition-all mb-6">✓ Exercice terminé !</button>
+  </div>
 </div>
 
 <!-- ===== PROFIL ===== -->
 <div id="screen-profile" class="screen min-h-screen px-4 py-8">
-<div class="max-w-3xl mx-auto">
-<div class="bg-white/70 rounded-3xl p-6 shadow-xl border border-white/80 mb-6">
-<div class="flex items-center gap-4 mb-4">
-<div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-2xl shadow-lg">🌿</div>
-<div><h1 class="text-xl font-bold text-gray-800">Toi</h1><p class="text-gray-500 text-sm">Membre <span id="profile-plan">Gratuit</span></p></div>
-</div>
-<div class="grid grid-cols-4 gap-3 mb-4">
-<div class="bg-purple-50 rounded-xl p-3 text-center"><p class="text-xl font-bold text-purple-700" id="p-ex">0</p><p class="text-xs text-purple-600">Exercices</p></div>
-<div class="bg-pink-50 rounded-xl p-3 text-center"><p class="text-xl font-bold text-pink-700" id="p-st">0</p><p class="text-xs text-pink-600">Jours 🔥</p></div>
-<div class="bg-amber-50 rounded-xl p-3 text-center"><p class="text-xl font-bold text-amber-700" id="p-lv">1</p><p class="text-xs text-amber-600">Niveau</p></div>
-<div class="bg-green-50 rounded-xl p-3 text-center"><p class="text-xl font-bold text-green-700" id="p-dy">1</p><p class="text-xs text-green-600">Jour/100</p></div>
-</div>
-<div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
-<div class="flex justify-between items-center mb-2"><span class="font-semibold text-purple-800 text-sm">Niveau <span id="level-num">1</span></span><span class="text-xs text-purple-600"><span id="xp-current">0</span>/<span id="xp-next">100</span> XP</span></div>
-<div class="w-full h-2 bg-purple-200 rounded-full overflow-hidden"><div id="xp-bar" class="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all" style="width:0%"></div></div>
-</div>
-</div>
-<button onclick="showScreen('screen-pricing')" class="w-full py-4 bg-gradient-to-r from-amber-400 to-orange-400 text-white rounded-xl font-bold shadow-lg hover:scale-105 transition-all mb-4">⭐ Passer Premium</button>
-</div>
+  <div class="max-w-3xl mx-auto">
+    <div class="bg-white/70 rounded-3xl p-6 shadow-xl border border-white/80 mb-6">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-2xl shadow-lg">🌿</div>
+        <div><h1 class="text-xl font-bold text-gray-800">Toi</h1><p class="text-gray-500 text-sm">Membre <span id="profile-plan">Gratuit</span></p></div>
+      </div>
+      <div class="grid grid-cols-4 gap-3 mb-4">
+        <div class="bg-purple-50 rounded-xl p-3 text-center"><p class="text-xl font-bold text-purple-700" id="p-ex">0</p><p class="text-xs text-purple-600">Exercices</p></div>
+        <div class="bg-pink-50 rounded-xl p-3 text-center"><p class="text-xl font-bold text-pink-700" id="p-st">0</p><p class="text-xs text-pink-600">Jours 🔥</p></div>
+        <div class="bg-amber-50 rounded-xl p-3 text-center"><p class="text-xl font-bold text-amber-700" id="p-lv">1</p><p class="text-xs text-amber-600">Niveau</p></div>
+        <div class="bg-green-50 rounded-xl p-3 text-center"><p class="text-xl font-bold text-green-700" id="p-dy">1</p><p class="text-xs text-green-600">Jour/100</p></div>
+      </div>
+      <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+        <div class="flex justify-between items-center mb-2"><span class="font-semibold text-purple-800 text-sm">Niveau <span id="level-num">1</span></span><span class="text-xs text-purple-600"><span id="xp-current">0</span>/<span id="xp-next">100</span> XP</span></div>
+        <div class="w-full h-2 bg-purple-200 rounded-full overflow-hidden"><div id="xp-bar" class="h-full bg-gradient-to-r from-purple-400 to-pink-400 rounded-full transition-all" style="width:0%"></div></div>
+      </div>
+    </div>
+    <button onclick="showScreen('screen-pricing')" class="w-full py-4 bg-gradient-to-r from-amber-400 to-orange-400 text-white rounded-xl font-bold shadow-lg hover:scale-105 transition-all mb-4">⭐ Passer Premium</button>
+  </div>
 </div>
 
 <!-- ===== TARIFICATION ===== -->
 <div id="screen-pricing" class="screen min-h-screen px-4 py-8">
-<div class="max-w-4xl mx-auto">
-<button onclick="showScreen('screen-home')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
-<div class="text-center mb-8">
-<div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-amber-200 to-orange-200 shadow-xl mb-4"><span class="text-3xl">⭐</span></div>
-<h1 class="text-3xl font-bold text-gray-800 mb-2">Passe au niveau supérieur</h1>
-</div>
-<div class="grid md:grid-cols-2 gap-6 mb-8">
-<div class="bg-white/70 rounded-3xl p-6 border-2 border-gray-200">
-<div class="text-center mb-4"><h3 class="text-xl font-bold text-gray-800">Gratuit</h3><div class="mt-3"><span class="text-3xl font-bold">0€</span></div></div>
-<ul class="space-y-2 mb-6 text-sm">
-<li class="flex items-center gap-2 text-gray-700"><span class="text-green-500">✓</span>10 exercices de base</li>
-<li class="flex items-center gap-2 text-gray-700"><span class="text-green-500">✓</span>Carte du jour</li>
-<li class="flex items-center gap-2 text-gray-700"><span class="text-green-500">✓</span>Rituels matin/soir</li>
-<li class="flex items-center gap-2 text-gray-400"><span>✗</span>Programme 100 jours</li>
-<li class="flex items-center gap-2 text-gray-400"><span>✗</span>Écriture créative</li>
-<li class="flex items-center gap-2 text-gray-400"><span>✗</span>Créations transformatrices</li>
-<li class="flex items-center gap-2 text-gray-400"><span>✗</span>40+ exercices premium</li>
-<li class="flex items-center gap-2 text-gray-400"><span>✗</span>Défis créatifs</li>
-</ul>
-<button onclick="showScreen('screen-home')" class="w-full py-3 border-2 border-gray-300 text-gray-600 rounded-xl font-semibold">Plan actuel</button>
-</div>
-<div class="relative bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-6 text-white shadow-2xl">
-<div class="absolute -top-3 right-4 bg-amber-400 text-amber-900 px-3 py-1 rounded-full text-xs font-bold">⭐ TOP</div>
-<div class="text-center mb-4"><h3 class="text-xl font-bold">Premium</h3><div class="mt-3"><span class="text-3xl font-bold">9,90€</span><span class="text-purple-200">/mois</span></div><p class="text-purple-200 text-xs mt-1">ou 97€/an</p></div>
-<ul class="space-y-2 mb-6 text-sm">
-<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Programme 100 jours</strong> complet</li>
-<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>50+ exercices</strong></li>
-<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Écriture créative</strong> guidée</li>
-<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Créations transformatrices</strong></li>
-<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Défis créatifs</strong> hebdo</li>
-<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Cartes du jour</strong> illimitées</li>
-<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Rituels</strong> matin/soir</li>
-<li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Nouveautés</strong> chaque mois</li>
-</ul>
-<a href="#" class="block w-full py-3 bg-white text-purple-600 rounded-xl font-bold text-center hover:scale-105 transition-transform">Je passe Premium ✨</a>
-</div>
-</div>
-</div>
+  <div class="max-w-4xl mx-auto">
+    <button onclick="showScreen('screen-home')" class="flex items-center gap-2 text-gray-500 hover:text-purple-600 mb-6">← Retour</button>
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-amber-200 to-orange-200 shadow-xl mb-4"><span class="text-3xl">⭐</span></div>
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">Passe au niveau supérieur</h1>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-white/70 rounded-3xl p-6 border-2 border-gray-200">
+        <div class="text-center mb-4"><h3 class="text-xl font-bold text-gray-800">Gratuit</h3><div class="mt-3"><span class="text-3xl font-bold">0€</span></div></div>
+        <ul class="space-y-2 mb-6 text-sm">
+          <li class="flex items-center gap-2 text-gray-700"><span class="text-green-500">✓</span>10 exercices de base</li>
+          <li class="flex items-center gap-2 text-gray-700"><span class="text-green-500">✓</span>Carte du jour</li>
+          <li class="flex items-center gap-2 text-gray-700"><span class="text-green-500">✓</span>Rituels matin/soir</li>
+          <li class="flex items-center gap-2 text-gray-400"><span>✗</span>Programme 100 jours</li>
+          <li class="flex items-center gap-2 text-gray-400"><span>✗</span>Écriture créative</li>
+          <li class="flex items-center gap-2 text-gray-400"><span>✗</span>Créations transformatrices</li>
+          <li class="flex items-center gap-2 text-gray-400"><span>✗</span>40+ exercices premium</li>
+          <li class="flex items-center gap-2 text-gray-400"><span>✗</span>Défis créatifs</li>
+        </ul>
+        <button onclick="showScreen('screen-home')" class="w-full py-3 border-2 border-gray-300 text-gray-600 rounded-xl font-semibold">Plan actuel</button>
+      </div>
+      <div class="relative bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-6 text-white shadow-2xl">
+        <div class="absolute -top-3 right-4 bg-amber-400 text-amber-900 px-3 py-1 rounded-full text-xs font-bold">⭐ TOP</div>
+        <div class="text-center mb-4"><h3 class="text-xl font-bold">Premium</h3><div class="mt-3"><span class="text-3xl font-bold">9,90€</span><span class="text-purple-200">/mois</span></div><p class="text-purple-200 text-xs mt-1">ou 97€/an</p></div>
+        <ul class="space-y-2 mb-6 text-sm">
+          <li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Programme 100 jours</strong> complet</li>
+          <li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>50+ exercices</strong></li>
+          <li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Écriture créative</strong> guidée</li>
+          <li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Créations transformatrices</strong></li>
+          <li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Défis créatifs</strong> hebdo</li>
+          <li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Cartes du jour</strong> illimitées</li>
+          <li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Rituels</strong> matin/soir</li>
+          <li class="flex items-center gap-2"><span class="text-amber-300">✓</span><strong>Nouveautés</strong> chaque mois</li>
+        </ul>
+        <!-- MODIFICATION 1 : Lien vers Systeme.io -->
+        <a href="https://www.sasuefi.com/commande" target="_blank" class="block w-full py-3 bg-white text-purple-600 rounded-xl font-bold text-center hover:scale-105 transition-transform">Je passe Premium ✨</a>
+        
+        <!-- MODIFICATION 2 : Lien pour activer le code -->
+        <p class="text-center mt-4 text-purple-200 text-sm">
+          Vous avez déjà un code d'accès ? 
+          <a href="#" onclick="activerCodePremium(); return false;" class="underline font-bold text-white hover:text-amber-300">Cliquez ici pour l'activer</a>
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 
 </div>
@@ -499,6 +493,8 @@ const creationPrompts=[
 let curQ=0,answers=[],selVal=null,currentExerciseId=null;
 let S=JSON.parse(localStorage.getItem('ev')||'{}');
 if(!S.done)S.done=0;if(!S.streak)S.streak=0;if(!S.xp)S.xp=0;if(!S.level)S.level=1;
+// MODIFICATION 4 : Initialisation de l'état Premium
+if(!S.isPremium)S.isPremium=false;
 if(!S.day)S.day=1;if(!S.completed)S.completed=[];if(!S.lastDate)S.lastDate='';
 if(!S.cardFlipped)S.cardFlipped=false;if(!S.cardDate)S.cardDate='';
 if(!S.weekDone)S.weekDone=false;save();
@@ -544,7 +540,6 @@ document.getElementById('streak-count').textContent=S.streak;
 document.getElementById('exercises-done').textContent=S.done;
 document.getElementById('level-display').textContent=S.level;
 document.getElementById('current-day').textContent=S.day;
-// Rituel
 const h=new Date().getHours();
 const isMorning=h<14;
 const rituals=isMorning?morningRituals:eveningRituals;
@@ -552,15 +547,12 @@ const r=rituals[S.day%rituals.length];
 document.getElementById('ritual-icon').textContent=r.icon;
 document.getElementById('ritual-title').textContent=isMorning?'Rituel du matin 🌅':'Rituel du soir 🌙';
 document.getElementById('ritual-content').innerHTML=r.steps.map((s,i)=>'<div class="flex items-center gap-3 bg-white/50 rounded-xl p-3"><div class="w-7 h-7 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-xs font-bold">'+(i+1)+'</div><span class="text-gray-700 text-sm">'+s+'</span></div>').join('');
-// Défi
 document.getElementById('weekly-challenge').textContent=weeklyChallenges[Math.floor(S.day/7)%weeklyChallenges.length];
-// Phase
 const phase=phases.find(p=>S.day>=((p.id-1)*25+1)&&S.day<=(p.id*25));
 if(phase){
 const dayInPhase=S.day-((phase.id-1)*25);
 document.getElementById('current-phase').innerHTML='<div class="flex items-center gap-3 mb-2"><span class="text-2xl">'+phase.emoji+'</span><div><h4 class="font-bold text-gray-800">Phase '+phase.id+' : '+phase.name+'</h4><p class="text-gray-500 text-xs">'+phase.desc+'</p></div></div><div class="w-full h-2 bg-purple-200 rounded-full mt-3"><div class="h-full bg-gradient-to-r '+phase.color+' rounded-full" style="width:'+((dayInPhase/25)*100)+'%"></div></div><p class="text-xs text-gray-500 mt-1">Jour '+dayInPhase+'/25 de cette phase'+(phase.premium?' ⭐ Premium':'')+'</p>';
 }
-// Greeting
 const hour=new Date().getHours();
 document.getElementById('greeting').textContent=(hour<12?'Bonjour':hour<18?'Bon après-midi':'Bonsoir')+' toi ! 🌿';
 }
@@ -698,6 +690,20 @@ const xn=S.level*100;
 document.getElementById('xp-next').textContent=xn;
 document.getElementById('xp-bar').style.width=(S.xp/xn*100)+'%';
 document.getElementById('profile-plan').textContent=S.isPremium?'Premium ⭐':'Gratuit';
+}
+
+// MODIFICATION 3 : Fonction d'activation du code Premium
+function activerCodePremium() {
+  const codeSaisi = prompt("🔑 Entrez votre code d'accès Premium Élan Vital :");
+  
+  if (codeSaisi === "ELANVITAL100") {
+    S.isPremium = true;
+    save();
+    alert("🎉 Félicitations ! Le mode Premium est activé.\n\nLa page va se recharger pour afficher votre nouveau contenu (100 jours, écriture créative, etc.).");
+    location.reload();
+  } else if (codeSaisi !== null) {
+    alert("❌ Code incorrect.\n\nVeuillez vérifier votre code (ex: ELANVITAL100) dans l'email que vous avez reçu après votre achat.");
+  }
 }
 </script>
 </body>
