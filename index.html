@@ -19,17 +19,33 @@
   <style>
     @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
     @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-    @keyframes flip{0%{transform:rotateY(0)}100%{transform:rotateY(180deg)}}
     @keyframes glow{0%,100%{box-shadow:0 0 5px rgba(139,92,246,0.3)}50%{box-shadow:0 0 20px rgba(139,92,246,0.6)}}
     .fade-in{animation:fadeIn .5s ease-out}
     .pulse-anim{animation:pulse 2s ease-in-out infinite}
     .glow-anim{animation:glow 2s ease-in-out infinite}
     .screen{display:none}.screen.active{display:block}
-    .card-flip{perspective:1000px}
-    .card-inner{transition:transform 0.6s;transform-style:preserve-3d;position:relative}
-    .card-inner.flipped{transform:rotateY(180deg)}
-    .card-front,.card-back{backface-visibility:hidden;position:absolute;top:0;left:0;width:100%;height:100%}
-    .card-back{transform:rotateY(180deg)}
+    
+    /* ===== NOUVEAU CSS CARTE (compatible mobile) ===== */
+    .card-container { perspective: 1000px; width: 100%; height: 100%; }
+    .card-inner {
+      position: relative; width: 100%; height: 100%;
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform-style: preserve-3d;
+    }
+    .card-inner.flipped { transform: rotateY(180deg); }
+    .card-face {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 2rem; text-align: center;
+      border-radius: 1rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.15);
+    }
+    .card-front { background: linear-gradient(135deg, #7c3aed, #ec2a90); color: white; z-index: 2; }
+    .card-back {
+      background: white; border: 2px solid #cdb0ff;
+      transform: rotateY(180deg); z-index: 1;
+    }
   </style>
 </head>
 <body class="bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 min-h-screen">
@@ -79,12 +95,9 @@
         <p class="text-purple-900 text-sm font-bold">🌟 50+ exercices • Rituels matin/soir • Défis créatifs • Histoires à écrire</p>
       </div>
     </div>
-    
-    <!-- NOUVEAU : Petit mot d'explication avant de commencer -->
     <p class="text-gray-600 text-sm mb-4 italic flex items-center justify-center gap-2">
       <span>💡</span> Un court questionnaire de 5 questions t'attend pour personnaliser ton expérience, puis tu auras accès à ton espace personnel.
     </p>
-
     <button onclick="showScreen('screen-questionnaire')" class="w-full px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl font-bold text-lg shadow-xl hover:scale-105 transition-all">Commencer mon parcours →</button>
   </div>
 </div>
@@ -117,18 +130,17 @@
       <div class="flex items-center gap-3">
         <div class="bg-white/30 rounded-xl px-3 py-2"><span class="text-xl font-bold" id="streak-count">0</span><p class="text-xs text-purple-100">jours 🔥</p></div>
         <div class="bg-white/30 rounded-xl px-3 py-2"><span class="text-xl font-bold" id="exercises-done">0</span><p class="text-xs text-purple-100">exercices ✨</p></div>
-        <div class="bg-white/30 rounded-xl px-3 py-2"><span class="text-xl font-bold" id="level-display">1</span><p class="text-xs text-purple-100">niveau 🏆</p></div>
+        <div class="bg-white/30 rounded-xl px-3 py-2"><span class="text-xl font-bold" id="level-display">1</span><p class="text-xs text-purple-100">niveau </p></div>
       </div>
     </div>
 
-    <!-- NOUVEAU : Guide de démarrage rapide -->
     <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl p-5 border-2 border-purple-200 mb-6 shadow-sm">
       <h3 class="font-bold text-purple-900 mb-3 flex items-center gap-2">
         <span class="text-xl">💡</span> Comment utiliser ton espace ?
       </h3>
       <ul class="space-y-3 text-sm text-gray-800">
         <li class="flex items-start gap-3">
-          <span class="text-lg mt-0.5">🎴</span>
+          <span class="text-lg mt-0.5"></span>
           <span><strong>1. Ta Carte du jour :</strong> Clique sur le bloc orange juste en dessous pour découvrir ton intention et ton mini-exercice du jour.</span>
         </li>
         <li class="flex items-start gap-3">
@@ -176,26 +188,32 @@
   </div>
 </div>
 
-<!-- ===== CARTE DU JOUR ===== -->
+<!-- ===== CARTE DU JOUR (CORRIGÉE) ===== -->
 <div id="screen-card" class="screen min-h-screen flex flex-col items-center justify-center px-4 py-8 pb-24">
   <div class="max-w-md mx-auto w-full text-center">
     <h1 class="text-2xl font-bold text-gray-900 mb-2">🎴 Ta carte du jour</h1>
-    <p class="text-gray-700 mb-8 font-medium">Tire ta carte pour découvrir ton intention</p>
-    <div class="card-flip w-72 h-96 mx-auto mb-8 cursor-pointer" onclick="flipCard()">
-      <div id="card-inner" class="card-inner w-full h-full">
-        <div class="card-front bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl shadow-xl flex flex-col items-center justify-center p-6">
-          <span class="text-6xl mb-4">🎴</span>
-          <p class="text-white text-xl font-bold">Touche pour révéler</p>
-          <p class="text-purple-200 text-sm mt-2">ta carte du jour</p>
-        </div>
-        <div class="card-back bg-white rounded-2xl shadow-xl flex flex-col items-center justify-center p-6 border-2 border-purple-300">
-          <span id="card-emoji" class="text-5xl mb-3"></span>
-          <h3 id="card-title" class="text-lg font-bold text-purple-900 mb-2"></h3>
-          <p id="card-affirmation" class="text-gray-800 text-sm italic mb-3"></p>
-          <p id="card-exercise" class="text-gray-900 text-sm font-medium"></p>
+    <p class="text-gray-700 mb-6 font-medium">Touche la carte pour révéler ton intention</p>
+    
+    <div class="w-72 h-96 mx-auto mb-8 cursor-pointer" onclick="flipCard()">
+      <div class="card-container">
+        <div id="card-inner" class="card-inner">
+          <div class="card-face card-front">
+            <span class="text-6xl mb-4">🎴</span>
+            <p class="text-xl font-bold mb-2">Touche pour révéler</p>
+            <p class="text-purple-200 text-sm">ta carte du jour</p>
+          </div>
+          <div class="card-face card-back">
+            <span id="card-emoji" class="text-6xl mb-4">✨</span>
+            <h3 id="card-title" class="text-2xl font-bold text-purple-800 mb-3">Titre de la carte</h3>
+            <p id="card-affirmation" class="text-gray-700 text-lg italic mb-4 px-2">"Ton affirmation du jour"</p>
+            <div class="bg-purple-50 rounded-xl p-3 border border-purple-200 w-full">
+              <p id="card-exercise" class="text-purple-900 text-sm font-bold"> Ton exercice du jour</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    
     <button onclick="showScreen('screen-home')" class="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold shadow-lg hover:scale-105 transition-all">C'est parti ! →</button>
   </div>
 </div>
@@ -229,8 +247,8 @@
     <p class="text-gray-800 mb-4 font-medium">50+ exercices pour ta transformation</p>
     <div class="flex flex-wrap gap-2 mb-6">
       <button onclick="filterEx('all')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-bold bg-purple-600 text-white">✨ Tous</button>
-      <button onclick="filterEx('meditation')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-bold bg-white/90 text-gray-800 border-2 border-purple-200">🧘 Méditation</button>
-      <button onclick="filterEx('ancrage')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-bold bg-white/90 text-gray-800 border-2 border-purple-200">🌳 Ancrage</button>
+      <button onclick="filterEx('meditation')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-bold bg-white/90 text-gray-800 border-2 border-purple-200"> Méditation</button>
+      <button onclick="filterEx('ancrage')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-bold bg-white/90 text-gray-800 border-2 border-purple-200"> Ancrage</button>
       <button onclick="filterEx('ecriture')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-bold bg-white/90 text-gray-800 border-2 border-purple-200">✍️ Écriture</button>
       <button onclick="filterEx('creation')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-bold bg-white/90 text-gray-800 border-2 border-purple-200">🎨 Création</button>
       <button onclick="filterEx('gratitude')" class="fbtn px-3 py-1.5 rounded-xl text-xs font-bold bg-white/90 text-gray-800 border-2 border-purple-200">🙏 Gratitude</button>
@@ -328,7 +346,7 @@
           <li class="flex items-center gap-2 text-gray-800"><span class="text-green-600 font-bold">✓</span>10 exercices de base</li>
           <li class="flex items-center gap-2 text-gray-800"><span class="text-green-600 font-bold">✓</span>Carte du jour</li>
           <li class="flex items-center gap-2 text-gray-800"><span class="text-green-600 font-bold">✓</span>Rituels matin/soir</li>
-          <li class="flex items-center gap-2 text-gray-500"><span class="text-gray-400">✗</span>Programme 100 jours</li>
+          <li class="flex items-center gap-2 text-gray-500"><span class="text-gray-400"></span>Programme 100 jours</li>
           <li class="flex items-center gap-2 text-gray-500"><span class="text-gray-400">✗</span>Écriture créative</li>
           <li class="flex items-center gap-2 text-gray-500"><span class="text-gray-400">✗</span>Créations transformatrices</li>
           <li class="flex items-center gap-2 text-gray-500"><span class="text-gray-400">✗</span>40+ exercices premium</li>
@@ -349,7 +367,7 @@
           <li class="flex items-center gap-2"><span class="text-amber-300 font-bold">✓</span><strong>Rituels</strong> matin/soir</li>
           <li class="flex items-center gap-2"><span class="text-amber-300 font-bold">✓</span><strong>Nouveautés</strong> chaque mois</li>
         </ul>
-        <a href="https://www.sasuefi.com/commande" target="_blank" class="block w-full py-3 bg-white text-purple-700 rounded-xl font-bold text-center hover:scale-105 transition-transform">Je passe Premium ✨</a>
+        <a href="https://www.sasuefi.com/commande" target="_blank" class="block w-full py-3 bg-white text-purple-700 rounded-xl font-bold text-center hover:scale-105 transition-transform">Je passe Premium </a>
         <p class="text-center mt-4 text-purple-200 text-sm">
           Vous avez déjà un code d'accès ? 
           <a href="#" onclick="activerCodePremium(); return false;" class="underline font-bold text-white hover:text-amber-300">Cliquez ici pour l'activer</a>
@@ -362,23 +380,23 @@
 <script>
 // ===== DONNÉES =====
 const questions=[
-{title:"Qu'est-ce qui t'amène ici ?",subtitle:"Écoute ce qui te motive.",options:[{value:'mieux-etre',label:'Me sentir mieux',emoji:'🌤️'},{value:'confiance',label:'Développer ma confiance',emoji:'💪'},{value:'sens',label:'Trouver du sens',emoji:'🧭'},{value:'stress',label:'Gérer mon stress',emoji:'🍃'},{value:'creativite',label:'Libérer ma créativité',emoji:'✨'},{value:'equilibre',label:'Retrouver un équilibre',emoji:'⚖️'}]},
-{title:"De quoi aurais-tu le plus besoin ?",subtitle:"Écoute ce qui résonne.",options:[{value:'calme',label:'De calme',emoji:'☮️'},{value:'energie',label:"D'énergie",emoji:'⚡'},{value:'clarte',label:'De clarté',emoji:'🔮'},{value:'creativite',label:"D'expression",emoji:'🎨'},{value:'connexion',label:'De connexion à moi',emoji:'🤝'},{value:'gratitude',label:'De gratitude',emoji:'🙏'}]},
+{title:"Qu'est-ce qui t'amène ici ?",subtitle:"Écoute ce qui te motive.",options:[{value:'mieux-etre',label:'Me sentir mieux',emoji:'🌤️'},{value:'confiance',label:'Développer ma confiance',emoji:'💪'},{value:'sens',label:'Trouver du sens',emoji:'🧭'},{value:'stress',label:'Gérer mon stress',emoji:''},{value:'creativite',label:'Libérer ma créativité',emoji:'✨'},{value:'equilibre',label:'Retrouver un équilibre',emoji:'⚖️'}]},
+{title:"De quoi aurais-tu le plus besoin ?",subtitle:"Écoute ce qui résonne.",options:[{value:'calme',label:'De calme',emoji:'☮️'},{value:'energie',label:"D'énergie",emoji:'⚡'},{value:'clarte',label:'De clarté',emoji:'🔮'},{value:'creativite',label:"D'expression",emoji:''},{value:'connexion',label:'De connexion à moi',emoji:'🤝'},{value:'gratitude',label:'De gratitude',emoji:'🙏'}]},
 {title:"Combien de temps par jour ?",subtitle:"Même 5 minutes comptent.",options:[{value:'5',label:'5 minutes',emoji:'⏱️'},{value:'10',label:'10 minutes',emoji:'🕐'},{value:'20',label:'20 minutes',emoji:'🕑'},{value:'30',label:'30 min ou plus',emoji:'🕒'}]},
-{title:"Qu'est-ce qui t'attire ?",subtitle:"Choisis ce qui te parle.",options:[{value:'respirer',label:'Respirer, méditer',emoji:'🧘'},{value:'ecrire',label:'Écrire, raconter',emoji:'✍️'},{value:'creer',label:'Créer, transformer',emoji:'🎨'},{value:'nature',label:'Être en nature',emoji:'🌳'},{value:'visualiser',label:'Visualiser',emoji:'🎯'},{value:'reflecter',label:'Réfléchir, comprendre',emoji:'💭'}]},
-{title:"Ton intention ?",subtitle:"Ton phare pour 100 jours.",options:[{value:'apaiser',label:'Apaiser mon mental',emoji:'🌙'},{value:'grandir',label:'Grandir',emoji:'🌱'},{value:'confiance',label:'Ma confiance',emoji:'💎'},{value:'creer',label:'Créer davantage',emoji:'✨'},{value:'presence',label:'Vivre le présent',emoji:'🌻'},{value:'harmonie',label:"L'harmonie",emoji:'☯️'}]}
+{title:"Qu'est-ce qui t'attire ?",subtitle:"Choisis ce qui te parle.",options:[{value:'respirer',label:'Respirer, méditer',emoji:''},{value:'ecrire',label:'Écrire, raconter',emoji:'✍️'},{value:'creer',label:'Créer, transformer',emoji:'🎨'},{value:'nature',label:'Être en nature',emoji:'🌳'},{value:'visualiser',label:'Visualiser',emoji:'🎯'},{value:'reflecter',label:'Réfléchir, comprendre',emoji:''}]},
+{title:"Ton intention ?",subtitle:"Ton phare pour 100 jours.",options:[{value:'apaiser',label:'Apaiser mon mental',emoji:'🌙'},{value:'grandir',label:'Grandir',emoji:'🌱'},{value:'confiance',label:'Ma confiance',emoji:'💎'},{value:'creer',label:'Créer davantage',emoji:'✨'},{value:'presence',label:'Vivre le présent',emoji:''},{value:'harmonie',label:"L'harmonie",emoji:'☯️'}]}
 ];
 
 const dailyCards=[
-{emoji:'🌅',title:'Nouveau départ',affirmation:"Aujourd'hui est un nouveau commencement.",exercise:"Écris 3 choses que tu veux laisser derrière toi."},
+{emoji:'',title:'Nouveau départ',affirmation:"Aujourd'hui est un nouveau commencement.",exercise:"Écris 3 choses que tu veux laisser derrière toi."},
 {emoji:'💪',title:'Force intérieure',affirmation:"Tu es plus fort·e que tu ne le crois.",exercise:"Rappelle-toi un moment où tu as surmonté un défi."},
 {emoji:'🌿',title:'Ancrage',affirmation:"Tu es ici, maintenant, et c'est suffisant.",exercise:"Fais l'exercice des 5 sens."},
 {emoji:'✨',title:'Créativité',affirmation:"Ta créativité est illimitée.",exercise:"Dessine ce que tu ressens en ce moment."},
 {emoji:'🙏',title:'Gratitude',affirmation:"La gratitude transforme ce que tu as en suffisant.",exercise:"Note 3 choses pour lesquelles tu es reconnaissant·e."},
-{emoji:'🌙',title:'Lâcher prise',affirmation:"Tu n'as pas besoin de tout contrôler.",exercise:"Écris ce que tu peux lâcher aujourd'hui."},
+{emoji:'',title:'Lâcher prise',affirmation:"Tu n'as pas besoin de tout contrôler.",exercise:"Écris ce que tu peux lâcher aujourd'hui."},
 {emoji:'💎',title:'Confiance',affirmation:"Tu mérites tout le bonheur du monde.",exercise:"Écris 5 qualités que tu apprécies chez toi."},
 {emoji:'🌊',title:'Fluidité',affirmation:"Comme l'eau, adapte-toi avec souplesse.",exercise:"Respire profondément 10 fois."},
-{emoji:'🔥',title:'Passion',affirmation:"Ce qui te fait vibrer est ton guide.",exercise:"Note ce qui te passionne vraiment."},
+{emoji:'',title:'Passion',affirmation:"Ce qui te fait vibrer est ton guide.",exercise:"Note ce qui te passionne vraiment."},
 {emoji:'🌸',title:'Douceur',affirmation:"Sois doux·ce avec toi-même.",exercise:"Pose une main sur ton cœur et respire."},
 {emoji:'🧭',title:'Direction',affirmation:"Chaque petit pas compte.",exercise:"Quel est ton prochain petit pas ?"},
 {emoji:'🎨',title:'Expression',affirmation:"Tes émotions méritent d'être exprimées.",exercise:"Écris ou dessine ce que tu ressens."},
@@ -468,30 +486,30 @@ tasks:[
 ];
 
 const exercises=[
-{id:'med-1',title:'Respiration consciente',cat:'meditation',dur:'5 min',diff:'débutant',emoji:'🌬️',p:false,desc:'Apaise ton mental par le souffle.',ben:['Réduit le stress','Concentration','Calme'],steps:[{t:'Installe-toi',d:'Assieds-toi, ferme les yeux.'},{t:'Observe',d:'Observe ton souffle.'},{t:'Approfondis',d:'Inspire 4s, retiens 2s, expire 6s.'},{t:'Continue',d:'5 minutes.'},{t:'Reviens',d:'Ouvre les yeux.'}]},
+{id:'med-1',title:'Respiration consciente',cat:'meditation',dur:'5 min',diff:'débutant',emoji:'️',p:false,desc:'Apaise ton mental par le souffle.',ben:['Réduit le stress','Concentration','Calme'],steps:[{t:'Installe-toi',d:'Assieds-toi, ferme les yeux.'},{t:'Observe',d:'Observe ton souffle.'},{t:'Approfondis',d:'Inspire 4s, retiens 2s, expire 6s.'},{t:'Continue',d:'5 minutes.'},{t:'Reviens',d:'Ouvre les yeux.'}]},
 {id:'med-2',title:'Scan corporel',cat:'meditation',dur:'15 min',diff:'intermédiaire',emoji:'🫧',p:true,desc:'Voyage à travers ton corps.',ben:['Relâche les tensions','Sommeil','Conscience'],steps:[{t:'Allonge-toi',d:'Confortablement.'},{t:'Respire',d:'3 grandes respirations.'},{t:'Pieds',d:'Porte ton attention sur tes pieds.'},{t:'Remonte',d:'Jambes, bassin, ventre...'}, {t:'Visage',d:'Détends tout ton visage.'},{t:'Enveloppe',d:'Lumière chaude.'}]},
 {id:'med-3',title:'Gratitude',cat:'gratitude',dur:'10 min',diff:'débutant',emoji:'🙏',p:false,desc:'Cultive la gratitude.',ben:['Humeur','Résilience','Optimisme'],steps:[{t:'Installe-toi',d:'Endroit paisible.'},{t:'3 choses',d:'3 gratitudes.'},{t:'Ressens',d:'Ressens la gratitude.'},{t:'Toi',d:'Gratitude envers toi.'},{t:'Clôture',d:'Main sur le cœur.'}]},
 {id:'med-4',title:'Visualisation',cat:'meditation',dur:'15 min',diff:'intermédiaire',emoji:'🌟',p:true,desc:'Crée ta réalité idéale.',ben:['Succès','Objectifs','Motivation'],steps:[{t:'Détends-toi',d:'5 respirations.'},{t:'Lieu sûr',d:'Un endroit de paix.'},{t:'Avenir',d:'Toi dans 1 an.'},{t:'Détails',d:'Couleurs, sons, émotions.'},{t:'Action',d:'Premier pas.'}]},
 {id:'med-5',title:'Cœur ouvert',cat:'meditation',dur:'15 min',diff:'intermédiaire',emoji:'💗',p:true,desc:'Ouvre ton cœur.',ben:['Compassion','Amour','Paix'],steps:[{t:'Centre-toi',d:'Respire.'},{t:'Lumière',d:'Lumière dans ton cœur.'},{t:'Toi',d:'Amour à toi-même.'},{t:'Proche',d:'Quelqu\'un que tu aimes.'},{t:'Tous',d:'Amour à tous.'}]},
-{id:'anc-1',title:'Arbre intérieur',cat:'ancrage',dur:'10 min',diff:'débutant',emoji:'🌳',p:false,desc:'Deviens un arbre puissant.',ben:['Stabilité','Confiance','Nature'],steps:[{t:'Debout',d:'Pieds ancrés.'},{t:'Racines',d:'Racines profondes.'},{t:'Tronc',d:'Corps solide.'},{t:'Branches',d:'Bras vers le ciel.'},{t:'Reviens',d:'Inspire.'}]},
+{id:'anc-1',title:'Arbre intérieur',cat:'ancrage',dur:'10 min',diff:'débutant',emoji:'',p:false,desc:'Deviens un arbre puissant.',ben:['Stabilité','Confiance','Nature'],steps:[{t:'Debout',d:'Pieds ancrés.'},{t:'Racines',d:'Racines profondes.'},{t:'Tronc',d:'Corps solide.'},{t:'Branches',d:'Bras vers le ciel.'},{t:'Reviens',d:'Inspire.'}]},
 {id:'anc-2',title:'5 sens',cat:'ancrage',dur:'5 min',diff:'débutant',emoji:'👁️',p:false,desc:'Reviens au présent.',ben:['Anti-anxiété','Présence','Partout'],steps:[{t:'5 VOIS',d:'5 choses.'},{t:'4 TOUCHES',d:'4 sensations.'},{t:'3 ENTENDS',d:'3 sons.'},{t:'2 SENS',d:'2 odeurs.'},{t:'1 GOÛTE',d:'1 goût.'}]},
 {id:'anc-3',title:'Ancrage émotionnel',cat:'ancrage',dur:'10 min',diff:'intermédiaire',emoji:'⚓',p:true,desc:'Crée un ancrage de calme.',ben:['Calme instantané','Portable','Autonomie'],steps:[{t:'Rappelle',d:'Un moment de calme.'},{t:'Ressens',d:'Amplifie.'},{t:'Ancre',d:'Serre ton poing.'},{t:'Répète',d:'5 fois.'},{t:'Teste',d:'Le calme revient.'}]},
 {id:'anc-4',title:'Bain de nature',cat:'ancrage',dur:'30 min',diff:'débutant',emoji:'🌲',p:true,desc:'Immerge-toi.',ben:['Recharge','Créativité','Bien-être'],steps:[{t:'Lieu',d:'Trouve la nature.'},{t:'Respire',d:'5 respirations.'},{t:'Observe',d:'Regarde tout.'},{t:'Écoute',d:'Yeux fermés.'},{t:'Touche',d:'Connecte-toi.'},{t:'Merci',d:'Remercie.'}]},
 {id:'ecr-1',title:'Qui suis-je ?',cat:'ecriture',dur:'15 min',diff:'débutant',emoji:'🪞',p:false,desc:'Explore ton identité par l\'écriture.',ben:['Connaissance','Clarté','Authenticité'],steps:[{t:'Question',d:'"Qui suis-je vraiment ?"'},{t:'Écris',d:'Sans filtre, 10 minutes.'},{t:'Relis',d:'Que découvres-tu ?'},{t:'Note',d:'Les mots qui reviennent.'}]},
-{id:'ecr-2',title:'Mon histoire - Chapitre 1',cat:'ecriture',dur:'20 min',diff:'débutant',emoji:'📖',p:true,desc:'Commence à raconter ton histoire.',ben:['Sens','Compréhension','Libération'],steps:[{t:'Le début',d:'"Tout a commencé quand..."'},{t:'Décris',d:'Le contexte, les personnages.'},{t:'L\'élément',d:'Ce qui a tout changé.'},{t:'Ressens',d:'Comment tu te sens en écrivant.'}]},
+{id:'ecr-2',title:'Mon histoire - Chapitre 1',cat:'ecriture',dur:'20 min',diff:'débutant',emoji:'',p:true,desc:'Commence à raconter ton histoire.',ben:['Sens','Compréhension','Libération'],steps:[{t:'Le début',d:'"Tout a commencé quand..."'},{t:'Décris',d:'Le contexte, les personnages.'},{t:'L\'élément',d:'Ce qui a tout changé.'},{t:'Ressens',d:'Comment tu te sens en écrivant.'}]},
 {id:'ecr-3',title:'Lettre à mon futur moi',cat:'ecriture',dur:'15 min',diff:'débutant',emoji:'💌',p:false,desc:'Écris à la personne que tu seras dans 1 an.',ben:['Vision','Espoir','Direction'],steps:[{t:'Cher futur moi',d:'Commence ta lettre.'},{t:'Aujourd\'hui',d:'Décris où tu en es.'},{t:'Rêves',d:'Ce que tu veux devenir.'},{t:'Promesse',d:'Ce que tu promets de faire.'}]},
-{id:'ecr-4',title:'Le chapitre du changement',cat:'ecriture',dur:'25 min',diff:'intermédiaire',emoji:'📝',p:true,desc:'Raconte le moment où tout a basculé.',ben:['Transformation','Sens','Force'],steps:[{t:'Avant',d:'Décris ta vie avant.'},{t:'Le déclic',d:'Qu\'est-ce qui a changé ?'},{t:'Pendant',d:'Comment tu as vécu le changement.'},{t:'Après',d:'Qui es-tu devenu·e ?'}]},
-{id:'ecr-5',title:'Mon manifeste',cat:'ecriture',dur:'20 min',diff:'intermédiaire',emoji:'📜',p:true,desc:'Écris tes valeurs et engagements.',ben:['Clarté','Engagement','Identité'],steps:[{t:'Je crois',d:'"Je crois que..."'},{t:'Je choisis',d:'"Je choisis de..."'},{t:'Je m\'engage',d:'"Je m\'engage à..."'},{t:'Je suis',d:'"Je suis..."'}]},
+{id:'ecr-4',title:'Le chapitre du changement',cat:'ecriture',dur:'25 min',diff:'intermédiaire',emoji:'',p:true,desc:'Raconte le moment où tout a basculé.',ben:['Transformation','Sens','Force'],steps:[{t:'Avant',d:'Décris ta vie avant.'},{t:'Le déclic',d:'Qu\'est-ce qui a changé ?'},{t:'Pendant',d:'Comment tu as vécu le changement.'},{t:'Après',d:'Qui es-tu devenu·e ?'}]},
+{id:'ecr-5',title:'Mon manifeste',cat:'ecriture',dur:'20 min',diff:'intermédiaire',emoji:'',p:true,desc:'Écris tes valeurs et engagements.',ben:['Clarté','Engagement','Identité'],steps:[{t:'Je crois',d:'"Je crois que..."'},{t:'Je choisis',d:'"Je choisis de..."'},{t:'Je m\'engage',d:'"Je m\'engage à..."'},{t:'Je suis',d:'"Je suis..."'}]},
 {id:'ecr-6',title:'Histoire de guérison',cat:'ecriture',dur:'25 min',diff:'avancé',emoji:'🌈',p:true,desc:'Raconte ta guérison comme une histoire.',ben:['Guérison','Distance','Force'],steps:[{t:'La blessure',d:'Décris ce qui t\'a blessé·e.'},{t:'Le chemin',d:'Comment tu as traversé.'},{t:'La guérison',d:'Comment tu as guéri.'},{t:'Le trésor',d:'Ce que tu as gagné.'}]},
 {id:'ecr-7',title:'Lettre de libération',cat:'ecriture',dur:'20 min',diff:'intermédiaire',emoji:'🕊️',p:true,desc:'Libère-toi de ce qui te pèse.',ben:['Libération','Lâcher prise','Paix'],steps:[{t:'Ce que je libère',d:'"Je libère..."'},{t:'Ce que je pardonne',d:'"Je pardonne..."'},{t:'Ce que je choisis',d:'"Je choisis maintenant..."'},{t:'Adieu',d:'Écris ton adieu.'}]},
-{id:'ecr-8',title:'Le héros que je deviens',cat:'ecriture',dur:'30 min',diff:'avancé',emoji:'🦸',p:true,desc:'Raconte ton histoire héroïque.',ben:['Confiance','Vision','Puissance'],steps:[{t:'L\'appel',d:'Quel est ton appel ?'},{t:'Les épreuves',d:'Quels dragons as-tu affrontés ?'},{t:'Le trésor',d:'Qu\'as-tu gagné ?'},{t:'Le retour',d:'Comment tu transformes le monde.'}]},
-{id:'cre-1',title:'Dessine ton émotion',cat:'creation',dur:'15 min',diff:'débutant',emoji:'🎨',p:false,desc:'Exprime ton émotion par le dessin.',ben:['Expression','Libération','Conscience'],steps:[{t:'Ton émotion',d:'Quelle émotion est là ?'},{t:'Couleurs',d:'Choisis les couleurs.'},{t:'Dessine',d:'Laisse ta main bouger.'},{t:'Contemple',d:'Que te dit ton dessin ?'}]},
+{id:'ecr-8',title:'Le héros que je deviens',cat:'ecriture',dur:'30 min',diff:'avancé',emoji:'',p:true,desc:'Raconte ton histoire héroïque.',ben:['Confiance','Vision','Puissance'],steps:[{t:'L\'appel',d:'Quel est ton appel ?'},{t:'Les épreuves',d:'Quels dragons as-tu affrontés ?'},{t:'Le trésor',d:'Qu\'as-tu gagné ?'},{t:'Le retour',d:'Comment tu transformes le monde.'}]},
+{id:'cre-1',title:'Dessine ton émotion',cat:'creation',dur:'15 min',diff:'débutant',emoji:'',p:false,desc:'Exprime ton émotion par le dessin.',ben:['Expression','Libération','Conscience'],steps:[{t:'Ton émotion',d:'Quelle émotion est là ?'},{t:'Couleurs',d:'Choisis les couleurs.'},{t:'Dessine',d:'Laisse ta main bouger.'},{t:'Contemple',d:'Que te dit ton dessin ?'}]},
 {id:'cre-2',title:'Ce que je veux transformer',cat:'creation',dur:'20 min',diff:'débutant',emoji:'🔄',p:true,desc:'Crée quelque chose pour symboliser ta transformation.',ben:['Transformation','Clarté','Action'],steps:[{t:'Identifie',d:'Qu\'est-ce que tu veux transformer ?'},{t:'Avant',d:'Dessine/écris l\'état actuel.'},{t:'Après',d:'Dessine/écris l\'état désiré.'},{t:'Le pont',d:'Crée le pont entre les deux.'}]},
 {id:'cre-3',title:'Mandala personnel',cat:'creation',dur:'25 min',diff:'intermédiaire',emoji:'🔮',p:true,desc:'Crée ton mandala.',ben:['Centre','Harmonie','Méditation'],steps:[{t:'Cercle',d:'Trace un cercle.'},{t:'Centre',d:'Toi au centre.'},{t:'Couches',d:'Formes concentriques.'},{t:'Couleurs',d:'Celles qui te parlent.'},{t:'Contemple',d:'Ton monde intérieur.'}]},
 {id:'cre-4',title:'Transformer la colère',cat:'creation',dur:'20 min',diff:'intermédiaire',emoji:'🔥',p:true,desc:'Transforme ta colère en création.',ben:['Libération','Transformation','Paix'],steps:[{t:'La colère',d:'Ressens-la sans juger.'},{t:'Matière',d:'Choisis un matériau (papier, argile...).'},{t:'Transforme',d:'Transforme la colère en forme.'},{t:'Lâche',d:'Que faire de cette œuvre ?'}]},
-{id:'cre-5',title:'Portrait symbolique',cat:'creation',dur:'25 min',diff:'intermédiaire',emoji:'🎭',p:true,desc:'Crée ton portrait symbolique.',ben:['Connaissance','Expression','Authenticité'],steps:[{t:'Symboles',d:'Quels symboles te représentent ?'},{t:'Crée',d:'Assemble-les.'},{t:'Signification',d:'Que disent-ils de toi ?'},{t:'Évolution',d:'Comment ils évoluent.'}]},
+{id:'cre-5',title:'Portrait symbolique',cat:'creation',dur:'25 min',diff:'intermédiaire',emoji:'',p:true,desc:'Crée ton portrait symbolique.',ben:['Connaissance','Expression','Authenticité'],steps:[{t:'Symboles',d:'Quels symboles te représentent ?'},{t:'Crée',d:'Assemble-les.'},{t:'Signification',d:'Que disent-ils de toi ?'},{t:'Évolution',d:'Comment ils évoluent.'}]},
 {id:'cre-6',title:'Carte au trésor',cat:'creation',dur:'30 min',diff:'débutant',emoji:'🗺️',p:true,desc:'Crée ta carte vers tes rêves.',ben:['Vision','Motivation','Plan'],steps:[{t:'L\'île',d:'Ton objectif principal.'},{t:'Le chemin',d:'Les étapes.'},{t:'Les obstacles',d:'Les défis.'},{t:'Les alliés',d:'Tes ressources.'},{t:'Le trésor',d:'Ce que tu trouveras.'}]},
-{id:'cre-7',title:'Rituel de passage',cat:'creation',dur:'30 min',diff:'avancé',emoji:'🚪',p:true,desc:'Crée un rituel pour marquer un passage.',ben:['Transformation','Sens','Engagement'],steps:[{t:'Le passage',d:'Que laisses-tu derrière toi ?'},{t:'Le seuil',d:'Crée un objet/acte symbolique.'},{t:'L\'arrivée',d:'Qui arrives-tu de l\'autre côté ?'},{t:'Célébration',d:'Marque le moment.'}]},
+{id:'cre-7',title:'Rituel de passage',cat:'creation',dur:'30 min',diff:'avancé',emoji:'',p:true,desc:'Crée un rituel pour marquer un passage.',ben:['Transformation','Sens','Engagement'],steps:[{t:'Le passage',d:'Que laisses-tu derrière toi ?'},{t:'Le seuil',d:'Crée un objet/acte symbolique.'},{t:'L\'arrivée',d:'Qui arrives-tu de l\'autre côté ?'},{t:'Célébration',d:'Marque le moment.'}]},
 {id:'cre-8',title:'Arbre de vie',cat:'creation',dur:'30 min',diff:'intermédiaire',emoji:'🌳',p:true,desc:'Crée ton arbre de vie.',ben:['Vision globale','Racines','Croissance'],steps:[{t:'Racines',d:'Tes valeurs, ton histoire.'},{t:'Tronc',d:'Tes forces.'},{t:'Branches',d:'Tes aspirations.'},{t:'Fruits',d:'Tes accomplissements.'},{t:'Feuilles',d:'Tes rêves.'}]},
 {id:'gra-1',title:'Journal de gratitude',cat:'gratitude',dur:'5 min',diff:'débutant',emoji:'📔',p:false,desc:'3 gratitudes par jour.',ben:['Positif','Humeur','Perspective'],steps:[{t:'Moment',d:'Matin ou soir.'},{t:'3 choses',d:'3 gratitudes.'},{t:'Pourquoi',d:'Pourquoi ?'},{t:'Toi',d:'Gratitude envers toi.'}]},
 {id:'gra-2',title:'Gratitude profonde',cat:'gratitude',dur:'15 min',diff:'intermédiaire',emoji:'🙏',p:true,desc:'Gratitude pour les épreuves.',ben:['Acceptation','Sagesse','Paix'],steps:[{t:'L\'épreuve',d:'Pense à une difficulté.'},{t:'La leçon',d:'Qu\'as-tu appris ?'},{t:'La force',d:'Quelle force as-tu développée ?'},{t:'Merci',d:'Remercie pour cette leçon.'}]},
@@ -499,12 +517,12 @@ const exercises=[
 {id:'con-2',title:'Roue de la vie',cat:'emotionnel',dur:'20 min',diff:'intermédiaire',emoji:'🎡',p:true,desc:'Évalue l\'équilibre de ta vie.',ben:['Vision','Déséquilibres','Plan'],steps:[{t:'8 domaines',d:'Santé, travail, amour, famille, amis, argent, loisirs, spirituel.'},{t:'Note',d:'De 1 à 10.'},{t:'Relie',d:'Forme ta roue.'},{t:'Analyse',d:'Où sont les déséquilibres ?'}]},
 {id:'con-3',title:'Ikigai',cat:'emotionnel',dur:'30 min',diff:'intermédiaire',emoji:'🎯',p:true,desc:'Trouve ta raison d\'être.',ben:['Sens','Alignement','Motivation'],steps:[{t:'Aimes',d:'Ce que tu aimes.'},{t:'Monde',d:'Ce dont le monde a besoin.'},{t:'Doué·e',d:'Ce pour quoi tu es doué·e.'},{t:'Payé·e',d:'Ce pour quoi tu peux être payé·e.'},{t:'Ikigai',d:'L\'intersection.'}]},
 {id:'con-4',title:'Objectifs SMART',cat:'confiance',dur:'20 min',diff:'débutant',emoji:'🎯',p:true,desc:'Objectifs clairs.',ben:['Clarté','Motivation','Action'],steps:[{t:'S',d:'Spécifique.'},{t:'M',d:'Mesurable.'},{t:'A',d:'Atteignable.'},{t:'R',d:'Rélevant.'},{t:'T',d:'Temporel.'}]},
-{id:'con-5',title:'Auto-compassion',cat:'confiance',dur:'15 min',diff:'débutant',emoji:'🤗',p:true,desc:'Sois ton meilleur ami.',ben:['Bienveillance','Estime','Résilience'],steps:[{t:'Situation',d:'Une situation difficile.'},{t:'Souffrance',d:'Reconnais-la.'},{t:'Humanité',d:'Tout le monde souffre.'},{t:'Bienveillance',d:'Parle-toi comme à un ami.'},{t:'Geste',d:'Main sur le cœur.'}]}
+{id:'con-5',title:'Auto-compassion',cat:'confiance',dur:'15 min',diff:'débutant',emoji:'',p:true,desc:'Sois ton meilleur ami.',ben:['Bienveillance','Estime','Résilience'],steps:[{t:'Situation',d:'Une situation difficile.'},{t:'Souffrance',d:'Reconnais-la.'},{t:'Humanité',d:'Tout le monde souffre.'},{t:'Bienveillance',d:'Parle-toi comme à un ami.'},{t:'Geste',d:'Main sur le cœur.'}]}
 ];
 
 const writingPrompts=[
 {id:'w1',title:'Le commencement',emoji:'📖',desc:'Raconte le début de ton histoire. "Tout a commencé quand..."',theme:'Les origines',premium:false,steps:[{t:'Le décor',d:'Décris le lieu, l\'époque, l\'ambiance.'},{t:'Le personnage',d:'Qui étais-tu à ce moment ?'},{t:'L\'événement',d:'Qu\'est-ce qui a tout déclenché ?'},{t:'L\'émotion',d:'Qu\'as-tu ressenti ?'},{t:'Le sens',d:'Avec le recul, quel sens donnes-tu à ce début ?'}]},
-{id:'w2',title:'Le dragon',emoji:'🐉',desc:'Raconte ton combat contre ta plus grande peur.',theme:'Le courage',premium:true,steps:[{t:'Le dragon',d:'Décris ta peur comme un dragon.'},{t:'L\'appel',d:'Qu\'est-ce qui t\'a poussé·e à l\'affronter ?'},{t:'Le combat',d:'Comment l\'as-tu affronté ?'},{t:'La victoire',d:'Qu\'as-tu gagné ?'},{t:'Le trésor',d:'Quelle force as-tu trouvée ?'}]},
+{id:'w2',title:'Le dragon',emoji:'',desc:'Raconte ton combat contre ta plus grande peur.',theme:'Le courage',premium:true,steps:[{t:'Le dragon',d:'Décris ta peur comme un dragon.'},{t:'L\'appel',d:'Qu\'est-ce qui t\'a poussé·e à l\'affronter ?'},{t:'Le combat',d:'Comment l\'as-tu affronté ?'},{t:'La victoire',d:'Qu\'as-tu gagné ?'},{t:'Le trésor',d:'Quelle force as-tu trouvée ?'}]},
 {id:'w3',title:'La lettre jamais envoyée',emoji:'💌',desc:'Écris la lettre que tu n\'as jamais osé envoyer.',theme:'La libération',premium:true,steps:[{t:'Le destinataire',d:'À qui est cette lettre ?'},{t:'Ce que tu veux dire',d:'Écris sans filtre.'},{t:'Ce que tu ressens',d:'Laisse venir les émotions.'},{t:'La fin',d:'Comment veux-tu terminer ?'},{t:'Que faire',d:'Garder, envoyer, brûler ?'}]},
 {id:'w4',title:'Le monde idéal',emoji:'🌍',desc:'Décris ton monde idéal comme un conte.',theme:'La vision',premium:true,steps:[{t:'Le lieu',d:'Où se passe ton monde idéal ?'},{t:'Les habitants',d:'Qui y vit ?'},{t:'Ton rôle',d:'Qui es-tu dans ce monde ?'},{t:'Un jour',d:'Raconte une journée type.'},{t:'Le premier pas',d:'Comment t\'en rapprocher ?'}]},
 {id:'w5',title:'L\'objet magique',emoji:'✨',desc:'Si tu avais un objet magique, que ferait-il ?',theme:'Le pouvoir intérieur',premium:true,steps:[{t:'L\'objet',d:'Quel est cet objet ?'},{t:'Son pouvoir',d:'Que fait-il ?'},{t:'La première utilisation',d:'Comment l\'utilises-tu ?'},{t:'La conséquence',d:'Qu\'est-ce que ça change ?'},{t:'Le vrai pouvoir',d:'En réalité, ce pouvoir est déjà en toi. Lequel ?'}]},
@@ -514,11 +532,11 @@ const writingPrompts=[
 ];
 
 const creationPrompts=[
-{id:'c1',title:'Avant/Après',emoji:'🔄',desc:'Crée une œuvre en 2 parties : ce que tu veux laisser et ce que tu veux devenir.',transform:'Une habitude ou un comportement',premium:false,steps:[{t:'Identifie',d:'Qu\'est-ce que tu veux transformer ?'},{t:'Avant',d:'Crée/dessine l\'état actuel.'},{t:'Après',d:'Crée/dessine l\'état désiré.'},{t:'Le geste',d:'Fais un geste symbolique pour marquer le passage.'}]},
+{id:'c1',title:'Avant/Après',emoji:'',desc:'Crée une œuvre en 2 parties : ce que tu veux laisser et ce que tu veux devenir.',transform:'Une habitude ou un comportement',premium:false,steps:[{t:'Identifie',d:'Qu\'est-ce que tu veux transformer ?'},{t:'Avant',d:'Crée/dessine l\'état actuel.'},{t:'Après',d:'Crée/dessine l\'état désiré.'},{t:'Le geste',d:'Fais un geste symbolique pour marquer le passage.'}]},
 {id:'c2',title:'L\'emotion en matière',emoji:'🎭',desc:'Donne forme à une émotion difficile.',transform:'Une émotion qui te pèse',premium:true,steps:[{t:'L\'émotion',d:'Quelle émotion veux-tu transformer ?'},{t:'La matière',d:'Choisis : papier, argile, tissu, objets...'},{t:'La forme',d:'Donne-lui une forme.'},{t:'La transformation',d:'Transforme cette forme en quelque chose de beau.'},{t:'Le message',d:'Que te dit cette création ?'}]},
 {id:'c3',title:'La boussole',emoji:'🧭',desc:'Crée ta boussole intérieure.',transform:'Le manque de direction',premium:true,steps:[{t:'Le Nord',d:'Qu\'est-ce qui te guide ? (une valeur)'},{t:'Le Sud',d:'D\'où viens-tu ? (tes racines)'},{t:'L\'Est',d:'Vers quoi tu vas ? (ton rêve)'},{t:'L\'Ouest',d:'Ce que tu laisses derrière.'},{t:'Crée',d:'Fabrique ta boussole.'}]},
 {id:'c4',title:'Le masque et la vérité',emoji:'🎭',desc:'Crée un masque et révèle ce qui est derrière.',transform:'Ce que tu caches au monde',premium:true,steps:[{t:'Le masque',d:'Qu\'est-ce que tu montres au monde ?'},{t:'Crée le masque',d:'Dessine/fabrique ce masque.'},{t:'La vérité',d:'Qu\'est-ce qui est derrière ?'},{t:'Révèle',d:'Crée ce qui est caché.'},{t:'Intègre',d:'Comment réunir les deux ?'}]},
-{id:'c5',title:'L\'autel personnel',emoji:'🕯️',desc:'Crée un espace sacré avec des objets qui comptent.',transform:'Le manque de connexion à soi',premium:true,steps:[{t:'Choisis',d:'5-7 objets qui ont du sens pour toi.'},{t:'Dispose',d:'Crée ton autel.'},{t:'Chaque objet',d:'Pourquoi cet objet ? Que représente-t-il ?'},{t:'Rituel',d:'Crée un petit rituel pour cet espace.'}]},
+{id:'c5',title:'L\'autel personnel',emoji:'️',desc:'Crée un espace sacré avec des objets qui comptent.',transform:'Le manque de connexion à soi',premium:true,steps:[{t:'Choisis',d:'5-7 objets qui ont du sens pour toi.'},{t:'Dispose',d:'Crée ton autel.'},{t:'Chaque objet',d:'Pourquoi cet objet ? Que représente-t-il ?'},{t:'Rituel',d:'Crée un petit rituel pour cet espace.'}]},
 {id:'c6',title:'Le pont vers l\'autre',emoji:'🌉',desc:'Crée quelque chose pour quelqu\'un qui compte.',transform:'Une relation à améliorer',premium:true,steps:[{t:'La personne',d:'À qui penses-tu ?'},{t:'Le message',d:'Que veux-tu lui dire ?'},{t:'La création',d:'Crée quelque chose pour elle/lui.'},{t:'Le geste',d:'Comment le lui offrir ?'}]},
 {id:'c7',title:'L\'arbre des possibles',emoji:'🌳',desc:'Crée un arbre avec tes possibilités.',transform:'Le sentiment d\'être bloqué·e',premium:true,steps:[{t:'Le tronc',d:'Toi, ici et maintenant.'},{t:'Les branches',d:'Chaque branche = une possibilité.'},{t:'Les fruits',d:'Ce que chaque possibilité peut t\'apporter.'},{t:'Choisis',d:'Quelle branche t\'attire le plus ?'}]},
 {id:'c8',title:'La lettre en images',emoji:'🖼️',desc:'Crée une lettre visuelle à ton toi du futur.',transform:'Le manque de vision',premium:true,steps:[{t:'Le futur',d:'Imagine-toi dans 1 an.'},{t:'Les images',d:'Collecte/dessine des images.'},{t:'Compose',d:'Crée ta lettre visuelle.'},{t:'Place-la',d:'Là où tu la verras chaque jour.'}]}
@@ -585,13 +603,13 @@ document.getElementById('weekly-challenge').textContent=weeklyChallenges[Math.fl
 const phase=phases.find(p=>S.day>=((p.id-1)*25+1)&&S.day<=(p.id*25));
 if(phase){
 const dayInPhase=S.day-((phase.id-1)*25);
-document.getElementById('current-phase').innerHTML='<div class="flex items-center gap-3 mb-2"><span class="text-2xl">'+phase.emoji+'</span><div><h4 class="font-bold text-gray-900">Phase '+phase.id+' : '+phase.name+'</h4><p class="text-gray-700 text-xs font-medium">'+phase.desc+'</p></div></div><div class="w-full h-2 bg-purple-200 rounded-full mt-3"><div class="h-full bg-gradient-to-r '+phase.color+' rounded-full" style="width:'+((dayInPhase/25)*100)+'%"></div></div><p class="text-xs text-gray-700 mt-1 font-medium">Jour '+dayInPhase+'/25 de cette phase'+(phase.premium?' ⭐ Premium':'')+'</p>';
+document.getElementById('current-phase').innerHTML='<div class="flex items-center gap-3 mb-2"><span class="text-2xl">'+phase.emoji+'</span><div><h4 class="font-bold text-gray-900">Phase '+phase.id+' : '+phase.name+'</h4><p class="text-gray-700 text-xs font-medium">'+phase.desc+'</p></div></div><div class="w-full h-2 bg-purple-200 rounded-full mt-3"><div class="h-full bg-gradient-to-r '+phase.color+' rounded-full" style="width:'+((dayInPhase/25)*100)+'%"></div></div><p class="text-xs text-gray-700 mt-1 font-medium">Jour '+dayInPhase+'/25 de cette phase'+(phase.premium?'  Premium':'')+'</p>';
 }
 const hour=new Date().getHours();
 document.getElementById('greeting').textContent=(hour<12?'Bonjour':hour<18?'Bon après-midi':'Bonsoir')+' toi ! 🌿';
 }
 
-// ===== CARTE DU JOUR =====
+// ===== CARTE DU JOUR (CORRIGÉE) =====
 function renderCard(){
 const today=new Date().toDateString();
 if(S.cardDate!==today){S.cardFlipped=false;S.cardDate=today;save()}
@@ -604,7 +622,7 @@ document.getElementById('card-inner').classList.toggle('flipped',S.cardFlipped);
 }
 function flipCard(){
 S.cardFlipped=true;save();
-document.getElementById('card-inner').classList.add('flipped');
+document.getElementById('card-inner').classList.toggle('flipped');
 }
 
 // ===== PROGRAMMES =====
@@ -659,7 +677,7 @@ function filterEx(cat){document.querySelectorAll('.fbtn').forEach(b=>{b.classNam
 function showExercise(id){
 const e=exercises.find(x=>x.id===id);if(!e)return;
 currentExerciseId=id;
-document.getElementById('exercise-content').innerHTML='<div class="flex items-start gap-4 mb-4"><span class="text-4xl">'+e.emoji+'</span><div><h1 class="text-xl font-bold text-gray-900 mb-1">'+e.title+'</h1><div class="flex items-center gap-2"><span class="text-xs text-gray-700 font-medium">⏱️ '+e.dur+'</span><span class="text-xs text-gray-700 font-medium">'+e.diff+'</span></div></div></div><p class="text-gray-800 text-sm mb-4 font-medium">'+e.desc+'</p><div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-4 border-2 border-purple-200"><h3 class="font-bold text-purple-900 text-sm mb-2">✨ Bienfaits</h3><div class="flex flex-wrap gap-1">'+e.ben.map(b=>'<span class="px-2 py-1 bg-white/90 rounded-full text-xs text-purple-800 font-medium border border-purple-200">'+b+'</span>').join('')+'</div></div>';
+document.getElementById('exercise-content').innerHTML='<div class="flex items-start gap-4 mb-4"><span class="text-4xl">'+e.emoji+'</span><div><h1 class="text-xl font-bold text-gray-900 mb-1">'+e.title+'</h1><div class="flex items-center gap-2"><span class="text-xs text-gray-700 font-medium">️ '+e.dur+'</span><span class="text-xs text-gray-700 font-medium">'+e.diff+'</span></div></div></div><p class="text-gray-800 text-sm mb-4 font-medium">'+e.desc+'</p><div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-4 border-2 border-purple-200"><h3 class="font-bold text-purple-900 text-sm mb-2">✨ Bienfaits</h3><div class="flex flex-wrap gap-1">'+e.ben.map(b=>'<span class="px-2 py-1 bg-white/90 rounded-full text-xs text-purple-800 font-medium border border-purple-200">'+b+'</span>').join('')+'</div></div>';
 const sd=document.getElementById('exercise-steps');sd.innerHTML='';
 e.steps.forEach((s,i)=>{sd.innerHTML+='<div class="bg-white/90 rounded-xl p-4 border-2 border-gray-200 fade-in" style="animation-delay:'+(i*0.1)+'s"><div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">'+(i+1)+'</div><div><h3 class="font-bold text-gray-900 text-sm mb-1">'+s.t+'</h3><p class="text-gray-800 text-sm font-medium">'+s.d+'</p></div></div></div>'});
 document.getElementById('complete-btn').style.display=S.completed.includes(id)?'none':'block';
