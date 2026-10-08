@@ -922,8 +922,7 @@ function showCreationDetail(id){
 let curTool, toolStep, toolAns;
 
 function openTools(){
-  showScreen('screen-tools');
-  const b=document.getElementById('tools-box');
+   const b=document.getElementById('tools-box');
   b.innerHTML=T.map(function(t,i){
     return '<button onclick="runTool('+i+')" class="ev-card w-full p-4 mb-3 text-left flex items-center gap-3 hover:shadow-xl transition-all">'+
       '<span class="text-3xl">'+t.i+'</span><span><b class="text-purple-900">'+t.n+'</b><br><span class="text-sm text-gray-700">'+t.d+'</span></span></button>';
