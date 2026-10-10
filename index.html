@@ -78,7 +78,7 @@
     <!-- QUESTIONNAIRE UNIQUE -->
     <div id="questionnaire-section" class="mb-4" style="display:none">
       <div class="mb-4">
-        <div class="flex items-center justify-between mb-2"><span class="text-sm text-gray-800 font-semibold">Question <span id="q-current">1</span> sur 5</span><span class="text-sm text-purple-700 font-bold"><span id="q-percent">20</span>%</span></div>
+        <div class="flex items-center justify-between mb-2"><span class="text-sm text-gray-800 font-semibold">Question <span id="q-current">1</span> sur <span id="q-total">5</span></span><span class="text-sm text-purple-700 font-bold"><span id="q-percent">20</span>%</span></div>
         <div class="w-full h-2 bg-purple-200 rounded-full overflow-hidden"><div id="q-progress" class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-500" style="width:20%"></div></div>
       </div>
       <div class="bg-white/90 rounded-3xl p-6 shadow-xl border-2 border-purple-200">
@@ -854,13 +854,14 @@ window.setMood=function(i){var t=EV.today();S.mood=S.mood||{};var first=S.mood[t
 var rh=renderHome;renderHome=function(){rh();var p=document.getElementById('ev-home');if(!p)return;var t=EV.today(),m=(S.mood||{})[t];
 p.insertAdjacentHTML('afterbegin','<div class="ev-card p-5 text-center"><p class="font-bold text-purple-900 mb-3">Comment te sens-tu aujourd\'hui ?</p><div class="flex justify-around">'+M.map(function(x,i){return '<button onclick="setMood('+i+')" class="text-3xl p-2 rounded-2xl '+(m===i?'bg-amber-100 ring-2 ring-amber-400':'')+'" title="'+x[1]+'">'+x[0]+'</button>'}).join('')+'</div>'+(m!==undefined?'<p class="text-sm text-gray-800 mt-3">'+M[m][2]+'</p>':'<p class="text-xs text-gray-600 mt-3">1 tap, +5 XP</p>')+'</div>')};
 
-function lab(qi,v){var o=questions[qi].options.filter(function(x){return x.value===v})[0];return o?o.label:''}
+function tu(x){return x.replace(/^Me /,'Te ').replace(/\bme /g,'te ').replace(/\bmon\b/gi,function(m){return m[0]==='M'?'Ton':'ton'}).replace(/\bma\b/gi,function(m){return m[0]==='M'?'Ta':'ta'}).replace(/\bmes\b/gi,'tes').replace(/\bmoi\b/g,'toi').replace(/\bj'en suis\b/g,'tu en es').replace(/\bà moi\b/g,'à toi')}
+function lab(qi,v){var o=questions[qi].options.filter(function(x){return x.value===v})[0];return o?tu(o.label):''}
 function pick(){var a=(answers[3]||''),cat={respirer:'meditation',ecrire:'ecriture',creer:'creation'}[a]||'gratitude';
  var f=exercises.filter(function(e){return e.cat===cat&&!e.p})[0]||exercises.filter(function(e){return !e.p})[0];return f}
 window.closeProf=function(){var o=document.getElementById('ev-prof-ov');if(o)o.remove()};
 window.startRec=function(id){closeProf();showExercise(id)};
 function showProf(){var e=pick(),o=document.createElement('div');o.id='ev-prof-ov';o.className='fixed inset-0 z-50 flex items-center justify-center p-5';o.style.background='rgba(59,15,122,.6)';
-o.innerHTML='<div class="ev-card p-6 text-center max-w-sm w-full fade-in"><div class="text-5xl mb-2">🌿</div><h1 class="text-2xl font-bold text-purple-900">Ton profil Élan Vital</h1><p class="text-gray-800 mt-3">Tu viens pour <b>'+lab(0,answers[0]).toLowerCase()+'</b>, tu as surtout besoin <b>'+lab(1,answers[1]).toLowerCase().replace(/^d'|^de /,'de ')+'</b>, avec <b>'+lab(2,answers[2]).toLowerCase()+'</b> par jour.</p><p class="text-gray-800 mt-2">Ton intention pour 100 jours : <b>'+lab(4,answers[4]).toLowerCase()+'</b>.</p>'+(e?'<div class="mt-4 p-4 rounded-2xl bg-purple-50"><p class="text-xs font-bold text-purple-800 mb-1">TON PREMIER PAS CONSEILLÉ</p><p class="font-bold text-gray-900">'+e.emoji+' '+e.title+'</p></div><button onclick="startRec(\''+e.id+'\')" class="mt-4 w-full ev-gold font-bold py-3 rounded-2xl shadow-lg">Commencer maintenant</button>':'')+'<button onclick="closeProf()" class="mt-3 text-sm font-semibold text-gray-700">Plus tard</button></div>';
+o.innerHTML='<div class="ev-card p-6 text-center max-w-sm w-full fade-in"><div class="text-5xl mb-2">🌿</div><h1 class="text-2xl font-bold text-purple-900">Ton profil Élan Vital</h1>'+(S.name?'<p class="font-bold text-amber-700 mt-1">Merci '+S.name.replace(/[<>&]/g,"")+' 🌿</p>':'')+'<p class="text-gray-800 mt-3">Tu viens pour <b>'+lab(0,answers[0]).toLowerCase()+'</b>, tu as surtout besoin <b>'+lab(1,answers[1]).toLowerCase().replace(/^d'|^de /,'de ')+'</b>, avec <b>'+lab(2,answers[2]).toLowerCase()+'</b> par jour.</p><p class="text-gray-800 mt-2">Ton intention pour 100 jours : <b>'+lab(4,answers[4]).toLowerCase()+'</b>.</p>'+(answers[5]?'<p class="text-gray-800 mt-2">Ce qui te motive : <b>'+lab(5,answers[5]).toLowerCase()+'</b>.</p>':'')+(e?'<div class="mt-4 p-4 rounded-2xl bg-purple-50"><p class="text-xs font-bold text-purple-800 mb-1">TON PREMIER PAS CONSEILLÉ</p><p class="font-bold text-gray-900">'+e.emoji+' '+e.title+'</p></div><button onclick="startRec(\''+e.id+'\')" class="mt-4 w-full ev-gold font-bold py-3 rounded-2xl shadow-lg">Commencer maintenant</button>':'')+'<button onclick="closeProf()" class="mt-3 text-sm font-semibold text-gray-700">Plus tard</button></div>';
 document.body.appendChild(o)}
 var nq=nextQuestion;nextQuestion=function(){var last=curQ===questions.length-1&&selVal;nq();if(last){S.profile=answers.slice();save();EV.boom();showProf()}};
 })();
@@ -992,7 +993,7 @@ var MOD=[
 ];
 var cur,si,ans,sc,tmr;
 function nm(){return S.name||'toi'}
-function fx(x){return String(x||'').replace(/\{n\}/g,nm())}
+function fx(x){x=String(x||'').replace(/\{n\}/g,nm());var g=S.genre;if(g==='m')x=x.replace(/devenue/g,'devenu').replace(/fière/g,'fier').replace(/poussée/g,'poussé');else if(g!=='f')x=x.replace(/devenue/g,'devenu·e').replace(/fière/g,'fier·ère').replace(/poussée/g,'poussé·e');return x}
 function es(x){return String(x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function td(){return EV.today()}
 document.body.insertAdjacentHTML('beforeend','<div id="screen-prem" class="screen"><div class="max-w-lg mx-auto p-5 pb-28"><button onclick="showScreen(\'screen-home\')" class="font-bold text-purple-700 mb-4">← Retour</button><div id="prem-box"></div></div></div>');
@@ -1029,6 +1030,24 @@ B().innerHTML='<div class="ev-card p-6 fade-in"><div class="text-5xl text-center
 window.showLetters=function(){B().innerHTML='<button onclick="openPrem()" class="font-bold text-purple-700 mb-3">← Modules</button><h1 class="text-xl font-bold text-purple-900 mb-3">📮 Mes lettres</h1>'+S.letters.slice().reverse().map(function(l){return '<div class="ev-card p-4 mb-3"><p class="text-xs font-bold text-purple-800">'+es(l.t)+' · '+l.d+'</p><p class="text-gray-900 mt-2 whitespace-pre-wrap">'+es(l.x)+'</p></div>'}).join('')+'<p class="text-xs text-gray-600">Stockées uniquement sur ce téléphone.</p>'};
 var rh=renderHome;renderHome=function(){rh();var p=document.getElementById('ev-home');if(p)p.insertAdjacentHTML('beforeend','<button onclick="openPrem()" class="w-full ev-gold rounded-2xl p-5 text-left shadow-xl"><span class="text-2xl">💎</span> <b class="text-lg">Parcours Premium</b><br><span class="text-sm font-semibold">Concentration, objectifs, gratitude, restructuration cognitive, lettres</span></button>')};
 var oSS=showScreen;showScreen=function(id){oSS(id);if(id==='screen-prem')document.getElementById('bottom-nav').classList.remove('hidden')};
+if(S.welcomed)renderHome();
+})();
+</script>
+
+<script>
+(function(){
+questions.push({title:"Qu'est-ce qui te motive le plus à avancer ?",subtitle:"Ce qui te donne envie de continuer.",options:[{value:'moi',label:'Aller mieux, pour moi',emoji:'🌸'},{value:'proches',label:'Mes proches, ma famille',emoji:'💞'},{value:'energie',label:'Retrouver mon énergie',emoji:'⚡'},{value:'projet',label:'Réaliser un projet',emoji:'🚀'},{value:'liberte',label:'Me sentir libre',emoji:'🕊️'},{value:'prouver',label:'Me prouver que j\'en suis capable',emoji:'🏔️'}]});
+var G=function(f,m,n){return S.genre==='f'?f:S.genre==='m'?m:n};
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function card(h){var o=document.getElementById('ev-wel');if(o)o.firstChild.innerHTML=h}
+window.saveName=function(skip){var v=document.getElementById('ev-nm').value.trim();S.name=(!skip&&v)?v.slice(0,20):(S.name||'');save();
+card('<div class="text-5xl mb-2">'+(S.name?'💜':'🌿')+'</div><h1 class="text-2xl font-bold text-purple-900">'+(S.name?'Ravi·e de te rencontrer, '+esc(S.name)+' !':'Faisons connaissance')+'</h1><p class="text-gray-800 mt-3">Pour que ce parcours te ressemble vraiment, j\'ai quelques questions. Elles restent sur ton téléphone.</p><p class="font-bold text-purple-900 mt-5">Tu es…</p><div class="mt-2"><button onclick="saveGenre(\'f\')" class="ev-opt">👩 Une femme</button><button onclick="saveGenre(\'m\')" class="ev-opt">👨 Un homme</button><button onclick="saveGenre(\'n\')" class="ev-opt">🌈 Je préfère ne pas préciser</button></div>')};
+window.saveGenre=function(g){S.genre=g;S.welcomed=true;save();var o=document.getElementById('ev-wel');if(o)o.remove();if(window.revealQ)revealQ();showQ();renderHome();EV.toast(G('Enchantée','Enchanté','Enchanté·e')+(S.name?' '+esc(S.name):'')+' 🌿')};
+var sq=showQ;showQ=function(){sq();var t=document.getElementById('q-total');if(t)t.textContent=questions.length;var q=document.getElementById('questionnaire-section'),h=document.getElementById('ev-qhint');
+if(!h){h=document.createElement('p');h.id='ev-qhint';h.className='text-center font-bold text-purple-900 mb-3';q.insertBefore(h,q.firstChild)}
+h.innerHTML=(S.name?'Merci '+esc(S.name)+' 🌿 ':'')+'<span class="font-medium text-gray-800">'+(curQ===questions.length-1?'Dernière question, ton parcours est presque prêt !':'Tes réponses créent un parcours sur mesure.')+'</span>'};
+showQ();
+var rh=renderHome;renderHome=function(){rh();var g=document.getElementById('greeting');if(g)g.textContent=(function(){var h=new Date().getHours();return h<12?'Bonjour':h<18?'Bon après-midi':'Bonsoir'})()+(S.name?' '+S.name:'')+' ! 🌿'};
 if(S.welcomed)renderHome();
 })();
 </script>
